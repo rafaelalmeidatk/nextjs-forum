@@ -4,6 +4,8 @@ import { z, ZodError } from "zod";
 const envVars = z.object({
   DISCORD_BOT_TOKEN: z.string(),
   FORUM_CHANNEL_ID: z.string(),
+  DATABASE_URL: z.string(),
+  MIGRATE_OP: z.union([z.literal("latest"), z.literal("down")]).optional(),
 });
 
 dotenv.config();

@@ -6,12 +6,15 @@
   "scripts": {
     "dev": "NODE_OPTIONS='--loader ts-node/esm' nodemon index.ts",
     "build": "tsc",
-    "test": "ts-node --esm index.ts",
-    "start": "node build/index.js"
+    "start": "node build/index.js",
+    "migrate": "NODE_OPTIONS='--loader ts-node/esm' ts-node ./db/migrate.ts",
+    "migrate:down": "MIGRATE_OP=down NODE_OPTIONS='--loader ts-node/esm' ts-node ./db/migrate.ts"
   },
   "dependencies": {
     "discord.js": "^14.8.0",
     "dotenv": "^16.0.3",
+    "kysely": "^0.23.5",
+    "mysql2": "^3.2.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {
