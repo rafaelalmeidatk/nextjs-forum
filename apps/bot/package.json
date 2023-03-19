@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "NODE_OPTIONS='--loader ts-node/esm' nodemon index.ts",
-    "build": "tsc",
+    "build": "yarn db-codegen && tsc",
     "start": "node build/index.js",
     "migrate": "NODE_OPTIONS='--loader ts-node/esm' ts-node ./db/migrate.ts",
-    "migrate:down": "MIGRATE_OP=down NODE_OPTIONS='--loader ts-node/esm' ts-node ./db/migrate.ts"
+    "migrate:down": "MIGRATE_OP=down NODE_OPTIONS='--loader ts-node/esm' ts-node ./db/migrate.ts",
+    "db-codegen": "kysely-codegen --dialect mysql --out-file ./db/schema.ts"
   },
   "dependencies": {
     "discord.js": "^14.8.0",
@@ -21,6 +22,7 @@
     "@types/node": "^18.15.3",
     "eslint": "^8.36.0",
     "eslint-config-custom": "*",
+    "kysely-codegen": "^0.9.0",
     "nodemon": "^2.0.21",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.2"

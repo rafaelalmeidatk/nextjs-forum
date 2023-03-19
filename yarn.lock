@@ -876,7 +876,7 @@ chalk@^2.0.0:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
-chalk@^4.0.0:
+chalk@^4.0.0, chalk@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.2.tgz#aac4e2b7734a740867aeb16bf02aad556a1e7a01"
   integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==
@@ -2103,6 +2103,16 @@ json5@^2.2.2:
     array-includes "^3.1.5"
     object.assign "^4.1.3"
 
+kysely-codegen@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/kysely-codegen/-/kysely-codegen-0.9.0.tgz#aec00be807e1c799bfedcc18411cc31fe4f79bcb"
+  integrity sha512-VCkrEY0WPwObvT4LGJkwLn29DXmvwG2oAv94qa+yAXDPAWtYTfO8NQSqyeEiNHEWmuKI+Sl+ANSn63by2Xn1tw==
+  dependencies:
+    chalk "^4.1.2"
+    dotenv "^16.0.3"
+    micromatch "^4.0.5"
+    minimist "^1.2.7"
+
 kysely@^0.23.5:
   version "0.23.5"
   resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.23.5.tgz#60c63d94e1c42cc0411be8aaa688a0f27405f514"
@@ -2196,7 +2206,7 @@ merge2@^1.3.0, merge2@^1.4.1:
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
 
-micromatch@^4.0.4:
+micromatch@^4.0.4, micromatch@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-4.0.5.tgz#bc8999a7cbbf77cdc89f132f6e467051b49090c6"
   integrity sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==
@@ -2211,7 +2221,7 @@ minimatch@^3.0.4, minimatch@^3.0.5, minimatch@^3.1.1, minimatch@^3.1.2:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimist@^1.2.0, minimist@^1.2.6:
+minimist@^1.2.0, minimist@^1.2.6, minimist@^1.2.7:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==

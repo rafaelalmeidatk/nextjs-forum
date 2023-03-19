@@ -15,7 +15,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .createTable("posts")
     .addColumn("id", SnowflakeDataType, (col) => col.primaryKey())
     .addColumn("title", "text", (col) => col.notNull())
-    .addColumn("content", "text", (col) => col.notNull())
     .addColumn("isLocked", "boolean", (col) => col.notNull())
     .addColumn("createdAt", "datetime", (col) => col.notNull())
     .addColumn("updatedAt", "datetime", (col) => col.notNull())
