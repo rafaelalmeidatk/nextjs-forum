@@ -1,0 +1,25 @@
+{
+  "name": "bot",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "NODE_OPTIONS='--loader ts-node/esm' nodemon index.ts",
+    "build": "tsc",
+    "test": "ts-node --esm index.ts",
+    "start": "node build/index.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.8.0",
+    "dotenv": "^16.0.3",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.3",
+    "eslint": "^8.36.0",
+    "eslint-config-custom": "*",
+    "nodemon": "^2.0.21",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.2"
+  }
+}
