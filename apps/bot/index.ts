@@ -1,6 +1,8 @@
 import discord, { Events, GatewayIntentBits, Partials } from "discord.js";
-import { db } from "./db/connection.js";
+import { createOrUpdateMessage } from "./db/actions/messages.js";
+import { createOrUpdatePost } from "./db/actions/posts.js";
 import { env } from "./env.js";
+import { log } from "./log.js";
 import { isMessageInForumChannel, isThreadInForumChannel } from "./utils.js";
 
 const client = new discord.Client({
@@ -13,35 +15,48 @@ const client = new discord.Client({
 });
 
 client.once(Events.ClientReady, (c) => {
-  console.log(`Ready! Logged in as ${c.user.tag}`);
+  log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-client.on(Events.MessageCreate, (message) => {
+client.on(Events.MessageCreate, async (message) => {
   if (!isMessageInForumChannel(message.channel)) return;
-
-  // TODO: upsert message in db
-  console.log("new message", message.content);
+  try {
+    await createOrUpdateMessage(message);
+    log("Created a new message in post %s", message.channelId);
+  } catch (err) {
+    console.error("Failed to create message:", err);
+  }
 });
 
-client.on(Events.MessageUpdate, (_, newMessage) => {
+client.on(Events.MessageUpdate, async (_, newMessage) => {
   if (!isMessageInForumChannel(newMessage.channel)) return;
-
-  // TODO: upsert message in db
-  console.log("updated message", newMessage.content);
+  try {
+    const message = await newMessage.fetch();
+    await createOrUpdateMessage(message);
+    log("Updated a message in post %s", message.channelId);
+  } catch (err) {
+    console.error("Failed to update message:", err);
+  }
 });
 
-client.on(Events.ThreadCreate, (thread) => {
+client.on(Events.ThreadCreate, async (thread) => {
   if (!isThreadInForumChannel(thread)) return;
-
-  // TODO: upsert thread in db
-  console.log("created thread", thread.name);
+  try {
+    await createOrUpdatePost(thread);
+    log("Created a new post (%s)", thread.id);
+  } catch (err) {
+    console.error("Failed to create thread:", err);
+  }
 });
 
-client.on(Events.ThreadUpdate, (thread) => {
-  if (!isThreadInForumChannel(thread)) return;
-
-  // TODO: upsert thread in db
-  console.log("updated thread", thread.name);
+client.on(Events.ThreadUpdate, async (_, newThread) => {
+  if (!isThreadInForumChannel(newThread)) return;
+  try {
+    await createOrUpdatePost(newThread);
+    log("Updated a post (%s)", newThread.id);
+  } catch (err) {
+    console.error("Failed to update thread:", err);
+  }
 });
 
 client.login(env.DISCORD_BOT_TOKEN);

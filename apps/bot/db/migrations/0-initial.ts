@@ -17,8 +17,8 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("title", "text", (col) => col.notNull())
     .addColumn("isLocked", "boolean", (col) => col.notNull())
     .addColumn("createdAt", "datetime", (col) => col.notNull())
-    .addColumn("updatedAt", "datetime", (col) => col.notNull())
-    .addColumn("userId", SnowflakeDataType, (col) => col.notNull())
+    .addColumn("editedAt", "datetime")
+    .addColumn("userId", SnowflakeDataType)
     .execute();
 
   await db.schema
@@ -31,16 +31,23 @@ export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable("messages")
     .addColumn("id", SnowflakeDataType, (col) => col.primaryKey())
-    .addColumn("content", "text")
+    .addColumn("content", "text", (col) => col.notNull())
     .addColumn("createdAt", "datetime", (col) => col.notNull())
-    .addColumn("updatedAt", "datetime", (col) => col.notNull())
+    .addColumn("editedAt", "datetime")
     .addColumn("userId", SnowflakeDataType, (col) => col.notNull())
+    .addColumn("postId", SnowflakeDataType, (col) => col.notNull())
     .execute();
 
   await db.schema
     .createIndex("messages_userId_idx")
     .on("messages")
     .column("userId")
+    .execute();
+
+  await db.schema
+    .createIndex("messages_postId_idx")
+    .on("messages")
+    .column("postId")
     .execute();
 }
 

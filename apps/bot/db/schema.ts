@@ -1,9 +1,10 @@
 export interface Messages {
   id: string;
-  content: string | null;
+  content: string;
   createdAt: Date;
-  updatedAt: Date;
+  editedAt: Date | null;
   userId: string;
+  postId: string;
 }
 
 export interface Posts {
@@ -11,8 +12,8 @@ export interface Posts {
   title: string;
   isLocked: number;
   createdAt: Date;
-  updatedAt: Date;
-  userId: string;
+  editedAt: Date | null;
+  userId: string | null;
 }
 
 export interface Users {

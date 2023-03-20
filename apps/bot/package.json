@@ -4,14 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_OPTIONS='--loader ts-node/esm' nodemon index.ts",
-    "build": "yarn db-codegen && tsc",
+    "dev": "DEBUG=discord NODE_OPTIONS='--loader ts-node/esm' nodemon index.ts",
+    "build": "tsc",
     "start": "node build/index.js",
     "migrate": "NODE_OPTIONS='--loader ts-node/esm' ts-node ./db/migrate.ts",
     "migrate:down": "MIGRATE_OP=down NODE_OPTIONS='--loader ts-node/esm' ts-node ./db/migrate.ts",
-    "db-codegen": "kysely-codegen --dialect mysql --out-file ./db/schema.ts"
+    "db-codegen": "kysely-codegen --dialect mysql --out-file ./db/schema.ts",
+    "nuke-db": "yarn migrate:down && yarn migrate && yarn db-codegen"
   },
   "dependencies": {
+    "debug": "^4.3.4",
     "discord.js": "^14.8.0",
     "dotenv": "^16.0.3",
     "kysely": "^0.23.5",
@@ -19,6 +21,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.7",
     "@types/node": "^18.15.3",
     "eslint": "^8.36.0",
     "eslint-config-custom": "*",
