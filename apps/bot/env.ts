@@ -2,6 +2,9 @@ import dotenv from "dotenv";
 import { z, ZodError } from "zod";
 
 const envVars = z.object({
+  NODE_ENV: z
+    .union([z.literal("development"), z.literal("production")])
+    .default("production"),
   DISCORD_BOT_TOKEN: z.string(),
   FORUM_CHANNEL_ID: z.string(),
   DATABASE_URL: z.string(),

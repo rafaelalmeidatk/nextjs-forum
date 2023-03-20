@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "DEBUG=discord NODE_OPTIONS='--loader ts-node/esm' nodemon index.ts",
+    "dev": "NODE_ENV=development NODE_OPTIONS='--loader ts-node/esm' nodemon index.ts",
     "build": "tsc",
     "start": "node build/index.js",
     "migrate": "NODE_OPTIONS='--loader ts-node/esm' ts-node ./db/migrate.ts",

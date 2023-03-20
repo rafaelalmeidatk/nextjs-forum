@@ -1,7 +1,13 @@
 import { AnyThreadChannel } from "discord.js";
 import { db } from "../connection.js";
+import { syncUser } from "./users.js";
 
-export const createOrUpdatePost = (thread: AnyThreadChannel) => {
+export const syncPost = async (thread: AnyThreadChannel) => {
+  if (thread.ownerId) {
+    const owner = await thread.client.users.fetch(thread.ownerId);
+    await syncUser(owner);
+  }
+
   const now = new Date();
   return db
     .insertInto("posts")

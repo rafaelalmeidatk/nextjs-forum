@@ -20,6 +20,7 @@ export interface Users {
   id: string;
   username: string;
   discriminator: string;
+  avatarUrl: string;
 }
 
 export interface DB {

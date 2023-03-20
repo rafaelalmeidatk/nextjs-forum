@@ -1,7 +1,10 @@
 import { Message } from "discord.js";
 import { db } from "../connection.js";
+import { syncUser } from "./users.js";
 
-export const createOrUpdateMessage = (message: Message) => {
+export const syncMessage = async (message: Message) => {
+  await syncUser(message.author);
+
   return db
     .insertInto("messages")
     .values({

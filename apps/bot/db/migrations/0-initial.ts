@@ -8,6 +8,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("id", SnowflakeDataType, (col) => col.primaryKey())
     .addColumn("username", "varchar(32)", (col) => col.notNull())
     .addColumn("discriminator", "varchar(4)", (col) => col.notNull())
+    .addColumn("avatarUrl", "varchar(2048)", (col) => col.notNull())
     .execute();
 
   // -- Posts
