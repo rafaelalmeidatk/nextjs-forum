@@ -1,6 +1,6 @@
 import { User } from 'discord.js'
 import { baseLog } from '../../log.js'
-import { db } from '../connection.js'
+import { db } from 'db/node'
 
 const log = baseLog.extend('users')
 

@@ -458,6 +458,11 @@
     tiny-glob "^0.2.9"
     tslib "^2.4.0"
 
+"@planetscale/database@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@planetscale/database/-/database-1.6.0.tgz#f0f602e9067acb4023b4468f65dad2d5a6accca2"
+  integrity sha512-eb02567S706Xme/nVwx+EN/wyoHhHBXl1a7+67R/Xm91myEpLn0vZNl58TvLZztBxje4gga16lc8dLt0elNrJA==
+
 "@rushstack/eslint-patch@^1.1.3":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz#8be36a1f66f3265389e90b5f9c9962146758f728"
@@ -968,6 +973,11 @@ damerau-levenshtein@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/damerau-levenshtein/-/damerau-levenshtein-1.0.8.tgz#b43d286ccbd36bc5b2f7ed41caf2d0aba1f8a6e7"
   integrity sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==
+
+date-fns@^2.29.3:
+  version "2.29.3"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.29.3.tgz#27402d2fc67eb442b511b70bbdf98e6411cd68a8"
+  integrity sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==
 
 debug@^3.2.7:
   version "3.2.7"
@@ -2056,6 +2066,13 @@ kysely-codegen@^0.9.0:
     dotenv "^16.0.3"
     micromatch "^4.0.5"
     minimist "^1.2.7"
+
+kysely-planetscale@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/kysely-planetscale/-/kysely-planetscale-1.3.0.tgz#171ddd990006a7cb16d862c50e2ac81060521049"
+  integrity sha512-lAldOF+Yg2raVvRfyXjBqlZ63ONpNZRpfWUK9WrtEdVUIYJxOhbgzihYaRtb4lHVFNyAZyuSCvatEsK7hszcJg==
+  dependencies:
+    date-fns "^2.29.3"
 
 kysely@^0.23.5:
   version "0.23.5"

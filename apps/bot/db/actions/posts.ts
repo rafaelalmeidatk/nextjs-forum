@@ -1,5 +1,5 @@
 import { AnyThreadChannel } from 'discord.js'
-import { db } from '../connection.js'
+import { db } from 'db/node'
 import { syncUser } from './users.js'
 
 export const syncPost = async (thread: AnyThreadChannel) => {

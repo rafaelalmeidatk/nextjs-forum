@@ -2,10 +2,9 @@ import path from 'path'
 import url from 'url'
 import fs from 'fs/promises'
 import { Migrator, FileMigrationProvider } from 'kysely'
-import { env } from '../env.js'
-import { db } from './connection.js'
+import { db } from './node'
 
-const op = env.MIGRATE_OP ?? 'latest'
+const op = process.env.MIGRATE_OP ?? 'latest'
 const dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
 const migrator = new Migrator({

@@ -1,7 +1,7 @@
 import discord, { Events, GatewayIntentBits, Partials } from 'discord.js'
+import { env } from './env.js'
 import { syncMessage } from './db/actions/messages.js'
 import { syncPost } from './db/actions/posts.js'
-import { env } from './env.js'
 import { baseLog } from './log.js'
 import { isMessageInForumChannel, isThreadInForumChannel } from './utils.js'
 

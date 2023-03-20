@@ -1,11 +1,11 @@
 import { Message } from 'discord.js'
-import { db } from '../connection.js'
+import dbNode from 'db/node'
 import { syncUser } from './users.js'
 
 export const syncMessage = async (message: Message) => {
   await syncUser(message.author)
 
-  return db
+  return dbNode
     .insertInto('messages')
     .values({
       id: message.id,
