@@ -4,6 +4,14 @@ const nextConfig = {
     appDir: true,
     serverComponentsExternalPackages: ['mysql2'],
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.discordapp.com',
+      },
+    ],
+  },
   transpilePackages: ['ui'],
 }
 
