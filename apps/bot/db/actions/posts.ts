@@ -1,16 +1,16 @@
-import { AnyThreadChannel } from "discord.js";
-import { db } from "../connection.js";
-import { syncUser } from "./users.js";
+import { AnyThreadChannel } from 'discord.js'
+import { db } from '../connection.js'
+import { syncUser } from './users.js'
 
 export const syncPost = async (thread: AnyThreadChannel) => {
   if (thread.ownerId) {
-    const owner = await thread.client.users.fetch(thread.ownerId);
-    await syncUser(owner);
+    const owner = await thread.client.users.fetch(thread.ownerId)
+    await syncUser(owner)
   }
 
-  const now = new Date();
+  const now = new Date()
   return db
-    .insertInto("posts")
+    .insertInto('posts')
     .values({
       id: thread.id,
       title: thread.name,
@@ -24,5 +24,5 @@ export const syncPost = async (thread: AnyThreadChannel) => {
       editedAt: now,
       isLocked: thread.locked ? 1 : 0,
     })
-    .executeTakeFirst();
-};
+    .executeTakeFirst()
+}

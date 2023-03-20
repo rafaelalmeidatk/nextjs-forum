@@ -1,7 +1,7 @@
-import { Kysely, MysqlDialect } from "kysely";
-import { createPool } from "mysql2";
-import { DB } from "./schema.js";
-import { env } from "../env.js";
+import { Kysely, MysqlDialect } from 'kysely'
+import { createPool } from 'mysql2'
+import { DB } from './schema.js'
+import { env } from '../env.js'
 
 export const db = new Kysely<DB>({
   dialect: new MysqlDialect({
@@ -10,4 +10,4 @@ export const db = new Kysely<DB>({
       uri: env.DATABASE_URL,
     }),
   }),
-});
+})
