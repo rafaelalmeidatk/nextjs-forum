@@ -14,11 +14,11 @@
   },
   "devDependencies": {
     "eslint-config-custom": "*",
-    "prettier": "latest",
-    "turbo": "latest"
+    "prettier": "^2.8.4",
+    "turbo": "^1.8.3"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {},
   "packageManager": "yarn@1.22.19"
