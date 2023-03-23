@@ -1,6 +1,6 @@
 import discord, { Events, GatewayIntentBits, Partials } from 'discord.js'
 import { env } from './env.js'
-import { syncMessage } from './db/actions/messages.js'
+import { deleteMessage, syncMessage } from './db/actions/messages.js'
 import { syncPost } from './db/actions/posts.js'
 import { baseLog } from './log.js'
 import { isMessageInForumChannel, isThreadInForumChannel } from './utils.js'
@@ -36,6 +36,16 @@ client.on(Events.MessageUpdate, async (_, newMessage) => {
     baseLog('Updated a message in post %s', message.channelId)
   } catch (err) {
     console.error('Failed to update message:', err)
+  }
+})
+
+client.on(Events.MessageDelete, async (message) => {
+  if (!isMessageInForumChannel(message.channel)) return
+  try {
+    await deleteMessage(message.id)
+    baseLog('Deleted a message in post %s', message.channelId)
+  } catch (err) {
+    console.error('Failed to delete message:', err)
   }
 })
 

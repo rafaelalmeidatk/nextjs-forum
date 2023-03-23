@@ -21,3 +21,10 @@ export const syncMessage = async (message: Message) => {
     })
     .executeTakeFirst()
 }
+
+export const deleteMessage = async (messageId: string) => {
+  return dbNode
+    .deleteFrom('messages')
+    .where('id', '=', messageId)
+    .executeTakeFirst()
+}
