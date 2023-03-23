@@ -33,7 +33,9 @@ const Home = async () => {
         <div className="mt-2 space-y-2">
           {posts.map((post) => (
             <div key={post.id} className="p-4 border border-gray-50 rounded">
-              <div className="text-lg">{post.title}</div>
+              <div className="text-lg">
+                <a href={`/post/${post.id}`}>{post.title}</a>
+              </div>
               <div className="flex items-center space-x-2">
                 <Image
                   src={post.userAvatar}
