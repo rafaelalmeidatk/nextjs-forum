@@ -8,7 +8,7 @@ export const syncMessage = async (message: Message) => {
   return dbNode
     .insertInto('messages')
     .values({
-      id: message.id,
+      snowflakeId: message.id,
       content: message.content,
       createdAt: message.createdAt,
       editedAt: message.editedAt,
@@ -25,6 +25,6 @@ export const syncMessage = async (message: Message) => {
 export const deleteMessage = async (messageId: string) => {
   return dbNode
     .deleteFrom('messages')
-    .where('id', '=', messageId)
+    .where('snowflakeId', '=', messageId)
     .executeTakeFirst()
 }

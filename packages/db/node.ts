@@ -1,6 +1,6 @@
 import { Kysely, MysqlDialect } from 'kysely'
 import { createPool } from 'mysql2'
-import { DB } from './schema'
+import { DB } from './schema.js'
 
 if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL is not defined')
@@ -16,3 +16,4 @@ export const db = new Kysely<DB>({
 })
 
 export default db
+export { sql } from 'kysely'

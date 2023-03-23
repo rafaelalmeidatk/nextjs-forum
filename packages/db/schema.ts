@@ -1,5 +1,12 @@
+import type { ColumnType } from "kysely";
+
+export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
+  ? ColumnType<S, I | undefined, U>
+  : ColumnType<T, T | undefined, T>;
+
 export interface Messages {
-  id: string;
+  id: Generated<Buffer>;
+  snowflakeId: string;
   content: string;
   createdAt: Date;
   editedAt: Date | null;
@@ -8,7 +15,8 @@ export interface Messages {
 }
 
 export interface Posts {
-  id: string;
+  id: Generated<Buffer>;
+  snowflakeId: string;
   title: string;
   isLocked: number;
   createdAt: Date;
@@ -17,7 +25,8 @@ export interface Posts {
 }
 
 export interface Users {
-  id: string;
+  id: Generated<Buffer>;
+  snowflakeId: string;
   username: string;
   discriminator: string;
   avatarUrl: string;

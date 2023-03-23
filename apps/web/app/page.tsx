@@ -1,13 +1,13 @@
-import { db } from 'db/node'
+import { db, sql } from 'db/node'
 import Image from 'next/image'
 import plur from 'plur'
 
 const getPosts = async () => {
   return await db
     .selectFrom('posts')
-    .innerJoin('users', 'users.id', 'posts.userId')
+    .innerJoin('users', 'users.snowflakeId', 'posts.userId')
     .select([
-      'posts.id',
+      sql<string>`bin_to_uuid(posts.id)`.as('id'),
       'posts.title',
       'users.username',
       'users.avatarUrl as userAvatar',
@@ -15,7 +15,7 @@ const getPosts = async () => {
         eb
           .selectFrom('messages')
           .select(eb.fn.countAll<number>().as('count'))
-          .where('messages.postId', '=', eb.ref('posts.id'))
+          .where('messages.postId', '=', eb.ref('posts.snowflakeId'))
           .as('messagesCount'),
     ])
     .orderBy('createdAt', 'desc')
@@ -32,7 +32,10 @@ const Home = async () => {
         <div className="text-2xl">Posts:</div>
         <div className="mt-2 space-y-2">
           {posts.map((post) => (
-            <div key={post.id} className="p-4 border border-gray-50 rounded">
+            <div
+              key={post.id.toString()}
+              className="p-4 border border-gray-50 rounded"
+            >
               <div className="text-lg">
                 <a href={`/post/${post.id}`}>{post.title}</a>
               </div>

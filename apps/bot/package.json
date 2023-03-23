@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "NODE_ENV=development NODE_OPTIONS='--loader ts-node/esm' nodemon index.ts",
     "build": "tsc",
-    "start": "node build/index.js",
-    "nuke-db": "yarn migrate:down && yarn migrate && yarn db-codegen"
+    "start": "node build/index.js"
   },
   "dependencies": {
     "debug": "^4.3.4",

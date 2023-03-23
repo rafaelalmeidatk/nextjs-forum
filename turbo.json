@@ -3,15 +3,14 @@
   "globalDependencies": ["**/.env.*local"],
   "globalEnv": ["DATABASE_URL"],
   "pipeline": {
+    "nuke-db": { "cache": false },
+    "dev": { "cache": false },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
     "lint": {
       "outputs": []
-    },
-    "dev": {
-      "cache": false
     }
   }
 }

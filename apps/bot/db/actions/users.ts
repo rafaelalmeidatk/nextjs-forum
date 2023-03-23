@@ -15,7 +15,7 @@ export const syncUser = async (user: User) => {
   await db
     .insertInto('users')
     .values({
-      id: user.id,
+      snowflakeId: user.id,
       username: user.username,
       discriminator: user.discriminator,
       avatarUrl: user.displayAvatarURL({ size: 256 }),

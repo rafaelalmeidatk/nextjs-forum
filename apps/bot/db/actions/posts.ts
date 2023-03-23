@@ -12,7 +12,7 @@ export const syncPost = async (thread: AnyThreadChannel) => {
   return db
     .insertInto('posts')
     .values({
-      id: thread.id,
+      snowflakeId: thread.id,
       title: thread.name,
       createdAt: thread.createdAt ?? now,
       editedAt: thread.createdAt ?? now,

@@ -1,8 +1,9 @@
+import './load-env.js'
 import path from 'path'
 import url from 'url'
 import fs from 'fs/promises'
 import { Migrator, FileMigrationProvider } from 'kysely'
-import { db } from './node'
+import { db } from './node.js'
 
 const op = process.env.MIGRATE_OP ?? 'latest'
 const dirname = url.fileURLToPath(new URL('.', import.meta.url))
