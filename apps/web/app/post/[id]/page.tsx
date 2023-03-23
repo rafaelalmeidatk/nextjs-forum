@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation'
 import { db, selectUuid } from 'db/node'
-import Image from 'next/image'
+import { Message } from '../../../components/Message'
+
+import '../../discord-markdown.css'
 
 const getPost = async (snowflakeId: string) => {
   return await db
@@ -49,22 +51,11 @@ const Post = async ({ params }: PostProps) => {
         <div className="text-2xl">{post.title}</div>
         <div className="mt-2 space-y-2">
           {messages.map((message) => (
-            <div
+            <Message
               key={message.id.toString()}
-              className="p-4 border border-gray-50 rounded"
-            >
-              <div className="text-lg">{message.content}</div>
-              <div className="flex items-center space-x-2">
-                <Image
-                  src={post.userAvatar}
-                  alt={`${post.username}'s avatar`}
-                  width={48}
-                  height={48}
-                  className="rounded-full w-5 h-5"
-                />
-                <div className="text-sm">{post.username}</div>
-              </div>
-            </div>
+              id={message.id.toString()}
+              content={message.content}
+            />
           ))}
         </div>
       </div>

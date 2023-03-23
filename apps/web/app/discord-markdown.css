@@ -1,0 +1,7 @@
+.d-emoji {
+  object-fit: contain;
+  width: 22px;
+  height: 22px;
+  vertical-align: bottom;
+  display: inline-block;
+}
