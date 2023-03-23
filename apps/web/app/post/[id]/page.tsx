@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation'
-import { db } from 'db/node'
+import { db, selectUuid } from 'db/node'
 import Image from 'next/image'
 
-const getPost = async (id: string) => {
+const getPost = async (snowflakeId: string) => {
   return await db
     .selectFrom('posts')
-    .innerJoin('users', 'users.id', 'posts.userId')
+    .innerJoin('users', 'users.snowflakeId', 'posts.userId')
     .select([
-      'posts.id',
+      selectUuid('posts.id').as('id'),
       'posts.title',
       'users.username',
       'users.avatarUrl as userAvatar',
@@ -15,17 +15,17 @@ const getPost = async (id: string) => {
         eb
           .selectFrom('messages')
           .select(eb.fn.countAll<number>().as('count'))
-          .where('messages.postId', '=', eb.ref('posts.id'))
+          .where('messages.postId', '=', eb.ref('posts.snowflakeId'))
           .as('messagesCount'),
     ])
-    .where('posts.id', '=', id)
+    .where('posts.snowflakeId', '=', snowflakeId)
     .executeTakeFirst()
 }
 
 const getMessages = async (postId: string) => {
   return await db
     .selectFrom('messages')
-    .selectAll()
+    .select([selectUuid('id').as('id'), 'content'])
     .where('postId', '=', postId)
     .execute()
 }
@@ -49,7 +49,10 @@ const Post = async ({ params }: PostProps) => {
         <div className="text-2xl">{post.title}</div>
         <div className="mt-2 space-y-2">
           {messages.map((message) => (
-            <div key={post.id} className="p-4 border border-gray-50 rounded">
+            <div
+              key={message.id.toString()}
+              className="p-4 border border-gray-50 rounded"
+            >
               <div className="text-lg">{message.content}</div>
               <div className="flex items-center space-x-2">
                 <Image

@@ -1,4 +1,4 @@
-import { db, sql } from 'db/node'
+import { db, selectUuid } from 'db/node'
 import Image from 'next/image'
 import plur from 'plur'
 
@@ -7,7 +7,8 @@ const getPosts = async () => {
     .selectFrom('posts')
     .innerJoin('users', 'users.snowflakeId', 'posts.userId')
     .select([
-      sql<string>`bin_to_uuid(posts.id)`.as('id'),
+      selectUuid('posts.id').as('id'),
+      'posts.snowflakeId',
       'posts.title',
       'users.username',
       'users.avatarUrl as userAvatar',
@@ -37,7 +38,7 @@ const Home = async () => {
               className="p-4 border border-gray-50 rounded"
             >
               <div className="text-lg">
-                <a href={`/post/${post.id}`}>{post.title}</a>
+                <a href={`/post/${post.snowflakeId}`}>{post.title}</a>
               </div>
               <div className="flex items-center space-x-2">
                 <Image
