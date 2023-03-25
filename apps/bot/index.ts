@@ -1,7 +1,7 @@
 import discord, { Events, GatewayIntentBits, Partials } from 'discord.js'
 import { env } from './env.js'
 import { deleteMessage, syncMessage } from './db/actions/messages.js'
-import { syncPost } from './db/actions/posts.js'
+import { deletePost, syncPost } from './db/actions/posts.js'
 import { baseLog } from './log.js'
 import { isMessageInForumChannel, isThreadInForumChannel } from './utils.js'
 
@@ -67,6 +67,16 @@ client.on(Events.ThreadUpdate, async (_, newThread) => {
     baseLog('Updated a post (%s)', newThread.id)
   } catch (err) {
     console.error('Failed to update thread:', err)
+  }
+})
+
+client.on(Events.ThreadDelete, async (thread) => {
+  if (!isThreadInForumChannel(thread)) return
+  try {
+    await deletePost(thread.id)
+    baseLog('Deleted a post (%s)', thread.id)
+  } catch (err) {
+    console.error('Failed to delete thread:', err)
   }
 })
 

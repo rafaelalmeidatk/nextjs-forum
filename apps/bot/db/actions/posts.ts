@@ -26,3 +26,8 @@ export const syncPost = async (thread: AnyThreadChannel) => {
     })
     .executeTakeFirst()
 }
+
+export const deletePost = async (postId: string) => {
+  await db.deleteFrom('posts').where('snowflakeId', '=', postId).execute()
+  await db.deleteFrom('messages').where('postId', '=', postId).execute()
+}
