@@ -21,6 +21,7 @@ export interface Messages {
   editedAt: Date | null;
   userId: string;
   postId: string;
+  replyToMessageId: string | null;
 }
 
 export interface Posts {

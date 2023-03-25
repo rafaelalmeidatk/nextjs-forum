@@ -14,6 +14,7 @@ export const syncMessage = async (message: Message) => {
       editedAt: message.editedAt,
       userId: message.author.id,
       postId: message.channelId,
+      replyToMessageId: message.reference?.messageId,
     })
     .onDuplicateKeyUpdate({
       content: message.content,
