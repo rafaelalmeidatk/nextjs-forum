@@ -46,8 +46,12 @@ export const syncMessage = async (message: Message) => {
 }
 
 export const deleteMessage = async (messageId: string) => {
-  return db
+  await db
     .deleteFrom('messages')
     .where('snowflakeId', '=', messageId)
     .executeTakeFirst()
+  await db
+    .deleteFrom('attachments')
+    .where('messageId', '=', messageId)
+    .execute()
 }
