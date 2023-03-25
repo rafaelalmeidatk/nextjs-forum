@@ -29,6 +29,7 @@ client.on(Events.MessageCreate, async (message) => {
 })
 
 client.on(Events.MessageUpdate, async (_, newMessage) => {
+  console.log('message updated')
   if (!isMessageInForumChannel(newMessage.channel)) return
   try {
     const message = await newMessage.fetch()

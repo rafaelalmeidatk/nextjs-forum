@@ -4,6 +4,15 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 
+export interface Attachments {
+  id: Generated<Buffer>;
+  snowflakeId: string;
+  url: string;
+  name: string;
+  contentType: string | null;
+  messageId: string;
+}
+
 export interface Messages {
   id: Generated<Buffer>;
   snowflakeId: string;
@@ -33,6 +42,7 @@ export interface Users {
 }
 
 export interface DB {
+  attachments: Attachments;
   messages: Messages;
   posts: Posts;
   users: Users;

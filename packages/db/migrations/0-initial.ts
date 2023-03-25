@@ -78,9 +78,34 @@ export async function up(db: Kysely<any>): Promise<void> {
     .on('messages')
     .column('postId')
     .execute()
+
+  // -- Attachments
+  await db.schema
+    .createTable('attachments')
+    .addColumn('id', UuidDataType, uuidColumnBuilder)
+    .addColumn('snowflakeId', SnowflakeDataType, (col) =>
+      col.notNull().unique()
+    )
+    .addColumn('url', 'varchar(2048)', (col) => col.notNull())
+    .addColumn('name', 'varchar(256)', (col) => col.notNull())
+    .addColumn('contentType', 'varchar(50)')
+    .addColumn('messageId', SnowflakeDataType, (col) => col.notNull())
+    .execute()
+
+  await db.schema
+    .createIndex('attachments_snowflakeId_idx')
+    .on('attachments')
+    .column('snowflakeId')
+    .execute()
+  await db.schema
+    .createIndex('attachments_messageId_idx')
+    .on('attachments')
+    .column('messageId')
+    .execute()
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
+  await db.schema.dropTable('attachments').execute()
   await db.schema.dropTable('messages').execute()
   await db.schema.dropTable('posts').execute()
   await db.schema.dropTable('users').execute()

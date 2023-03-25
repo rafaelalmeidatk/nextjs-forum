@@ -19,5 +19,4 @@ export const selectUuid = <SE extends SelectExpression<DB, keyof DB>>(
   selection: SE
 ) => sql<string>`bin_to_uuid(${sql.ref(selection.toString())})`
 
-export default db
 export { sql } from 'kysely'

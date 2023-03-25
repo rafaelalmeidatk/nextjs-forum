@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
-import { db, selectUuid } from 'db/node'
-import { Message } from '../../../components/Message'
+import { db, selectUuid, sql } from 'db/node'
+import { Attachment, Message } from '../../../components/Message'
 
 import '../../discord-markdown.css'
 
@@ -27,8 +27,27 @@ const getPost = async (snowflakeId: string) => {
 const getMessages = async (postId: string) => {
   return await db
     .selectFrom('messages')
-    .select([selectUuid('id').as('id'), 'content'])
+    .select([
+      selectUuid('messages.id').as('id'),
+      'messages.content',
+      sql<Attachment[]>`
+        if(
+          count(attachments.id) > 0,
+          json_arrayagg(
+            json_object(
+              'id', ${selectUuid('attachments.id')},
+              'url', attachments.url,
+              'name', attachments.name,
+              'contentType', attachments.contentType
+            )
+          ),
+          json_array()
+        )
+      `.as('attachments'),
+    ])
     .where('postId', '=', postId)
+    .leftJoin('attachments', 'attachments.messageId', 'messages.snowflakeId')
+    .groupBy('messages.id')
     .execute()
 }
 
@@ -55,6 +74,7 @@ const Post = async ({ params }: PostProps) => {
               key={message.id.toString()}
               id={message.id.toString()}
               content={message.content}
+              attachments={message.attachments}
             />
           ))}
         </div>

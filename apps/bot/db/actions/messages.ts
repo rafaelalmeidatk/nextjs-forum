@@ -1,11 +1,11 @@
 import { Message } from 'discord.js'
-import dbNode from 'db/node'
+import { db } from 'db/node'
 import { syncUser } from './users.js'
 
 export const syncMessage = async (message: Message) => {
   await syncUser(message.author)
 
-  return dbNode
+  await db
     .insertInto('messages')
     .values({
       snowflakeId: message.id,
@@ -20,10 +20,32 @@ export const syncMessage = async (message: Message) => {
       editedAt: message.editedAt,
     })
     .executeTakeFirst()
+
+  if (message.attachments.size === 0) return
+
+  await db.transaction().execute(async (trx) => {
+    await trx
+      .deleteFrom('attachments')
+      .where('messageId', '=', message.id)
+      .execute()
+
+    await trx
+      .insertInto('attachments')
+      .values(
+        Array.from(message.attachments.values()).map((attachment) => ({
+          snowflakeId: attachment.id,
+          url: attachment.url,
+          name: attachment.name,
+          contentType: attachment.contentType,
+          messageId: message.id,
+        }))
+      )
+      .execute()
+  })
 }
 
 export const deleteMessage = async (messageId: string) => {
-  return dbNode
+  return db
     .deleteFrom('messages')
     .where('snowflakeId', '=', messageId)
     .executeTakeFirst()
