@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { db, selectUuid, sql } from 'db/node'
-import { Attachment, Message } from '../../../components/Message'
+import { Attachment, Message } from '../../../components/message'
 
 import '../../discord-markdown.css'
 
@@ -11,6 +11,7 @@ const getPost = async (snowflakeId: string) => {
     .select([
       selectUuid('posts.id').as('id'),
       'posts.title',
+      'posts.createdAt',
       'users.username',
       'users.avatarUrl as userAvatar',
       (eb) =>
@@ -30,6 +31,7 @@ const getMessages = async (postId: string) => {
     .select([
       selectUuid('messages.id').as('id'),
       'messages.content',
+      'messages.createdAt',
       sql<Attachment[]>`
         if(
           count(attachments.id) > 0,
@@ -64,7 +66,7 @@ const Post = async ({ params }: PostProps) => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-4xl">Next.js Discord Forum</h1>
       <div className="mt-4">
         <div className="text-2xl">{post.title}</div>
