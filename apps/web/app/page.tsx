@@ -1,7 +1,4 @@
 import { db, selectUuid } from 'db/node'
-import Image from 'next/image'
-import plur from 'plur'
-import { CheckCircleSolidIcon } from '../components/icons/check-circle-solid'
 import { Post } from '../components/post'
 import { LayoutWithSidebar } from '../components/layout-with-sidebar'
 
@@ -21,6 +18,7 @@ const getPosts = async () => {
           .selectFrom('messages')
           .select(eb.fn.countAll<number>().as('count'))
           .where('messages.postId', '=', eb.ref('posts.snowflakeId'))
+          .where('messages.snowflakeId', '!=', eb.ref('posts.snowflakeId'))
           .as('messagesCount'),
     ])
     .orderBy('createdAt', 'desc')
