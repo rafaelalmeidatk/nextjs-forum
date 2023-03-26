@@ -1,6 +1,6 @@
 import plur from 'plur'
 import { DateTime } from 'luxon'
-import { formatPostDate } from '../utils/datetime'
+import { buildPostTimeValues, formatPostDate } from '../utils/datetime'
 
 type PostProps = {
   id: string
@@ -22,17 +22,7 @@ export const Post = ({
   hasAnswer,
   author,
 }: PostProps) => {
-  const createdAtDateTime = DateTime.fromJSDate(createdAt)
-  const createdAtText = formatPostDate(createdAtDateTime)
-  const createdAtTooltip = createdAtDateTime.toLocaleString({
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    timeZoneName: 'short',
-  })
+  const createdAtTimes = buildPostTimeValues(createdAt)
   const borderColor = hasAnswer ? 'border-green-700' : 'border-neutral-700'
 
   return (
@@ -52,8 +42,8 @@ export const Post = ({
         />
         <div className="text-sm opacity-90">
           {author.username} asked on{' '}
-          <time dateTime={createdAtDateTime.toISO()} title={createdAtTooltip}>
-            {createdAtText}
+          <time dateTime={createdAtTimes.iso} title={createdAtTimes.tooltip}>
+            {createdAtTimes.text}
           </time>{' '}
           · {messagesCount} {plur('Message', messagesCount)}
           {hasAnswer && (

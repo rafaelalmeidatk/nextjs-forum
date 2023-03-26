@@ -3,6 +3,7 @@ import { db, selectUuid, sql } from 'db/node'
 import { Attachment, Message } from '../../../components/message'
 
 import '../../discord-markdown.css'
+import { LayoutWithSidebar } from '../../../components/layout-with-sidebar'
 
 const getPost = async (snowflakeId: string) => {
   return await db
@@ -50,6 +51,7 @@ const getMessages = async (postId: string) => {
     .where('postId', '=', postId)
     .leftJoin('attachments', 'attachments.messageId', 'messages.snowflakeId')
     .groupBy('messages.id')
+    .orderBy('messages.createdAt', 'asc')
     .execute()
 }
 
@@ -66,22 +68,22 @@ const Post = async ({ params }: PostProps) => {
   }
 
   return (
-    <div className="container max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-4xl">Next.js Discord Forum</h1>
-      <div className="mt-4">
-        <div className="text-2xl">{post.title}</div>
-        <div className="mt-2 space-y-2">
-          {messages.map((message) => (
-            <Message
-              key={message.id.toString()}
-              id={message.id.toString()}
-              content={message.content}
-              attachments={message.attachments}
-            />
-          ))}
-        </div>
+    <LayoutWithSidebar className="mt-4">
+      <h1 className="mb-4 font-semibold text-3xl">{post.title}</h1>
+      <div className="p-4 border border-neutral-800 rounded space-y-0.5">
+        {messages.map((message, i) => (
+          <Message
+            key={message.id.toString()}
+            id={message.id.toString()}
+            createdAt={message.createdAt}
+            content={message.content}
+            isFirstRow={i === 0}
+            author={{ username: post.username, avatarUrl: post.userAvatar }}
+            attachments={message.attachments}
+          />
+        ))}
       </div>
-    </div>
+    </LayoutWithSidebar>
   )
 }
 
