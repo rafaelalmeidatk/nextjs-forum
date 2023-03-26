@@ -15,11 +15,10 @@ export const LayoutWithSidebar = ({
     <div
       className={twMerge('container max-w-7xl mx-auto px-4 py-8', className)}
     >
-      <div className="flex space-x-8">
-        <div className="flex-1">{children}</div>
-
+      <main className="flex space-x-8">
+        <section className="flex-1">{children}</section>
         <Sidebar />
-      </div>
+      </main>
     </div>
   )
 }

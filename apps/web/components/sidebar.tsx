@@ -2,7 +2,7 @@ import { CheckCircleSolidIcon } from './icons/check-circle-solid'
 
 export const Sidebar = () => {
   return (
-    <div className="w-[300px]">
+    <aside className="w-[300px]">
       <div className="text-lg font-semibold">Most Helpful</div>
 
       <div className="mt-2 grid grid-cols-1 divide-y divide-neutral-800">
@@ -23,6 +23,6 @@ export const Sidebar = () => {
           </div>
         ))}
       </div>
-    </div>
+    </aside>
   )
 }

@@ -30,7 +30,7 @@ export const Message = ({
   return (
     <div className="group">
       <div className="flex">
-        <div className="flex justify-center items-start w-[80px]">
+        <div className="flex justify-center items-start w-[80px] shrink-0">
           {isFirstRow ? (
             <img
               src={author.avatarUrl}

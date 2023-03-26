@@ -5,15 +5,38 @@ import './globals.css'
 import { GitHubIcon } from '../components/icons/github'
 import { NextIcon } from '../components/icons/next'
 import { DiscordIcon } from '../components/icons/discord'
+import { Metadata } from 'next'
+import { getBaseUrl } from '../utils/urls'
 
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
 })
 
-export const metadata = {
-  title: 'Next.js Discord Forum',
+export const metadata: Metadata = {
+  title: {
+    default: 'Next.js Discord Forum',
+    template: '%s | Next.js Discord Forum',
+  },
   description: 'The web version of the Next.js Discord server',
+  alternates: {
+    canonical: getBaseUrl(),
+  },
+  openGraph: {
+    title: {
+      default: 'Next.js Discord Forum',
+      template: '%s | Next.js Discord Forum',
+    },
+    description: 'The web version of the Next.js Discord server',
+    type: 'website',
+    url: 'https://nextjs-forum.vercel.app',
+    siteName: 'Next.js Discord Forum',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Next.js Discord Forum',
+    description: 'The web version of the Next.js Discord server',
+  },
 }
 
 type RootLayoutProps = { children: ReactNode }

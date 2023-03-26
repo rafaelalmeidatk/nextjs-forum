@@ -7,6 +7,9 @@ import '../../discord-markdown.css'
 import { LayoutWithSidebar } from '../../../components/layout-with-sidebar'
 import { groupMessagesByUser } from '../../../utils/group-messages'
 import { MessageGroup } from '../../../components/message-group'
+import { Metadata } from 'next'
+import { truncate } from '../../../utils/truncate'
+import { getCanonicalPostUrl } from '../../../utils/urls'
 
 const getPost = async (snowflakeId: string) => {
   return await db
@@ -95,6 +98,37 @@ const getMessages = async (postId: string) => {
     .groupBy('messages.id')
     .orderBy('messages.createdAt', 'asc')
     .execute()
+}
+
+export const generateMetadata = async ({
+  params,
+}: PostProps): Promise<Metadata> => {
+  const post = await getPost(params.id)
+  const postMessage = await getPostMessage(params.id)
+
+  const title = post?.title
+  const description = truncate(postMessage?.content || '', 230)
+  const url = getCanonicalPostUrl(params.id)
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: 'website',
+      siteName: 'Next.js Discord Forum',
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+    },
+  }
 }
 
 type PostProps = {
