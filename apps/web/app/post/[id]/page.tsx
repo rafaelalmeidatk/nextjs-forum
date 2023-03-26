@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import plur from 'plur'
 import { db, selectUuid, sql } from 'db/node'
 import { Attachment, Message } from '../../../components/message'
 
@@ -25,6 +26,40 @@ const getPost = async (snowflakeId: string) => {
           .as('messagesCount'),
     ])
     .where('posts.snowflakeId', '=', snowflakeId)
+    .executeTakeFirst()
+}
+
+const getPostMessage = async (postId: string) => {
+  return await db
+    .selectFrom('messages')
+    .leftJoin('attachments', 'attachments.messageId', 'messages.snowflakeId')
+    .innerJoin('users', 'users.snowflakeId', 'messages.userId')
+    .select([
+      selectUuid('messages.id').as('id'),
+      'messages.content',
+      'messages.createdAt',
+      selectUuid('users.id').as('authorId'),
+      'users.avatarUrl as authorAvatarUrl',
+      'users.username as authorUsername',
+      sql<Attachment[]>`
+        if(
+          count(attachments.id) > 0,
+          json_arrayagg(
+            json_object(
+              'id', ${selectUuid('attachments.id')},
+              'url', attachments.url,
+              'name', attachments.name,
+              'contentType', attachments.contentType
+            )
+          ),
+          json_array()
+        )
+      `.as('attachments'),
+    ])
+    .where('messages.postId', '=', postId)
+    .where('messages.snowflakeId', '=', postId)
+    .groupBy('messages.id')
+    .orderBy('messages.createdAt', 'asc')
     .executeTakeFirst()
 }
 
@@ -56,6 +91,7 @@ const getMessages = async (postId: string) => {
       `.as('attachments'),
     ])
     .where('postId', '=', postId)
+    .where('messages.snowflakeId', '!=', postId)
     .groupBy('messages.id')
     .orderBy('messages.createdAt', 'asc')
     .execute()
@@ -72,8 +108,8 @@ const Post = async ({ params }: PostProps) => {
   }
 
   const messages = await getMessages(params.id)
-  const postMessage = messages[0]
-  const groupedMessages = groupMessagesByUser(messages.slice(1))
+  const postMessage = await getPostMessage(params.id)
+  const groupedMessages = groupMessagesByUser(messages)
 
   return (
     <LayoutWithSidebar className="mt-4">
@@ -89,22 +125,28 @@ const Post = async ({ params }: PostProps) => {
 
       <div className="mt-4">
         <MessageGroup>
-          <Message
-            id={postMessage.id.toString()}
-            createdAt={postMessage.createdAt}
-            content={postMessage.content}
-            isFirstRow
-            author={{
-              username: postMessage.authorUsername,
-              avatarUrl: postMessage.authorAvatarUrl,
-            }}
-            attachments={postMessage.attachments}
-          />
+          {postMessage ? (
+            <Message
+              id={postMessage.id.toString()}
+              createdAt={postMessage.createdAt}
+              content={postMessage.content}
+              isFirstRow
+              author={{
+                username: postMessage.authorUsername,
+                avatarUrl: postMessage.authorAvatarUrl,
+              }}
+              attachments={postMessage.attachments}
+            />
+          ) : (
+            <span className="px-4 opacity-80">
+              Original message was deleted.
+            </span>
+          )}
         </MessageGroup>
       </div>
 
       <h2 className="my-4 text-lg font-semibold">
-        {messages.length - 1} Replies
+        {messages.length} {plur('Reply', messages.length)}
       </h2>
 
       <div className="space-y-2">

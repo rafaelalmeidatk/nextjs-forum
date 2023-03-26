@@ -3,7 +3,11 @@ import { env } from './env.js'
 import { deleteMessage, syncMessage } from './db/actions/messages.js'
 import { deletePost, syncPost } from './db/actions/posts.js'
 import { baseLog } from './log.js'
-import { isMessageInForumChannel, isThreadInForumChannel } from './utils.js'
+import {
+  isMessageInForumChannel,
+  isMessageSupported,
+  isThreadInForumChannel,
+} from './utils.js'
 
 const client = new discord.Client({
   intents: [
@@ -19,7 +23,9 @@ client.once(Events.ClientReady, (c) => {
 })
 
 client.on(Events.MessageCreate, async (message) => {
-  if (!isMessageInForumChannel(message.channel)) return
+  if (!isMessageInForumChannel(message.channel) || !isMessageSupported(message))
+    return
+
   try {
     await syncMessage(message)
     baseLog('Created a new message in post %s', message.channelId)
@@ -29,10 +35,12 @@ client.on(Events.MessageCreate, async (message) => {
 })
 
 client.on(Events.MessageUpdate, async (_, newMessage) => {
-  console.log('message updated')
   if (!isMessageInForumChannel(newMessage.channel)) return
+
   try {
     const message = await newMessage.fetch()
+    if (!isMessageSupported(message)) return
+
     await syncMessage(message)
     baseLog('Updated a message in post %s', message.channelId)
   } catch (err) {
@@ -42,6 +50,7 @@ client.on(Events.MessageUpdate, async (_, newMessage) => {
 
 client.on(Events.MessageDelete, async (message) => {
   if (!isMessageInForumChannel(message.channel)) return
+
   try {
     await deleteMessage(message.id)
     baseLog('Deleted a message in post %s', message.channelId)
@@ -52,6 +61,7 @@ client.on(Events.MessageDelete, async (message) => {
 
 client.on(Events.ThreadCreate, async (thread) => {
   if (!isThreadInForumChannel(thread)) return
+
   try {
     await syncPost(thread)
     baseLog('Created a new post (%s)', thread.id)
@@ -62,6 +72,7 @@ client.on(Events.ThreadCreate, async (thread) => {
 
 client.on(Events.ThreadUpdate, async (_, newThread) => {
   if (!isThreadInForumChannel(newThread)) return
+
   try {
     await syncPost(newThread)
     baseLog('Updated a post (%s)', newThread.id)
@@ -72,6 +83,7 @@ client.on(Events.ThreadUpdate, async (_, newThread) => {
 
 client.on(Events.ThreadDelete, async (thread) => {
   if (!isThreadInForumChannel(thread)) return
+
   try {
     await deletePost(thread.id)
     baseLog('Deleted a post (%s)', thread.id)
