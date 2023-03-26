@@ -24,6 +24,18 @@ export async function up(db: Kysely<any>): Promise<void> {
     .column('snowflakeId')
     .execute()
 
+  // -- Channels
+  await db.schema
+    .createTable('channels')
+    .addColumn('id', UuidDataType, uuidColumnBuilder)
+    .addColumn('snowflakeId', SnowflakeDataType, (col) =>
+      col.notNull().unique()
+    )
+    .addColumn('name', 'varchar(256)', (col) => col.notNull())
+    .addColumn('type', 'int2', (col) => col.notNull())
+    .addColumn('topic', 'text', (col) => col.notNull())
+    .execute()
+
   // -- Posts
   await db.schema
     .createTable('posts')

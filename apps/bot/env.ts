@@ -6,7 +6,7 @@ const envVars = z.object({
     .union([z.literal('development'), z.literal('production')])
     .default('production'),
   DISCORD_BOT_TOKEN: z.string(),
-  FORUM_CHANNEL_ID: z.string(),
+  INDEXABLE_CHANNEL_IDS: z.string().transform((str) => str.split(',')),
   DATABASE_URL: z.string(),
   MIGRATE_OP: z.union([z.literal('latest'), z.literal('down')]).optional(),
 })

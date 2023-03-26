@@ -4,7 +4,11 @@ import { env } from './env.js'
 export const isMessageInForumChannel = (
   channel: Channel
 ): channel is AnyThreadChannel<true> => {
-  return channel.isThread() && channel.parentId === env.FORUM_CHANNEL_ID
+  return (
+    channel.isThread() &&
+    channel.parentId !== null &&
+    env.INDEXABLE_CHANNEL_IDS.includes(channel.parentId)
+  )
 }
 
 export const isMessageSupported = (message: Message) => {
@@ -12,5 +16,8 @@ export const isMessageSupported = (message: Message) => {
 }
 
 export const isThreadInForumChannel = (thread: AnyThreadChannel<true>) => {
-  return thread.parentId === env.FORUM_CHANNEL_ID
+  return (
+    thread.parentId !== null &&
+    env.INDEXABLE_CHANNEL_IDS.includes(thread.parentId)
+  )
 }

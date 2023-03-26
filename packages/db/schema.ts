@@ -13,6 +13,14 @@ export interface Attachments {
   messageId: string;
 }
 
+export interface Channels {
+  id: Generated<Buffer>;
+  snowflakeId: string;
+  name: string;
+  type: number;
+  topic: string;
+}
+
 export interface Messages {
   id: Generated<Buffer>;
   snowflakeId: string;
@@ -44,6 +52,7 @@ export interface Users {
 
 export interface DB {
   attachments: Attachments;
+  channels: Channels;
   messages: Messages;
   posts: Posts;
   users: Users;
