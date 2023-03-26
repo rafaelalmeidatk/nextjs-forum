@@ -9,6 +9,10 @@ export const formatPostDate = (date: DateTime) => {
 export const buildPostTimeValues = (createdAt: Date) => {
   const datetime = DateTime.fromJSDate(createdAt)
   const text = formatPostDate(datetime)
+  const shortText = datetime.toLocaleString({
+    hour: 'numeric',
+    minute: 'numeric',
+  })
   const tooltip = datetime.toLocaleString({
     year: 'numeric',
     month: 'short',
@@ -20,22 +24,5 @@ export const buildPostTimeValues = (createdAt: Date) => {
   })
   const iso = datetime.toISO()
 
-  return { text, tooltip, iso }
-}
-
-export const buildMessageTimeValues = (createdAt: Date) => {
-  const datetime = DateTime.fromJSDate(createdAt)
-  const text = datetime.toLocaleString({ hour: 'numeric', minute: 'numeric' })
-  const tooltip = datetime.toLocaleString({
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    timeZoneName: 'short',
-  })
-  const iso = datetime.toISO()
-
-  return { text, tooltip, iso }
+  return { text, shortText, tooltip, iso }
 }

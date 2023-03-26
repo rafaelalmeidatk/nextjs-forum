@@ -1,5 +1,5 @@
 import { toHTML } from 'discord-markdown'
-import { buildMessageTimeValues, buildPostTimeValues } from '../utils/datetime'
+import { buildPostTimeValues } from '../utils/datetime'
 
 export type Attachment = {
   id: string
@@ -25,12 +25,12 @@ export const Message = ({
   attachments,
 }: MessageProps) => {
   const htmlContent = toHTML(content)
-  const createdAtTimes = buildMessageTimeValues(createdAt)
+  const createdAtTimes = buildPostTimeValues(createdAt)
 
   return (
     <div className="group">
       <div className="flex">
-        <div className="flex items-center w-[80px]">
+        <div className="flex justify-center items-start w-[80px]">
           {isFirstRow ? (
             <img
               src={author.avatarUrl}
@@ -43,13 +43,24 @@ export const Message = ({
               dateTime={createdAtTimes.iso}
               title={createdAtTimes.tooltip}
             >
-              {createdAtTimes.text}
+              {createdAtTimes.shortText}
             </time>
           )}
         </div>
 
         <div>
-          {isFirstRow && <div className="font-semibold">{author.username}</div>}
+          {isFirstRow && (
+            <div className="flex items-center space-x-2">
+              <div className="font-semibold">{author.username}</div>
+              <time
+                className="text-xs opacity-70"
+                dateTime={createdAtTimes.iso}
+                title={createdAtTimes.tooltip}
+              >
+                {createdAtTimes.text}
+              </time>
+            </div>
+          )}
 
           <div
             className="opacity-90"
