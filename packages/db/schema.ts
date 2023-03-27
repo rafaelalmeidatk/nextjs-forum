@@ -40,6 +40,7 @@ export interface Posts {
   createdAt: Date;
   editedAt: Date | null;
   userId: string | null;
+  channelId: string | null;
 }
 
 export interface Users {

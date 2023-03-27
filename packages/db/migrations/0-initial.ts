@@ -48,6 +48,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('createdAt', 'datetime', (col) => col.notNull())
     .addColumn('editedAt', 'datetime')
     .addColumn('userId', SnowflakeDataType)
+    .addColumn('channelId', SnowflakeDataType)
     .execute()
 
   await db.schema
@@ -59,6 +60,11 @@ export async function up(db: Kysely<any>): Promise<void> {
     .createIndex('posts_userId_idx')
     .on('posts')
     .column('userId')
+    .execute()
+  await db.schema
+    .createIndex('posts_channelId_idx')
+    .on('posts')
+    .column('channelId')
     .execute()
 
   // -- Messages

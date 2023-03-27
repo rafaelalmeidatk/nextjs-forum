@@ -12,6 +12,7 @@ export const syncPost = async (thread: AnyThreadChannel) => {
       editedAt: thread.createdAt ?? now,
       isLocked: thread.locked ? 1 : 0,
       userId: thread.ownerId,
+      channelId: thread.parentId,
     })
     .onDuplicateKeyUpdate({
       title: thread.name,

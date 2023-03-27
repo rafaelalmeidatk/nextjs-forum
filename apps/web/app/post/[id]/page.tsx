@@ -15,12 +15,14 @@ const getPost = async (snowflakeId: string) => {
   return await db
     .selectFrom('posts')
     .innerJoin('users', 'users.snowflakeId', 'posts.userId')
+    .innerJoin('channels', 'channels.snowflakeId', 'posts.channelId')
     .select([
       selectUuid('posts.id').as('id'),
       'posts.title',
       'posts.createdAt',
       'users.username',
       'users.avatarUrl as userAvatar',
+      'channels.name as channelName',
       (eb) =>
         eb
           .selectFrom('messages')
@@ -153,7 +155,9 @@ const Post = async ({ params }: PostProps) => {
           <div className="px-2.5 py-1 border rounded-full opacity-60">
             Unanswered
           </div>
-          <div className="">{post.username} posted this in #help-forum</div>
+          <div className="opacity-90">
+            {post.username} posted this in #{post.channelName}
+          </div>
         </div>
       </div>
 
