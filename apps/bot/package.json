@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "NODE_ENV=development NODE_OPTIONS='--loader ts-node/esm' nodemon index.ts",
     "build": "tsc",
-    "start": "node build/index.js"
+    "start": "node build/index.js",
+    "dev:register-commands": "NODE_ENV=development ts-node --esm ./register-commands.ts",
+    "register-commands": "ts-node --esm ./register-commands.ts"
   },
   "dependencies": {
     "debug": "^4.3.4",

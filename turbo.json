@@ -4,6 +4,8 @@
   "globalEnv": ["DATABASE_URL", "NEXT_PUBLIC_VERCEL_URL"],
   "pipeline": {
     "nuke-db": { "cache": false },
+    "register-commands": { "cache": false },
+    "dev:register-commands": { "cache": false },
     "dev": { "cache": false },
     "build": {
       "dependsOn": ["^build"],

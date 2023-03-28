@@ -6,6 +6,8 @@ const envVars = z.object({
     .union([z.literal('development'), z.literal('production')])
     .default('production'),
   DISCORD_BOT_TOKEN: z.string(),
+  DISCORD_CLIENT_ID: z.string(),
+  DEV_GUILD_ID: z.string().optional(),
   INDEXABLE_CHANNEL_IDS: z.string().transform((str) => str.split(',')),
   DATABASE_URL: z.string(),
   MIGRATE_OP: z.union([z.literal('latest'), z.literal('down')]).optional(),

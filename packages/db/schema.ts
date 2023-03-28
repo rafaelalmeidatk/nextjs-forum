@@ -41,6 +41,7 @@ export interface Posts {
   editedAt: Date | null;
   userId: string | null;
   channelId: string | null;
+  answerId: string | null;
 }
 
 export interface Users {

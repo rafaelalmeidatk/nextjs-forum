@@ -8,6 +8,7 @@ import {
   isMessageSupported,
   isThreadInForumChannel,
 } from './utils.js'
+import { contextMenuCommands } from './commands/context/index.js'
 
 const client = new discord.Client({
   intents: [
@@ -89,6 +90,14 @@ client.on(Events.ThreadDelete, async (thread) => {
     baseLog('Deleted a post (%s)', thread.id)
   } catch (err) {
     console.error('Failed to delete thread:', err)
+  }
+})
+
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (interaction.isMessageContextMenuCommand()) {
+    contextMenuCommands
+      .find((c) => c.data.name === interaction.commandName)
+      ?.execute(interaction)
   }
 })
 

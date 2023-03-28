@@ -57,3 +57,14 @@ export const deleteMessage = async (messageId: string) => {
     .where('messageId', '=', messageId)
     .execute()
 }
+
+export const markMessageAsSolution = async (
+  messageId: string,
+  postId: string
+) => {
+  await db
+    .updateTable('posts')
+    .set({ answerId: messageId })
+    .where('snowflakeId', '=', postId)
+    .executeTakeFirst()
+}

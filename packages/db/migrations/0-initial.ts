@@ -49,6 +49,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('editedAt', 'datetime')
     .addColumn('userId', SnowflakeDataType)
     .addColumn('channelId', SnowflakeDataType)
+    .addColumn('answerId', SnowflakeDataType)
     .execute()
 
   await db.schema
@@ -132,5 +133,6 @@ export async function down(db: Kysely<any>): Promise<void> {
   await db.schema.dropTable('attachments').execute()
   await db.schema.dropTable('messages').execute()
   await db.schema.dropTable('posts').execute()
+  await db.schema.dropTable('channels').execute()
   await db.schema.dropTable('users').execute()
 }
