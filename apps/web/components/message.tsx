@@ -66,6 +66,7 @@ export const Message = ({
             className="opacity-90"
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
+
           <div className="mt-0.5 w-full max-w-[550px] space-y-1">
             {attachments.map((attachment) => (
               <div

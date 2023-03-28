@@ -20,6 +20,7 @@ const getPost = async (snowflakeId: string) => {
       selectUuid('posts.id').as('id'),
       'posts.title',
       'posts.createdAt',
+      'posts.answerId',
       'users.username',
       'users.avatarUrl as userAvatar',
       'channels.name as channelName',
@@ -75,6 +76,7 @@ const getMessages = async (postId: string) => {
     .innerJoin('users', 'users.snowflakeId', 'messages.userId')
     .select([
       selectUuid('messages.id').as('id'),
+      'messages.snowflakeId',
       'messages.content',
       'messages.createdAt',
       selectUuid('users.id').as('authorId'),
@@ -145,16 +147,24 @@ const Post = async ({ params }: PostProps) => {
 
   const messages = await getMessages(params.id)
   const postMessage = await getPostMessage(params.id)
-  const groupedMessages = groupMessagesByUser(messages)
+  const groupedMessages = groupMessagesByUser(messages, post.answerId)
+  const hasAnswer =
+    post.answerId && messages.some((m) => m.snowflakeId === post.answerId)
 
   return (
     <LayoutWithSidebar className="mt-4">
       <div>
         <h1 className="mb-4 font-semibold text-3xl">{post.title}</h1>
         <div className="flex items-center space-x-2">
-          <div className="px-2.5 py-1 border rounded-full opacity-60">
-            Unanswered
-          </div>
+          {hasAnswer ? (
+            <div className="px-2.5 py-1 border border-green-400 text-green-400 rounded-full opacity-60">
+              Answered
+            </div>
+          ) : (
+            <div className="px-2.5 py-1 border rounded-full opacity-60">
+              Unanswered
+            </div>
+          )}
           <div className="opacity-90">
             {post.username} posted this in #{post.channelName}
           </div>
@@ -162,7 +172,7 @@ const Post = async ({ params }: PostProps) => {
       </div>
 
       <div className="mt-4">
-        <MessageGroup>
+        <MessageGroup isAnswer={false}>
           {postMessage ? (
             <Message
               id={postMessage.id.toString()}
@@ -189,7 +199,12 @@ const Post = async ({ params }: PostProps) => {
 
       <div className="space-y-2">
         {groupedMessages.map((group) => (
-          <MessageGroup key={group.id}>
+          <MessageGroup
+            key={group.id}
+            isAnswer={group.messages.some(
+              (m) => m.snowflakeId === post.answerId
+            )}
+          >
             {group.messages.map((message, i) => (
               <Message
                 key={message.id.toString()}

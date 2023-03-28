@@ -1,4 +1,4 @@
-import { db, selectUuid } from 'db/node'
+import { db, selectUuid, sql } from 'db/node'
 import { Post } from '../components/post'
 import { LayoutWithSidebar } from '../components/layout-with-sidebar'
 
@@ -6,6 +6,7 @@ const getPosts = async () => {
   return await db
     .selectFrom('posts')
     .innerJoin('users', 'users.snowflakeId', 'posts.userId')
+    .leftJoin('messages', 'messages.snowflakeId', 'posts.answerId')
     .select([
       selectUuid('posts.id').as('id'),
       'posts.snowflakeId',
@@ -13,6 +14,7 @@ const getPosts = async () => {
       'posts.createdAt',
       'users.username',
       'users.avatarUrl as userAvatar',
+      sql<number>`if (messages.id is null, 0, 1)`.as('hasAnswer'),
       (eb) =>
         eb
           .selectFrom('messages')
@@ -59,7 +61,7 @@ const Home = async () => {
               title={post.title}
               createdAt={post.createdAt}
               messagesCount={post.messagesCount}
-              hasAnswer={post.messagesCount > 2}
+              hasAnswer={post.hasAnswer === 1}
               author={{ avatar: post.userAvatar, username: post.username }}
             />
           ))}
