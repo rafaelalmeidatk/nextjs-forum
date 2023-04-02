@@ -1,6 +1,5 @@
 import { db, selectUuid, sql } from 'db/node'
 import { Post } from '@/components/post'
-import { LayoutWithSidebar } from '@/components/layout-with-sidebar'
 import { notFound } from 'next/navigation'
 import { ArrowLeftIcon } from '@/components/icons/arrow-left'
 import { PaginationLink } from '@/components/pagination-link'
@@ -91,59 +90,37 @@ const PaginationPage = async ({ params }: PaginationPageProps) => {
 
   return (
     <>
-      <div className="py-12 border-b border-neutral-800 bg-gradient-to-t from-neutral-900 to-neutral-800">
-        <div className="container max-w-7xl mx-auto flex items-center">
-          <div className="flex-1 flex flex-col space-y-4">
-            <h2 className="font-semibold text-5xl max-w-2xl leading-[1.1]">
-              The Next.js Discord server indexed in the web
-            </h2>
-            <a
-              href="https://nextjs.org/discord"
-              target="_blank"
-              rel="noopener"
-              className="text-xl"
-            >
-              Join the server ➔
-            </a>
-          </div>
-
-          <div className="bg-slate-900 w-[200px] h-[200px]" />
-        </div>
+      <div className="space-y-2">
+        {postsToRender.map((post) => (
+          <Post
+            key={post.id.toString()}
+            id={post.snowflakeId}
+            title={post.title}
+            createdAt={post.createdAt}
+            messagesCount={post.messagesCount}
+            hasAnswer={post.hasAnswer === 1}
+            author={{ avatar: post.userAvatar, username: post.username }}
+          />
+        ))}
       </div>
-
-      <LayoutWithSidebar>
-        <div className="space-y-2">
-          {postsToRender.map((post) => (
-            <Post
-              key={post.id.toString()}
-              id={post.snowflakeId}
-              title={post.title}
-              createdAt={post.createdAt}
-              messagesCount={post.messagesCount}
-              hasAnswer={post.hasAnswer === 1}
-              author={{ avatar: post.userAvatar, username: post.username }}
-            />
-          ))}
-        </div>
-        <div className="mt-4 flex space-x-4 justify-center">
-          {hasPreviousPage && (
-            <PaginationLink
-              href={`/page/${page - 1}`}
-              iconLeft={<ArrowLeftIcon size={4} />}
-            >
-              Previous
-            </PaginationLink>
-          )}
-          {hasNextPage && (
-            <PaginationLink
-              href={`/page/${page + 1}`}
-              iconRight={<ArrowRightIcon size={4} />}
-            >
-              Next
-            </PaginationLink>
-          )}
-        </div>
-      </LayoutWithSidebar>
+      <div className="mt-4 flex space-x-4 justify-center">
+        {hasPreviousPage && (
+          <PaginationLink
+            href={`/page/${page - 1}`}
+            iconLeft={<ArrowLeftIcon size={4} />}
+          >
+            Previous
+          </PaginationLink>
+        )}
+        {hasNextPage && (
+          <PaginationLink
+            href={`/page/${page + 1}`}
+            iconRight={<ArrowRightIcon size={4} />}
+          >
+            Next
+          </PaginationLink>
+        )}
+      </div>
     </>
   )
 }
