@@ -1,5 +1,5 @@
 import { AnyThreadChannel } from 'discord.js'
-import { db } from 'db/node'
+import { db } from '@nextjs-discord-forum/db/node'
 
 export const syncPost = async (thread: AnyThreadChannel) => {
   const now = new Date()

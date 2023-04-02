@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import plur from 'plur'
-import { db, selectUuid, sql } from 'db/node'
+import { db, selectUuid, sql } from '@nextjs-discord-forum/db/node'
 import { Attachment, Message } from '../../../components/message'
 
 import '../../discord-markdown.css'

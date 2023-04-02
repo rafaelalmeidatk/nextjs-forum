@@ -9,6 +9,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "start": "turbo run start",
     "lint": "turbo run lint",
     "nuke-db": "turbo run nuke-db",
     "register-commands": "turbo run register-commands",
@@ -16,7 +17,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "eslint-config-custom": "*",
+    "@nextjs-discord-forum/eslint-config-custom": "*",
     "prettier": "^2.8.4",
     "turbo": "^1.8.6"
   },

@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "NODE_ENV=development NODE_OPTIONS='--loader ts-node/esm' nodemon index.ts",
-    "build": "tsc",
-    "start": "node build/index.js",
+    "build": "tsc --build",
+    "start": "NODE_ENV=production node build/index.js",
     "dev:register-commands": "NODE_ENV=development ts-node --esm ./register-commands.ts",
     "register-commands": "ts-node --esm ./register-commands.ts"
   },
@@ -17,13 +17,14 @@
     "kysely": "^0.23.5",
     "lru-cache": "^8.0.4",
     "mysql2": "^3.2.0",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "@nextjs-discord-forum/db": "*"
   },
   "devDependencies": {
     "@types/debug": "^4.1.7",
     "@types/node": "^18.15.3",
     "eslint": "^8.36.0",
-    "eslint-config-custom": "*",
+    "@nextjs-discord-forum/eslint-config-custom": "*",
     "kysely-codegen": "^0.9.0",
     "nodemon": "^2.0.21",
     "ts-node": "^10.9.1",

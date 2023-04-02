@@ -1,6 +1,6 @@
 import { User } from 'discord.js'
 import { baseLog } from '../../log.js'
-import { db } from 'db/node'
+import { db } from '@nextjs-discord-forum/db/node'
 import { usersCache } from '../../lib/cache.js'
 
 const log = baseLog.extend('users')

@@ -7,9 +7,10 @@
     "register-commands": { "cache": false },
     "dev:register-commands": { "cache": false },
     "dev": { "cache": false },
+    "start": { "cache": false },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["build/**", ".next/**"]
     },
     "lint": {
       "outputs": []

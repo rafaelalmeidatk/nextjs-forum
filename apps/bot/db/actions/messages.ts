@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { db } from 'db/node'
+import { db } from '@nextjs-discord-forum/db/node'
 import { syncUser } from './users.js'
 import { syncMessageChannel } from './channels.js'
 

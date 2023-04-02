@@ -1,4 +1,4 @@
-import { db, selectUuid } from 'db/node'
+import { db, selectUuid } from '@nextjs-discord-forum/db/node'
 import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
 
 const getMostHelpfulUsers = async () => {

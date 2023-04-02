@@ -1,4 +1,4 @@
-import { db, selectUuid, sql } from 'db/node'
+import { db, selectUuid, sql } from '@nextjs-discord-forum/db/node'
 import { notFound } from 'next/navigation'
 import { ArrowLeftIcon } from '@/components/icons/arrow-left'
 import { ArrowRightIcon } from '@/components/icons/arrow-right'
