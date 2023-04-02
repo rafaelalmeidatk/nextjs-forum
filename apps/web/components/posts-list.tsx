@@ -5,7 +5,7 @@ import { ArrowRightIcon } from '@/components/icons/arrow-right'
 import { PaginationLink } from '@/components/pagination-link'
 import { Post } from '@/components/post'
 
-const POSTS_BY_PAGE = 5
+const POSTS_BY_PAGE = 20
 
 const getPostsByPage = async (pageNumber: number) => {
   const limit = POSTS_BY_PAGE
