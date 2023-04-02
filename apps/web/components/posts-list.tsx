@@ -32,7 +32,8 @@ const getPostsByPage = async (pageNumber: number) => {
           .as('messagesCount'),
     ])
     .orderBy('createdAt', 'desc')
-    // Add one more result so we can know if there's a next page
+    // Add one more result so we can know if there's a next page, not the
+    // prettiest solution but it works great
     .limit(limit + 1)
     .offset(offset)
     .execute()
