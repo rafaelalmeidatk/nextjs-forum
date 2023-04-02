@@ -1,6 +1,6 @@
 import { db, selectUuid, sql } from 'db/node'
-import { Post } from '../components/post'
-import { LayoutWithSidebar } from '../components/layout-with-sidebar'
+import { Post } from '@/components/post'
+import { LayoutWithSidebar } from '@/components/layout-with-sidebar'
 
 const getPosts = async () => {
   return await db
