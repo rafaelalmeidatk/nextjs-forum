@@ -1,5 +1,5 @@
 import { toHTML } from 'discord-markdown'
-import { buildPostTimeValues } from '../utils/datetime'
+import { buildPostTimeValues } from '@/utils/datetime'
 
 export type Attachment = {
   id: string

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { Sidebar } from './sidebar'
+import { Sidebar } from '@/components/sidebar'
 
 type LayoutWithSidebarProps = {
   className?: string

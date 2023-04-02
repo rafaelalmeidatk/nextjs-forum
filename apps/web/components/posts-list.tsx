@@ -1,39 +1,11 @@
 import { db, selectUuid, sql } from 'db/node'
-import { Post } from '@/components/post'
 import { notFound } from 'next/navigation'
 import { ArrowLeftIcon } from '@/components/icons/arrow-left'
-import { PaginationLink } from '@/components/pagination-link'
 import { ArrowRightIcon } from '@/components/icons/arrow-right'
-import { Metadata } from 'next'
-import { getBaseUrl } from '@/utils/urls'
+import { PaginationLink } from '@/components/pagination-link'
+import { Post } from '@/components/post'
 
-export const metadata: Metadata = {
-  title: 'Next.js Discord Forum',
-  description: 'The web version of the Next.js Discord server',
-  // These tags are to avoid indexing the pagination pages -->
-  alternates: {
-    canonical: getBaseUrl(),
-  },
-  robots: {
-    index: false,
-    follow: false,
-  },
-  // <-- End
-  openGraph: {
-    title: 'Next.js Discord Forum',
-    description: 'The web version of the Next.js Discord server',
-    type: 'website',
-    url: 'https://nextjs-forum.vercel.app',
-    siteName: 'Next.js Discord Forum',
-  },
-  twitter: {
-    card: 'summary',
-    title: 'Next.js Discord Forum',
-    description: 'The web version of the Next.js Discord server',
-  },
-}
-
-const POSTS_BY_PAGE = 20
+const POSTS_BY_PAGE = 5
 
 const getPostsByPage = async (pageNumber: number) => {
   const limit = POSTS_BY_PAGE
@@ -60,25 +32,17 @@ const getPostsByPage = async (pageNumber: number) => {
           .as('messagesCount'),
     ])
     .orderBy('createdAt', 'desc')
+    // Add one more result so we can know if there's a next page
     .limit(limit + 1)
     .offset(offset)
     .execute()
 }
 
-type Params = { page: string }
-type PaginationPageProps = { params: Params }
+type PostsListProps = {
+  page: number
+}
 
-const PaginationPage = async ({ params }: PaginationPageProps) => {
-  // Only positive integers
-  if (!/^\d+$/g.test(params.page)) {
-    notFound()
-  }
-
-  const page = parseInt(params.page, 10)
-  if (Number.isNaN(page) || page < 1) {
-    notFound()
-  }
-
+export const PostsList = async ({ page }: PostsListProps) => {
   const posts = await getPostsByPage(page)
   if (posts.length === 0) {
     notFound()
@@ -124,5 +88,3 @@ const PaginationPage = async ({ params }: PaginationPageProps) => {
     </>
   )
 }
-
-export default PaginationPage

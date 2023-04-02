@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { CheckCircleSolidIcon } from './icons/check-circle-solid'
+import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
 
 type MessageGroupProps = { isAnswer: boolean; children: ReactNode }
 

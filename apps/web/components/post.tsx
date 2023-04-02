@@ -1,6 +1,5 @@
 import plur from 'plur'
-import { DateTime } from 'luxon'
-import { buildPostTimeValues, formatPostDate } from '../utils/datetime'
+import { buildPostTimeValues } from '@/utils/datetime'
 
 type PostProps = {
   id: string
