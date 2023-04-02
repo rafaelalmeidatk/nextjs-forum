@@ -10,6 +10,8 @@ const envVars = z.object({
   DEV_GUILD_ID: z.string().optional(),
   INDEXABLE_CHANNEL_IDS: z.string().transform((str) => str.split(',')),
   DATABASE_URL: z.string(),
+  REVALIDATE_SECRET: z.string(),
+  WEB_URL: z.string(),
   MIGRATE_OP: z.union([z.literal('latest'), z.literal('down')]).optional(),
 })
 

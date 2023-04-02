@@ -1,9 +1,10 @@
 import { AnyThreadChannel } from 'discord.js'
 import { db } from '@nextjs-discord-forum/db/node'
+import { revalidateHomePage } from '../../revalidate.js'
 
 export const syncPost = async (thread: AnyThreadChannel) => {
   const now = new Date()
-  return db
+  await db
     .insertInto('posts')
     .values({
       snowflakeId: thread.id,
@@ -20,6 +21,8 @@ export const syncPost = async (thread: AnyThreadChannel) => {
       isLocked: thread.locked ? 1 : 0,
     })
     .executeTakeFirst()
+
+  await revalidateHomePage()
 }
 
 export const deletePost = async (postId: string) => {

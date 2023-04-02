@@ -104,6 +104,11 @@ const getMessages = async (postId: string) => {
     .execute()
 }
 
+// Since we have a lot of messages in a short period for posts, we will only revalidate it
+// at most once every 60 seconds
+export const dynamic = 'error'
+export const revalidate = 60
+
 export const generateMetadata = async ({
   params,
 }: PostProps): Promise<Metadata> => {
