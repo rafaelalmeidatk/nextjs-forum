@@ -15,7 +15,8 @@
     "plur": "^5.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwind-merge": "^1.10.0"
+    "tailwind-merge": "^1.10.0",
+    "@nextjs-discord-forum/db": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
