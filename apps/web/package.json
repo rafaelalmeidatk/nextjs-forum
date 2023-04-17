@@ -9,27 +9,27 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nextjs-discord-forum/db": "*",
     "discord-markdown": "^2.5.1",
     "luxon": "^3.3.0",
-    "next": "^13.2.5-canary.18",
+    "next": "^13.3.1-canary.8",
     "plur": "^5.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwind-merge": "^1.10.0",
-    "@nextjs-discord-forum/db": "*"
+    "tailwind-merge": "^1.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
+    "@nextjs-discord-forum/eslint-config-custom": "*",
+    "@nextjs-discord-forum/tsconfig": "*",
     "@types/luxon": "^3.2.0",
     "@types/node": "^18.15.3",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
     "autoprefixer": "^10.4.14",
     "eslint": "8.36.0",
-    "@nextjs-discord-forum/eslint-config-custom": "*",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.7",
-    "@nextjs-discord-forum/tsconfig": "*",
     "typescript": "^5.0.2"
   }
 }
