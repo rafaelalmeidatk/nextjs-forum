@@ -17,7 +17,9 @@ export const LayoutWithSidebar = ({
     >
       <main className="flex space-x-8">
         <section className="flex-1">{children}</section>
-        <Sidebar />
+        <div className="hidden lg:block">
+          <Sidebar />
+        </div>
       </main>
     </div>
   )

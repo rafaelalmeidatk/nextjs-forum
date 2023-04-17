@@ -51,9 +51,14 @@ const RootLayout = ({ children }: RootLayoutProps) => {
               Next.js Discord
             </h1>
 
-            <div>
-              <NextIcon className="w-[90px]" />
-            </div>
+            <a href="/" className="hover:opacity-75">
+              <span className="flex flex-col xs:flex-row xs:space-x-2  xs:items-center">
+                <NextIcon className="w-[90px]" />
+                <span className=" text-2xl font-bold tracking-tighter">
+                  Discord Forum
+                </span>
+              </span>
+            </a>
 
             <div className="flex space-x-5">
               <a
