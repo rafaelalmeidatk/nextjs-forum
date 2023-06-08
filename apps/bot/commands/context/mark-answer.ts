@@ -1,11 +1,17 @@
 import {
   ApplicationCommandType,
   ChannelType,
+  Colors,
   ContextMenuCommandBuilder,
   PermissionFlagsBits,
 } from 'discord.js'
 import { ContextMenuCommand } from '../types.js'
-import { isMessageInForumChannel, isMessageSupported } from '../../utils.js'
+import {
+  isMessageInForumChannel,
+  isMessageSupported,
+  replyWithEmbed,
+  replyWithEmbedError,
+} from '../../utils.js'
 import { markMessageAsSolution } from '../../db/actions/messages.js'
 
 export const command: ContextMenuCommand = {
@@ -21,9 +27,9 @@ export const command: ContextMenuCommand = {
       !isMessageInForumChannel(interaction.channel) ||
       !isMessageSupported(interaction.targetMessage)
     ) {
-      await interaction.reply({
-        ephemeral: true,
-        content: 'This command can only be used in a forum channel',
+      await replyWithEmbedError(interaction, {
+        description:
+          'This command can only be used in a supported forum channel',
       })
 
       return
@@ -31,9 +37,8 @@ export const command: ContextMenuCommand = {
 
     const mainChannel = interaction.channel.parent
     if (!mainChannel) {
-      await interaction.reply({
-        ephemeral: true,
-        content:
+      await replyWithEmbedError(interaction, {
+        description:
           'Could not find the parent channel, please try again later. If this issue persists, contact a staff member',
       })
 
@@ -44,6 +49,29 @@ export const command: ContextMenuCommand = {
       await interaction.reply({
         ephemeral: true,
         content: 'The parent channel is not a forum channel',
+      })
+
+      return
+    }
+
+    const interactionMember = await interaction.guild?.members.fetch(
+      interaction.user
+    )
+    if (!interactionMember) {
+      await replyWithEmbedError(interaction, {
+        description:
+          'Could not find your info in the server, please try again later. If this issue persists, contact a staff member',
+      })
+
+      return
+    }
+
+    if (
+      interaction.channel.ownerId !== interaction.user.id &&
+      !interactionMember.permissions.has(PermissionFlagsBits.ManageMessages)
+    ) {
+      await replyWithEmbedError(interaction, {
+        description: `Only the post author or moderators can mark a message as the answer`,
       })
 
       return
@@ -64,9 +92,19 @@ export const command: ContextMenuCommand = {
       interaction.targetMessage.id,
       interaction.channelId
     )
-    await interaction.reply({
-      content:
-        '✅ This question has been marked as answered! If you have any other questions, feel free to create another post',
+
+    await replyWithEmbed(interaction, {
+      title: '✅ Success!',
+      description:
+        'This question has been marked as answered! If you have any other questions, feel free to create another post',
+      color: Colors.Green,
+      fields: [
+        {
+          name: 'Jump to answer',
+          value: `[Click here](${interaction.targetMessage.url})`,
+          inline: true,
+        },
+      ],
     })
   },
 }
