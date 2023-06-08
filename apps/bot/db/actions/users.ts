@@ -1,7 +1,7 @@
 import { GuildMember, User } from 'discord.js'
 import { baseLog } from '../../log.js'
 import { db } from '@nextjs-discord-forum/db/node'
-import { Faker, en } from '@faker-js/faker'
+import { AnimalModule, Faker, en } from '@faker-js/faker'
 import { usersCache } from '../../lib/cache.js'
 import { env } from '../../env.js'
 
@@ -9,6 +9,18 @@ const log = baseLog.extend('users')
 
 const getDefaultAvatarForNumber = (n: number) =>
   `https://cdn.discordapp.com/embed/avatars/${n}.png`
+
+const allowedAnimalTypes: Array<keyof AnimalModule> = [
+  'bear',
+  'bird',
+  'cat',
+  'crocodilia',
+  'dog',
+  'fish',
+  'insect',
+  'lion',
+  'rabbit',
+]
 
 export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   const isCached = usersCache.get(user.id)
@@ -30,7 +42,11 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     const faker = new Faker({ locale: en })
     faker.seed(user.id.split('').map(Number))
 
-    username = faker.internet.userName()
+    // Generate a hopefully cool animal name because I thought the person names were weird for a Discord app
+    const animalType = faker.helpers.arrayElement(allowedAnimalTypes)
+    const animalName = faker.animal[animalType]()
+
+    username = animalName
     discriminator = faker.string.numeric(4)
     avatarUrl = getDefaultAvatarForNumber(faker.number.int({ min: 0, max: 5 }))
   }
