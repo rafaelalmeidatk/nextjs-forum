@@ -2,16 +2,26 @@ import dotenv from 'dotenv'
 import { z, ZodError } from 'zod'
 
 const envVars = z.object({
+  // Node.js
   NODE_ENV: z
     .union([z.literal('development'), z.literal('production')])
     .default('production'),
+
+  // Discord
   DISCORD_BOT_TOKEN: z.string(),
   DISCORD_CLIENT_ID: z.string(),
   DEV_GUILD_ID: z.string().optional(),
+  PUBLIC_PROFILE_ROLE_ID: z.string().optional(),
   INDEXABLE_CHANNEL_IDS: z.string().transform((str) => str.split(',')),
+
+  // Database
   DATABASE_URL: z.string(),
+
+  // Web
   REVALIDATE_SECRET: z.string(),
   WEB_URL: z.string(),
+
+  // Migrations
   MIGRATE_OP: z.union([z.literal('latest'), z.literal('down')]).optional(),
 })
 

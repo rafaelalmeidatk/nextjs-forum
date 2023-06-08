@@ -4,7 +4,11 @@ import { syncUser } from './users.js'
 import { syncMessageChannel } from './channels.js'
 
 export const syncMessage = async (message: Message) => {
-  await syncUser(message.author)
+  const authorAsGuildMember = await message.guild?.members.fetch(
+    message.author.id
+  )
+
+  await syncUser(message.author, authorAsGuildMember)
   await syncMessageChannel(message.channel)
 
   await db

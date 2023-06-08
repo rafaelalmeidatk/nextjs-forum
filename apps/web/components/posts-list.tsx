@@ -1,5 +1,4 @@
 import { db, selectUuid, sql } from '@nextjs-discord-forum/db/node'
-import { notFound } from 'next/navigation'
 import { ArrowLeftIcon } from '@/components/icons/arrow-left'
 import { ArrowRightIcon } from '@/components/icons/arrow-right'
 import { PaginationLink } from '@/components/pagination-link'
@@ -46,7 +45,7 @@ type PostsListProps = {
 export const PostsList = async ({ page }: PostsListProps) => {
   const posts = await getPostsByPage(page)
   if (posts.length === 0) {
-    notFound()
+    return <div>No posts found yet!</div>
   }
 
   const postsToRender = posts.slice(0, POSTS_BY_PAGE)

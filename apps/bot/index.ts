@@ -9,11 +9,14 @@ import {
   isThreadInForumChannel,
 } from './utils.js'
 import { contextMenuCommands } from './commands/context/index.js'
+import { usersCache } from './lib/cache.js'
+import { syncUser } from './db/actions/users.js'
 
 const client = new discord.Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.MessageContent,
   ],
   partials: [Partials.Message],
@@ -90,6 +93,19 @@ client.on(Events.ThreadDelete, async (thread) => {
     baseLog('Deleted a post (%s)', thread.id)
   } catch (err) {
     console.error('Failed to delete thread:', err)
+  }
+})
+
+client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
+  if (!env.PUBLIC_PROFILE_ROLE_ID) return
+
+  const hadRole = oldMember.roles.cache.has(env.PUBLIC_PROFILE_ROLE_ID)
+  const hasRole = newMember.roles.cache.has(env.PUBLIC_PROFILE_ROLE_ID)
+
+  // If the user changed the public profile role, trigger a resync
+  if ((hadRole && !hasRole) || (!hadRole && hasRole)) {
+    usersCache.delete(newMember.user.id)
+    await syncUser(newMember.user, newMember)
   }
 })
 

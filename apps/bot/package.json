@@ -11,20 +11,21 @@
     "register-commands": "ts-node --esm ./register-commands.ts"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "@nextjs-discord-forum/db": "*",
     "debug": "^4.3.4",
     "discord.js": "^14.8.0",
     "dotenv": "^16.0.3",
     "kysely": "^0.23.5",
     "lru-cache": "^8.0.4",
     "mysql2": "^3.2.0",
-    "zod": "^3.21.4",
-    "@nextjs-discord-forum/db": "*"
+    "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@nextjs-discord-forum/eslint-config-custom": "*",
     "@types/debug": "^4.1.7",
     "@types/node": "^18.15.3",
     "eslint": "^8.36.0",
-    "@nextjs-discord-forum/eslint-config-custom": "*",
     "kysely-codegen": "^0.9.0",
     "nodemon": "^2.0.21",
     "ts-node": "^10.9.1",
