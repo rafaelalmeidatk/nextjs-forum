@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import { Inter } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/react'
 
 import './globals.css'
 import { GitHubIcon } from '../components/icons/github'
@@ -85,6 +86,8 @@ const RootLayout = ({ children }: RootLayoutProps) => {
         </header>
 
         {children}
+
+        <Analytics />
       </body>
     </html>
   )
