@@ -18,7 +18,7 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
               href="https://nextjs.org/discord"
               target="_blank"
               rel="noopener"
-              className="text-xl"
+              className="text-xl w-fit hover:opacity-80 transition-opacity"
             >
               Join the server ➔
             </a>

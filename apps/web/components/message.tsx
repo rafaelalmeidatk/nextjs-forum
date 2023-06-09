@@ -39,7 +39,7 @@ export const Message = ({
             />
           ) : (
             <time
-              className="hidden group-hover:flex w-full justify-end items-center text-xs opacity-70 pr-2 "
+              className="hidden self-center group-hover:flex w-full justify-end items-center text-xs opacity-70 pr-2 "
               dateTime={createdAtTimes.iso}
               title={createdAtTimes.tooltip}
             >
