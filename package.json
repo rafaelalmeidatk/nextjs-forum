@@ -8,8 +8,10 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "build:bot": "turbo run build --filter=bot...",
     "start": "turbo run start",
+    "start:bot": "turbo run start --filter=bot",
+    "dev": "turbo run dev",
     "lint": "turbo run lint",
     "nuke-db": "turbo run nuke-db",
     "register-commands": "turbo run register-commands",
