@@ -1,7 +1,7 @@
 import { PostsList } from '@/components/posts-list'
 
-// We will revalidate the home page when a new post is created
 export const dynamic = 'error'
+export const revalidate = 60
 
 const Home = async () => {
   // @ts-expect-error: async component
