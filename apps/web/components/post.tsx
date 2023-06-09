@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import plur from 'plur'
 import { buildPostTimeValues } from '@/utils/datetime'
 
@@ -26,12 +27,12 @@ export const Post = ({
 
   return (
     <div className={`px-4 py-3 border bg-neutral-800 ${borderColor} rounded`}>
-      <a
+      <Link
         className="inline-block pr-2 text-lg font-semibold hover:opacity-75"
         href={`/post/${id}`}
       >
         {title}
-      </a>
+      </Link>
 
       <div className="mt-2 flex items-center space-x-2">
         <img
