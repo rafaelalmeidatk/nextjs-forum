@@ -18,6 +18,7 @@ const getPost = async (snowflakeId: string) => {
     .innerJoin('channels', 'channels.snowflakeId', 'posts.channelId')
     .select([
       selectUuid('posts.id').as('id'),
+      'posts.snowflakeId',
       'posts.title',
       'posts.createdAt',
       'posts.answerId',
@@ -160,19 +161,33 @@ const Post = async ({ params }: PostProps) => {
     <LayoutWithSidebar className="mt-4">
       <div>
         <h1 className="mb-4 font-semibold text-3xl">{post.title}</h1>
-        <div className="flex items-center space-x-2">
-          {hasAnswer ? (
-            <div className="px-2.5 py-1 border border-green-400 text-green-400 rounded-full opacity-60">
-              Answered
+        <div className="flex items-center space-x-2 justify-between">
+          <div className="flex items-center space-x-2 flex-1 w-0">
+            {hasAnswer ? (
+              <div className="px-2.5 py-1 border border-green-400 text-green-400 rounded-full opacity-60">
+                Answered
+              </div>
+            ) : (
+              <div className="px-2.5 py-1 border rounded-full opacity-60">
+                Unanswered
+              </div>
+            )}
+            <div className="opacity-90 whitespace-nowrap overflow-hidden text-ellipsis">
+              {post.username} posted this in{' '}
+              <span className="opacity-80 font-semibold">
+                #{post.channelName}
+              </span>
             </div>
-          ) : (
-            <div className="px-2.5 py-1 border rounded-full opacity-60">
-              Unanswered
-            </div>
-          )}
-          <div className="opacity-90">
-            {post.username} posted this in #{post.channelName}
           </div>
+
+          <a
+            href={`https://discord.com/channels/752553802359505017/${post.snowflakeId}/${post.snowflakeId}`}
+            className="shrink-0 px-4 py-1.5 font-semibold border-neutral-700 border rounded hover:bg-neutral-700 transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open in Discord
+          </a>
         </div>
       </div>
 
