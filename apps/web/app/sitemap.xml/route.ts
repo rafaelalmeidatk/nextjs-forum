@@ -1,6 +1,9 @@
 import { getBaseUrl } from '@/utils/urls'
 import { db } from '@nextjs-forum/db/node'
 
+// We shouldn't need this but for some reason Next isn't revalidating this route with `revalidatePath`
+export const revalidate = 60
+
 const generateSiteMap = async () => {
   const posts = await db
     .selectFrom('posts')
