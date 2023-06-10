@@ -79,6 +79,16 @@ To invite the bot to your own server, go to the OAuth2 > URL Generator page, sel
 
 Copy the Generated URL and open it in your browser
 
+### Registering Discord commands
+
+To use the context and slash commands you first need to register them in Discord. The easiest way to do that is by running this command:
+
+```sh
+yarn dev:register-commands
+```
+
+Notice the `dev:` prefix in the command. Discord limits how many times you can register commands with their API, but by registering the command in a specific server you can do this as many times as you want. You need the `DEV_GUILD_ID` env var set to use this command
+
 ## Creating the database
 
 This project uses PlanetScale as the DB provider, you can create a free account at https://planetscale.com. To create the database, follow these steps:
