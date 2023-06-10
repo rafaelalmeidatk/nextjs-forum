@@ -15,6 +15,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getBaseUrl()),
   title: {
     default: 'Next.js Discord Forum',
     template: '%s | Next.js Discord Forum',
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     },
     description: 'The web version of the Next.js Discord server',
     type: 'website',
-    url: 'https://nextjs-forum.vercel.app',
+    url: getBaseUrl(),
     siteName: 'Next.js Discord Forum',
   },
   twitter: {
