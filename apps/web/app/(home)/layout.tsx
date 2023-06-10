@@ -1,4 +1,5 @@
 import { LayoutWithSidebar } from '@/components/layout-with-sidebar'
+import Balancer from 'react-wrap-balancer'
 import discordImage from '@/discord.png'
 import Image from 'next/image'
 import { ReactNode } from 'react'
@@ -12,7 +13,9 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
         <div className="container max-w-7xl mx-auto flex items-center">
           <div className="flex-1 flex flex-col px-4 space-y-4 z-10 text-center lg:text-left">
             <h2 className="font-semibold text-5xl lg:max-w-2xl leading-[1.1]">
-              The Next.js Discord server indexed in the web
+              <Balancer ratio={0.75}>
+                The Next.js Discord server indexed in the web
+              </Balancer>
             </h2>
             <a
               href="https://nextjs.org/discord"
