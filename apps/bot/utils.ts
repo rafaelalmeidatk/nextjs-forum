@@ -9,6 +9,8 @@ import {
 } from 'discord.js'
 import { env } from './env.js'
 
+const START_INDEXING_AFTER = 1687285689000
+
 export const isMessageInForumChannel = (
   channel: Channel
 ): channel is AnyThreadChannel<true> => {
@@ -20,7 +22,15 @@ export const isMessageInForumChannel = (
 }
 
 export const isMessageSupported = (message: Message) => {
-  return !message.author.bot && !message.system
+  const isIndexable = message.createdAt.getTime() > START_INDEXING_AFTER
+  return !message.author.bot && !message.system && isIndexable
+}
+
+export const isThreadSupported = (thread: AnyThreadChannel<true>) => {
+  const isIndexable =
+    thread.createdAt !== null &&
+    thread.createdAt.getTime() > START_INDEXING_AFTER
+  return isIndexable
 }
 
 export const isThreadInForumChannel = (thread: AnyThreadChannel<true>) => {

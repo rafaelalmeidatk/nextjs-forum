@@ -7,6 +7,7 @@ import {
   isMessageInForumChannel,
   isMessageSupported,
   isThreadInForumChannel,
+  isThreadSupported,
 } from './utils.js'
 import { contextMenuCommands } from './commands/context/index.js'
 import { usersCache } from './lib/cache.js'
@@ -27,8 +28,12 @@ client.once(Events.ClientReady, (c) => {
 })
 
 client.on(Events.MessageCreate, async (message) => {
-  if (!isMessageInForumChannel(message.channel) || !isMessageSupported(message))
+  if (
+    !isMessageInForumChannel(message.channel) ||
+    !isMessageSupported(message)
+  ) {
     return
+  }
 
   try {
     await syncMessage(message)
@@ -52,10 +57,13 @@ client.on(Events.MessageUpdate, async (_, newMessage) => {
   }
 })
 
-client.on(Events.MessageDelete, async (message) => {
-  if (!isMessageInForumChannel(message.channel)) return
+client.on(Events.MessageDelete, async (partialMessage) => {
+  if (!isMessageInForumChannel(partialMessage.channel)) return
 
   try {
+    const message = await partialMessage.fetch()
+    if (!isMessageSupported(message)) return
+
     await deleteMessage(message.id)
     baseLog('Deleted a message in post %s', message.channelId)
   } catch (err) {
@@ -64,7 +72,7 @@ client.on(Events.MessageDelete, async (message) => {
 })
 
 client.on(Events.ThreadCreate, async (thread) => {
-  if (!isThreadInForumChannel(thread)) return
+  if (!isThreadInForumChannel(thread) || !isThreadSupported(thread)) return
 
   try {
     await syncPost(thread)
@@ -75,7 +83,9 @@ client.on(Events.ThreadCreate, async (thread) => {
 })
 
 client.on(Events.ThreadUpdate, async (_, newThread) => {
-  if (!isThreadInForumChannel(newThread)) return
+  if (!isThreadInForumChannel(newThread) || !isThreadSupported(newThread)) {
+    return
+  }
 
   try {
     await syncPost(newThread)
@@ -86,7 +96,7 @@ client.on(Events.ThreadUpdate, async (_, newThread) => {
 })
 
 client.on(Events.ThreadDelete, async (thread) => {
-  if (!isThreadInForumChannel(thread)) return
+  if (!isThreadInForumChannel(thread) || !isThreadSupported(thread)) return
 
   try {
     await deletePost(thread.id)
