@@ -3,6 +3,8 @@ import { ArrowLeftIcon } from '@/components/icons/arrow-left'
 import { ArrowRightIcon } from '@/components/icons/arrow-right'
 import { PaginationLink } from '@/components/pagination-link'
 import { Post } from '@/components/post'
+import { Inbox } from './icons/inbox'
+import { Balancer } from 'react-wrap-balancer'
 
 const POSTS_BY_PAGE = 20
 
@@ -44,8 +46,18 @@ type PostsListProps = {
 
 export const PostsList = async ({ page }: PostsListProps) => {
   const posts = await getPostsByPage(page)
+
   if (posts.length === 0) {
-    return <div>No posts found yet!</div>
+    return (
+      <div className="flex flex-col space-y-2 items-center justify-center">
+        <Inbox size={14} className="opacity-75" />
+        <div className="text-xl text-center w-full opacity-80">
+          <Balancer>
+            We couldn’t find any posts here, try checking again later
+          </Balancer>
+        </div>
+      </div>
+    )
   }
 
   const postsToRender = posts.slice(0, POSTS_BY_PAGE)

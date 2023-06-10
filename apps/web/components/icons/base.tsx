@@ -12,6 +12,7 @@ const sizes = {
   6: 'w-6 h-6',
   7: 'w-7 h-7',
   8: 'w-8 h-8',
+  14: 'w-14 h-14',
 }
 
 export const IconSvg = ({ size = 6, className, ...props }: IconProps) => {
