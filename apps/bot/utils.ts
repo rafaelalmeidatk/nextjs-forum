@@ -9,7 +9,7 @@ import {
 } from 'discord.js'
 import { env } from './env.js'
 
-const START_INDEXING_AFTER = 1687285689000
+const START_INDEXING_AFTER = 1686438000000
 
 export const isMessageInForumChannel = (
   channel: Channel
