@@ -1,5 +1,5 @@
 import { AnyThreadChannel } from 'discord.js'
-import { db } from '@nextjs-discord-forum/db/node'
+import { db } from '@nextjs-forum/db/node'
 import { revalidateHomePage } from '../../revalidate.js'
 
 export const syncPost = async (thread: AnyThreadChannel) => {

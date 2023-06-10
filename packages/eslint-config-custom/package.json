@@ -1,5 +1,5 @@
 {
-  "name": "@nextjs-discord-forum/eslint-config-custom",
+  "name": "@nextjs-forum/eslint-config-custom",
   "version": "0.0.0",
   "main": "index.js",
   "license": "MIT",

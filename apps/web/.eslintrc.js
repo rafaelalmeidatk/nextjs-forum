@@ -1,4 +1,4 @@
 module.exports = {
   root: true,
-  extends: ['@nextjs-discord-forum/custom'],
+  extends: ['@nextjs-forum/custom'],
 }

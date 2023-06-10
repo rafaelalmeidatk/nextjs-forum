@@ -1,6 +1,6 @@
 import { GuildMember, User } from 'discord.js'
 import { baseLog } from '../../log.js'
-import { db } from '@nextjs-discord-forum/db/node'
+import { db } from '@nextjs-forum/db/node'
 import { AnimalModule, Faker, en } from '@faker-js/faker'
 import { usersCache } from '../../lib/cache.js'
 import { env } from '../../env.js'

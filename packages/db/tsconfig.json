@@ -1,5 +1,5 @@
 {
-  "extends": "@nextjs-discord-forum/tsconfig/node.json",
+  "extends": "@nextjs-forum/tsconfig/node.json",
   "compilerOptions": {
     "composite": true,
     "outDir": "build"

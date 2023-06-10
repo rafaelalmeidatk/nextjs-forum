@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "@nextjs-forum/web",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@nextjs-discord-forum/db": "*",
+    "@nextjs-forum/db": "*",
     "@vercel/analytics": "^1.0.1",
     "discord-markdown": "^2.5.1",
     "luxon": "^3.3.0",
@@ -22,8 +22,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
-    "@nextjs-discord-forum/eslint-config-custom": "*",
-    "@nextjs-discord-forum/tsconfig": "*",
+    "@nextjs-forum/eslint-config-custom": "*",
+    "@nextjs-forum/tsconfig": "*",
     "@types/luxon": "^3.2.0",
     "@types/node": "^18.15.3",
     "@types/react": "^18.0.22",

@@ -1,5 +1,5 @@
 import { getBaseUrl } from '@/utils/urls'
-import { db } from '@nextjs-discord-forum/db/node'
+import { db } from '@nextjs-forum/db/node'
 
 const generateSiteMap = async () => {
   const posts = await db

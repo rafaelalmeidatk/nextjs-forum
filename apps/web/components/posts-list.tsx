@@ -1,4 +1,4 @@
-import { db, selectUuid, sql } from '@nextjs-discord-forum/db/node'
+import { db, selectUuid, sql } from '@nextjs-forum/db/node'
 import { ArrowLeftIcon } from '@/components/icons/arrow-left'
 import { ArrowRightIcon } from '@/components/icons/arrow-right'
 import { PaginationLink } from '@/components/pagination-link'
