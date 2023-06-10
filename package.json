@@ -13,6 +13,7 @@
     "start:bot": "turbo run start --filter=bot",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "migrate": "yarn workspace @nextjs-discord-forum/db migrate",
     "nuke-db": "turbo run nuke-db",
     "register-commands": "turbo run register-commands",
     "dev:register-commands": "turbo run dev:register-commands",

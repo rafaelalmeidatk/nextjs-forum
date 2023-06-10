@@ -34,7 +34,7 @@ results?.forEach((it) => {
 })
 
 if (error) {
-  console.error('failed to migrate')
+  console.error('Failed to migrate:')
   console.error(error)
   process.exit(1)
 }
