@@ -23,6 +23,8 @@ const getMostHelpfulUsers = async () => {
 }
 
 export const MostHelpful = async () => {
+  return null // TODO: reenable this
+
   const users = await getMostHelpfulUsers()
 
   if (users.length === 0) return null
