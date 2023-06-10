@@ -15,7 +15,6 @@ export default async function handler(
 
   try {
     await res.revalidate('/')
-    await res.revalidate('/sitemap.xml')
     res.json({ revalidated: true })
   } catch (err) {
     res.status(500).json({ error: 'Error revalidating' })

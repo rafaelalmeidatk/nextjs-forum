@@ -1,10 +1,17 @@
 import { env } from './env.js'
 
-export const revalidateHomePage = () => {
-  return fetch(`${env.WEB_URL}/api/revalidate-home`, {
+const post = (endpoint: string) => {
+  return fetch(`${env.WEB_URL}${endpoint}`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${env.REVALIDATE_SECRET}`,
     },
   })
+}
+
+export const revalidateHomePage = () => {
+  return Promise.all([
+    post('/api/revalidate-home'),
+    post('/api/revalidate-sitemap'),
+  ])
 }
