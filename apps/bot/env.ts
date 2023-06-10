@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import { z, ZodError } from 'zod'
 
 const envVars = z.object({
-  // Node.js
+  // Node.js (set by the CLI)
   NODE_ENV: z
     .union([z.literal('development'), z.literal('production')])
     .default('production'),
@@ -21,7 +21,7 @@ const envVars = z.object({
   REVALIDATE_SECRET: z.string(),
   WEB_URL: z.string(),
 
-  // Migrations
+  // Migrations (set by the CLI)
   MIGRATE_OP: z.union([z.literal('latest'), z.literal('down')]).optional(),
 })
 
