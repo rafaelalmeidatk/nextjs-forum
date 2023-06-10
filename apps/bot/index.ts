@@ -57,13 +57,10 @@ client.on(Events.MessageUpdate, async (_, newMessage) => {
   }
 })
 
-client.on(Events.MessageDelete, async (partialMessage) => {
-  if (!isMessageInForumChannel(partialMessage.channel)) return
+client.on(Events.MessageDelete, async (message) => {
+  if (!isMessageInForumChannel(message.channel)) return
 
   try {
-    const message = await partialMessage.fetch()
-    if (!isMessageSupported(message)) return
-
     await deleteMessage(message.id)
     baseLog('Deleted a message in post %s', message.channelId)
   } catch (err) {
