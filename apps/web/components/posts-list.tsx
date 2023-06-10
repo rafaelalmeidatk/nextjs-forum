@@ -53,7 +53,7 @@ export const PostsList = async ({ page }: PostsListProps) => {
         <Inbox size={14} className="opacity-75" />
         <div className="text-xl text-center w-full opacity-80">
           <Balancer>
-            We couldn’t find any posts here, try checking again later
+            There are no posts indexed yet! Try checking again later
           </Balancer>
         </div>
       </div>
