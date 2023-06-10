@@ -10,24 +10,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '18'
-        cache: 'yarn'
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          cache: 'yarn'
 
-    - name: Install dependencies
-      run: yarn install --frozen-lockfile
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
-    - name: Deploy Commands
-      run: yarn register-commands
-      env:
-        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-        DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        INDEXABLE_CHANNEL_IDS: ""
-        REVALIDATE_SECRET: ""
-        WEB_URL: ""
+      - name: Build apps
+        run: yarn build
+
+      - name: Deploy Commands
+        run: yarn register-commands
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          INDEXABLE_CHANNEL_IDS: ''
+          REVALIDATE_SECRET: ''
+          WEB_URL: ''
