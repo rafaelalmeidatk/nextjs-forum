@@ -25,6 +25,8 @@ const getMostHelpfulUsers = async () => {
 export const MostHelpful = async () => {
   const users = await getMostHelpfulUsers()
 
+  if (users.length === 0) return null
+
   return (
     <>
       <div className="text-lg font-semibold">Most Helpful</div>
