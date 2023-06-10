@@ -14,7 +14,7 @@
     "@faker-js/faker": "^8.0.2",
     "@nextjs-forum/db": "*",
     "debug": "^4.3.4",
-    "discord.js": "^14.8.0",
+    "discord.js": "^14.11.0",
     "dotenv": "^16.0.3",
     "kysely": "^0.23.5",
     "lru-cache": "^8.0.4",
