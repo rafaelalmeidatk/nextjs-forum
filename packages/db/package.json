@@ -8,7 +8,6 @@
     "migrate": "NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
     "migrate:down": "MIGRATE_OP=down NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
     "db-codegen": "kysely-codegen --dialect mysql --out-file ./schema.ts",
-    "nuke-db": "yarn migrate:down && yarn migrate && yarn db-codegen",
     "lint": "eslint ."
   },
   "exports": {
