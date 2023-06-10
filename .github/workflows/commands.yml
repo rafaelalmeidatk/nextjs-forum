@@ -22,8 +22,8 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build apps
-        run: yarn build
+      - name: Build bot
+        run: yarn build:bot
 
       - name: Deploy Commands
         run: yarn register-commands
