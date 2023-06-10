@@ -1,15 +1,15 @@
+import '../../discord-markdown.css'
+
+import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import plur from 'plur'
 import { db, selectUuid, sql } from '@nextjs-discord-forum/db/node'
-import { Attachment, Message } from '../../../components/message'
-
-import '../../discord-markdown.css'
-import { LayoutWithSidebar } from '../../../components/layout-with-sidebar'
-import { groupMessagesByUser } from '../../../utils/group-messages'
-import { MessageGroup } from '../../../components/message-group'
-import { Metadata } from 'next'
-import { truncate } from '../../../utils/truncate'
-import { getCanonicalPostUrl } from '../../../utils/urls'
+import { Attachment, Message } from '@/components/message'
+import { LayoutWithSidebar } from '@/components/layout-with-sidebar'
+import { groupMessagesByUser } from '@/utils/group-messages'
+import { MessageGroup } from '@/components/message-group'
+import { truncate } from '@/utils/truncate'
+import { getCanonicalPostUrl } from '@/utils/urls'
 
 const getPost = async (snowflakeId: string) => {
   return await db
