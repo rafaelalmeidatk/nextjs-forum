@@ -1,4 +1,9 @@
-import discord, { Events, GatewayIntentBits, Partials } from 'discord.js'
+import discord, {
+  Colors,
+  Events,
+  GatewayIntentBits,
+  Partials,
+} from 'discord.js'
 import { env } from './env.js'
 import { deleteMessage, syncMessage } from './db/actions/messages.js'
 import { deletePost, syncPost } from './db/actions/posts.js'
@@ -74,6 +79,25 @@ client.on(Events.ThreadCreate, async (thread) => {
   try {
     await syncPost(thread)
     baseLog('Created a new post (%s)', thread.id)
+
+    await thread.send({
+      embeds: [
+        {
+          title: 'Post created!',
+          description: `
+          🔎 This post has been indexed in our web forum and will be seen by search engines so other users can find it outside Discord
+
+          🕵️ Your user profile is private by default and won't be visible to users outside Discord, if you want to be visible in the web forum you can add the "Public Profile" role in <id:customize>
+
+          ✅ You can mark a message as the answer for your post with \`Right click -> Apps -> Mark Solution\``,
+          color: Colors.Blurple,
+          image: {
+            url: 'https://cdn.discordapp.com/attachments/1043615796787683408/1117191182133501962/image.png',
+          },
+          url: `${env.WEB_URL}/post/${thread.id}`,
+        },
+      ],
+    })
   } catch (err) {
     console.error('Failed to create thread:', err)
   }
