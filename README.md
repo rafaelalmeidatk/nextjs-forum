@@ -55,8 +55,7 @@ To run both the `web` and `bot` projects at the same time, use the following com
 yarn dev
 ```
 
-> **Info**
-> You don't need to run both projects always at the same time, they can work separately
+> **Note**: You don't need to run both projects always at the same time, they can work separately
 
 ## Creating your own bot instance
 
