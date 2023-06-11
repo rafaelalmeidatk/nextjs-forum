@@ -51,7 +51,9 @@ export const Message = ({
         <div className="flex-1 w-0">
           {isFirstRow && (
             <div className="flex items-center space-x-2">
-              <div className="font-semibold">{author.username}</div>
+              <div className="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
+                {author.username}
+              </div>
               <time
                 className="mt-[1px] text-xs opacity-70"
                 dateTime={createdAtTimes.iso}

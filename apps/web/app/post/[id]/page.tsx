@@ -162,7 +162,7 @@ const Post = async ({ params }: PostProps) => {
       <div>
         <h1 className="mb-4 font-semibold text-3xl">{post.title}</h1>
 
-        <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between ">
+        <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between">
           <div className="flex flex-wrap items-center gap-2">
             {hasAnswer ? (
               <div className="px-2.5 py-1 border border-green-400 text-green-400 rounded-full opacity-60">
