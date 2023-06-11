@@ -5,3 +5,11 @@
   vertical-align: bottom;
   display: inline-block;
 }
+
+.d-link {
+  color: #60a5fa;
+}
+
+.d-link:hover {
+  text-decoration: underline;
+}

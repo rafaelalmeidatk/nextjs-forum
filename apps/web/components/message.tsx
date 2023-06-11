@@ -1,5 +1,5 @@
-import { toHTML } from 'discord-markdown'
 import { buildPostTimeValues } from '@/utils/datetime'
+import { parseDiscordMessage } from '@/utils/discord-markdown'
 
 export type Attachment = {
   id: string
@@ -24,7 +24,7 @@ export const Message = ({
   createdAt,
   attachments,
 }: MessageProps) => {
-  const htmlContent = toHTML(content)
+  const htmlContent = parseDiscordMessage(content)
   const createdAtTimes = buildPostTimeValues(createdAt)
 
   return (
