@@ -30,7 +30,7 @@ export const Message = ({
   return (
     <div className="group">
       <div className="flex">
-        <div className="flex justify-center items-start w-[80px] shrink-0">
+        <div className="flex justify-center items-start w-[60px] sm:w-[80px] shrink-0">
           {isFirstRow ? (
             <img
               src={author.avatarUrl}
@@ -39,7 +39,7 @@ export const Message = ({
             />
           ) : (
             <time
-              className="hidden self-center group-hover:flex w-full justify-end items-center text-xs opacity-70 pr-2 "
+              className="hidden self-center text-center group-hover:flex w-full justify-end items-center text-xs opacity-70 pr-2 "
               dateTime={createdAtTimes.iso}
               title={createdAtTimes.tooltip}
             >
@@ -48,12 +48,14 @@ export const Message = ({
           )}
         </div>
 
-        <div>
+        <div className="flex-1 w-0">
           {isFirstRow && (
             <div className="flex items-center space-x-2">
-              <div className="font-semibold">{author.username}</div>
+              <div className="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
+                {author.username}
+              </div>
               <time
-                className="text-xs opacity-70"
+                className="mt-[1px] text-xs opacity-70"
                 dateTime={createdAtTimes.iso}
                 title={createdAtTimes.tooltip}
               >
@@ -62,8 +64,8 @@ export const Message = ({
             </div>
           )}
 
-          <div
-            className="opacity-90"
+          <p
+            className="opacity-90 break-words"
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
 
