@@ -48,12 +48,12 @@ export const Message = ({
           )}
         </div>
 
-        <div>
+        <div className="flex-1 w-0">
           {isFirstRow && (
             <div className="flex items-center space-x-2">
               <div className="font-semibold">{author.username}</div>
               <time
-                className="text-xs opacity-70"
+                className="mt-[1px] text-xs opacity-70"
                 dateTime={createdAtTimes.iso}
                 title={createdAtTimes.tooltip}
               >
@@ -62,8 +62,8 @@ export const Message = ({
             </div>
           )}
 
-          <div
-            className="opacity-90"
+          <p
+            className="opacity-90 break-words"
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
 
