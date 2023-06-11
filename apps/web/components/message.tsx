@@ -1,17 +1,10 @@
 import { buildPostTimeValues } from '@/utils/datetime'
-import { parseDiscordMessage } from '@/utils/discord-markdown'
 import { DisplayLocalTime } from './local-time'
 import 'highlight.js/styles/github-dark-dimmed.css'
-
-export type Attachment = {
-  id: string
-  url: string
-  name: string
-  contentType: string
-}
+import { Attachment, MessageContent } from './message-content'
 
 type MessageProps = {
-  id: string
+  snowflakeId: string
   content: string
   isFirstRow: boolean
   author: { username: string; avatarUrl: string }
@@ -20,19 +13,19 @@ type MessageProps = {
 }
 
 export const Message = ({
+  snowflakeId,
   content,
   isFirstRow,
   author,
   createdAt,
   attachments,
 }: MessageProps) => {
-  const htmlContent = parseDiscordMessage(content)
   const createdAtTimes = buildPostTimeValues(createdAt)
 
   return (
-    <div className="group">
-      <div className="flex">
-        <div className="flex justify-center items-start w-[60px] sm:w-[80px] shrink-0">
+    <div id={`message-${snowflakeId}`} className="group ">
+      <div className="flex pt-[60px] mt-[-60px]">
+        <div className="flex justify-start items-start w-[50px] sm:w-[60px] shrink-0">
           {isFirstRow ? (
             <img
               src={author.avatarUrl}
@@ -41,7 +34,7 @@ export const Message = ({
             />
           ) : (
             <time
-              className="hidden self-center text-center group-hover:flex w-full justify-end items-center text-xs opacity-70 pr-2 "
+              className="hidden self-center text-center group-hover:flex w-full items-center text-xs opacity-70"
               dateTime={createdAtTimes.iso}
               title={createdAtTimes.tooltip}
             >
@@ -66,25 +59,7 @@ export const Message = ({
             </div>
           )}
 
-          <div
-            className="opacity-90 break-words"
-            dangerouslySetInnerHTML={{ __html: htmlContent }}
-          />
-
-          <div className="mt-0.5 w-full max-w-[550px] space-y-1">
-            {attachments.map((attachment) => (
-              <div
-                key={attachment.id}
-                className="flex max-h-[350px] rounded-lg overflow-hidden"
-              >
-                <img
-                  src={attachment.url}
-                  alt="Image"
-                  className="max-w-full h-auto object-cover"
-                />
-              </div>
-            ))}
-          </div>
+          <MessageContent content={content} attachments={attachments} />
         </div>
       </div>
     </div>

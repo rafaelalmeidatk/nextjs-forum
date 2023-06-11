@@ -6,10 +6,7 @@ export const parseDiscordMessage = (content: string) => {
   const $ = load(html)
 
   // Links
-  $('a')
-    .attr('target', '_blank')
-    .attr('rel', 'noopener nofollow ugc')
-    .addClass('d-link')
+  $('a').attr('target', '_blank').attr('rel', 'noopener nofollow ugc')
 
   // Code blocks
   $('pre:has(code)').addClass('d-code-block')
