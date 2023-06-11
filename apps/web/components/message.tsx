@@ -30,7 +30,7 @@ export const Message = ({
   return (
     <div className="group">
       <div className="flex">
-        <div className="flex justify-center items-start w-[80px] shrink-0">
+        <div className="flex justify-center items-start w-[60px] sm:w-[80px] shrink-0">
           {isFirstRow ? (
             <img
               src={author.avatarUrl}
@@ -39,7 +39,7 @@ export const Message = ({
             />
           ) : (
             <time
-              className="hidden self-center group-hover:flex w-full justify-end items-center text-xs opacity-70 pr-2 "
+              className="hidden self-center text-center group-hover:flex w-full justify-end items-center text-xs opacity-70 pr-2 "
               dateTime={createdAtTimes.iso}
               title={createdAtTimes.tooltip}
             >
