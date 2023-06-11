@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  a {
+    @apply text-blue-400;
+  }
+  a:hover {
+    @apply underline;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}

@@ -53,7 +53,10 @@ const RootLayout = ({ children }: RootLayoutProps) => {
               Next.js Discord
             </h1>
 
-            <a href="/" className="hover:opacity-75">
+            <a
+              href="/"
+              className="hover:opacity-75 text-white hover:no-underline"
+            >
               <span className="flex flex-col xs:flex-row xs:space-x-2  xs:items-center">
                 <NextIcon className="w-[90px]" />
                 <span className=" text-2xl font-bold tracking-tighter">
@@ -68,7 +71,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
                 target="_blank"
                 rel="noopener"
                 aria-label="Discord Server Invite"
-                className="hover:opacity-75"
+                className="hover:opacity-75 text-white"
               >
                 <DiscordIcon size={7} />
               </a>
@@ -78,7 +81,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
                 target="_blank"
                 rel="noopener"
                 aria-label="Github Repository"
-                className="hover:opacity-75"
+                className="hover:opacity-75 text-white"
               >
                 <GitHubIcon size={7} />
               </a>

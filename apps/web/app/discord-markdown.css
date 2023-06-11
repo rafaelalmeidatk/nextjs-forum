@@ -6,14 +6,6 @@
   display: inline-block;
 }
 
-.d-link {
-  color: #60a5fa;
-}
-
-.d-link:hover {
-  text-decoration: underline;
-}
-
 .d-code-block {
   margin-top: 6px;
   border: 1px solid rgba(100, 100, 100, 0.5);

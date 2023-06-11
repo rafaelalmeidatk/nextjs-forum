@@ -4,12 +4,15 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import plur from 'plur'
 import { db, selectUuid, sql } from '@nextjs-forum/db/node'
-import { Attachment, Message } from '@/components/message'
+import { Message } from '@/components/message'
 import { LayoutWithSidebar } from '@/components/layout-with-sidebar'
 import { groupMessagesByUser } from '@/utils/group-messages'
 import { MessageGroup } from '@/components/message-group'
 import { truncate } from '@/utils/truncate'
 import { getCanonicalPostUrl } from '@/utils/urls'
+import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
+import { Attachment, MessageContent } from '@/components/message-content'
+import { ArrowDownIcon } from '@/components/icons/arrow-down'
 
 const getPost = async (snowflakeId: string) => {
   return await db
@@ -153,6 +156,7 @@ const Post = async ({ params }: PostProps) => {
 
   const messages = await getMessages(params.id)
   const postMessage = await getPostMessage(params.id)
+  const answerMessage = messages.find((m) => m.snowflakeId === post.answerId)
   const groupedMessages = groupMessagesByUser(messages, post.answerId)
   const hasAnswer =
     post.answerId && messages.some((m) => m.snowflakeId === post.answerId)
@@ -183,7 +187,7 @@ const Post = async ({ params }: PostProps) => {
 
           <a
             href={`https://discord.com/channels/752553802359505017/${post.snowflakeId}/${post.snowflakeId}`}
-            className="shrink-0 w-fit px-4 py-1.5 font-semibold border-neutral-700 border rounded hover:bg-neutral-700 transition-colors"
+            className="shrink-0 w-fit px-4 py-1.5 font-semibold text-white border-neutral-700 border rounded hover:bg-neutral-700 hover:no-underline transition-colors"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -192,19 +196,19 @@ const Post = async ({ params }: PostProps) => {
         </div>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-4 space-y-1">
         <MessageGroup isAnswer={false}>
           {postMessage ? (
             <Message
-              id={postMessage.id.toString()}
+              snowflakeId={postMessage.id.toString()}
               createdAt={postMessage.createdAt}
               content={postMessage.content}
-              isFirstRow
               author={{
                 username: postMessage.authorUsername,
                 avatarUrl: postMessage.authorAvatarUrl,
               }}
               attachments={postMessage.attachments}
+              isFirstRow
             />
           ) : (
             <span className="px-4 opacity-80">
@@ -212,6 +216,42 @@ const Post = async ({ params }: PostProps) => {
             </span>
           )}
         </MessageGroup>
+
+        {answerMessage && (
+          <div className="p-2 sm:p-3 space-y-1.5 border border-green-400 rounded">
+            <div className="flex space-x-2 items-center text-green-400">
+              <CheckCircleSolidIcon />
+              <div className="text-sm">
+                Answered by{' '}
+                <span className="font-semibold">
+                  {answerMessage.authorUsername}
+                </span>
+              </div>
+            </div>
+
+            <div
+              className="max-h-32 overflow-hidden"
+              style={{
+                WebkitMaskImage:
+                  'linear-gradient(180deg, #000 80%, transparent)',
+                maskImage: 'linear-gradient(180deg, #000 80%, transparent)',
+              }}
+            >
+              <MessageContent
+                content={answerMessage.content}
+                attachments={answerMessage.attachments}
+              />
+            </div>
+
+            <a
+              href={`#message-${answerMessage.snowflakeId}`}
+              className="mt-2 opacity-80 font-semibold text-sm space-x-1"
+            >
+              <span>View full answer</span>
+              <ArrowDownIcon size={4} />
+            </a>
+          </div>
+        )}
       </div>
 
       <h2 className="my-4 text-lg font-semibold">
@@ -229,7 +269,7 @@ const Post = async ({ params }: PostProps) => {
             {group.messages.map((message, i) => (
               <Message
                 key={message.id.toString()}
-                id={message.id.toString()}
+                snowflakeId={message.snowflakeId}
                 createdAt={message.createdAt}
                 content={message.content}
                 isFirstRow={i === 0}

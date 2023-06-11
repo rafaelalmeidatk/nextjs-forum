@@ -21,7 +21,7 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
               href="https://nextjs.org/discord"
               target="_blank"
               rel="noopener"
-              className="mx-auto text-xl w-fit hover:opacity-80 transition-opacity lg:mx-0"
+              className="mx-auto text-xl text-white w-fit hover:opacity-80 hover:no-underline transition-opacity lg:mx-0"
             >
               Join the server ➔
             </a>
