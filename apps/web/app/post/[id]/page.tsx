@@ -222,7 +222,10 @@ const Post = async ({ params }: PostProps) => {
             <div className="flex space-x-2 items-center text-green-400">
               <CheckCircleSolidIcon />
               <div className="text-sm">
-                Answered by <span className="font-semibold">rafael</span>
+                Answered by{' '}
+                <span className="font-semibold">
+                  {answerMessage.authorUsername}
+                </span>
               </div>
             </div>
 
