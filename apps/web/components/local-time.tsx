@@ -8,9 +8,14 @@ type LocalTime = {
   shortText: string
 }
 
-function useLocalTime(date: Date) {
+function useLocalTime(dateStr: string) {
   const [localTime, setLocalTime] = useState<LocalTime | null>(null)
-  useEffect(() => setLocalTime(buildPostTimeValues(date)), [date])
+
+  useEffect(() => {
+    const date = new Date(dateStr)
+    setLocalTime(buildPostTimeValues(date))
+  }, [dateStr])
+
   return localTime
 }
 
@@ -21,7 +26,7 @@ export const DisplayLocalTime = ({
   short?: boolean
   dateStr: string
 }) => {
-  const localTime = useLocalTime(new Date(dateStr))
+  const localTime = useLocalTime(dateStr)
   if (!localTime) return <span className="invisible">{dateStr}</span>
   return (
     <span className="visible">
