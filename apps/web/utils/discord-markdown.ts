@@ -5,11 +5,14 @@ export const parseDiscordMessage = (content: string) => {
   const html = toHTML(content)
   const $ = load(html)
 
-  // Add the necessary attributes to the links
+  // Links
   $('a')
     .attr('target', '_blank')
     .attr('rel', 'noopener nofollow ugc')
-    .attr('class', 'd-link')
+    .addClass('d-link')
+
+  // Code blocks
+  $('pre:has(code)').addClass('d-code-block')
 
   return $('body').html() ?? ''
 }

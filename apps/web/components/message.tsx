@@ -1,5 +1,6 @@
 import { buildPostTimeValues } from '@/utils/datetime'
 import { parseDiscordMessage } from '@/utils/discord-markdown'
+import 'highlight.js/styles/github-dark-dimmed.css'
 
 export type Attachment = {
   id: string
