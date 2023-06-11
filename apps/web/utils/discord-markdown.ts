@@ -14,5 +14,8 @@ export const parseDiscordMessage = (content: string) => {
   // Code blocks
   $('pre:has(code)').addClass('d-code-block')
 
+  // Inline code
+  $('code:not(pre *)').addClass('d-code-inline')
+
   return $('body').html() ?? ''
 }
