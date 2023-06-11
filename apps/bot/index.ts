@@ -89,7 +89,8 @@ client.on(Events.ThreadCreate, async (thread) => {
 
           🕵️ Your user profile is private by default and won't be visible to users outside Discord, if you want to be visible in the web forum you can add the "Public Profile" role in <id:customize>
 
-          ✅ You can mark a message as the answer for your post with \`Right click -> Apps -> Mark Solution\``,
+          ✅ You can mark a message as the answer for your post with \`Right click -> Apps -> Mark Solution\`
+          (if you don't see the option, try refreshing Discord with Ctrl + R)`,
           color: Colors.Blurple,
           image: {
             url: 'https://cdn.discordapp.com/attachments/1043615796787683408/1117191182133501962/image.png',
