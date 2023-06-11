@@ -28,7 +28,7 @@ export const Post = ({
   return (
     <div className={`px-4 py-3 border bg-neutral-800 ${borderColor} rounded`}>
       <Link
-        className="inline-block pr-2 text-lg font-semibold hover:opacity-75"
+        className="text-white inline-block pr-2 text-lg font-semibold hover:opacity-75 hover:no-underline"
         href={`/post/${id}`}
       >
         {title}
