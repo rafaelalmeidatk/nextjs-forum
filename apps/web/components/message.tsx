@@ -1,5 +1,6 @@
 import { buildPostTimeValues } from '@/utils/datetime'
 import { parseDiscordMessage } from '@/utils/discord-markdown'
+import { DisplayLocalTime } from './local-time'
 import 'highlight.js/styles/github-dark-dimmed.css'
 
 export type Attachment = {
@@ -44,7 +45,7 @@ export const Message = ({
               dateTime={createdAtTimes.iso}
               title={createdAtTimes.tooltip}
             >
-              {createdAtTimes.shortText}
+              <DisplayLocalTime short dateStr={createdAt.toISOString()} />
             </time>
           )}
         </div>
@@ -60,7 +61,7 @@ export const Message = ({
                 dateTime={createdAtTimes.iso}
                 title={createdAtTimes.tooltip}
               >
-                {createdAtTimes.text}
+                <DisplayLocalTime dateStr={createdAt.toISOString()} />
               </time>
             </div>
           )}
