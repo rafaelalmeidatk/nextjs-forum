@@ -13,6 +13,7 @@
     "@vercel/analytics": "^1.0.1",
     "cheerio": "^1.0.0-rc.12",
     "discord-markdown": "^2.5.1",
+    "highlight.js": "^11.8.0",
     "luxon": "^3.3.0",
     "next": "13.4.5-canary.6",
     "plur": "^5.1.0",

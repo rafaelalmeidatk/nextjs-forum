@@ -1,5 +1,6 @@
 import { buildPostTimeValues } from '@/utils/datetime'
 import { parseDiscordMessage } from '@/utils/discord-markdown'
+import 'highlight.js/styles/github-dark-dimmed.css'
 
 export type Attachment = {
   id: string
@@ -64,7 +65,7 @@ export const Message = ({
             </div>
           )}
 
-          <p
+          <div
             className="opacity-90 break-words"
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
