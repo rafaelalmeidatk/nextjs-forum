@@ -64,7 +64,7 @@ export const Message = ({
             </div>
           )}
 
-          <p
+          <div
             className="opacity-90 break-words"
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
