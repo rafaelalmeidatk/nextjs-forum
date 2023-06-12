@@ -2,6 +2,7 @@ import { Message } from 'discord.js'
 import { db } from '@nextjs-forum/db/node'
 import { syncUser } from './users.js'
 import { syncMessageChannel } from './channels.js'
+import { parseMessageContent } from '../../lib/message-parser.js'
 
 export const syncMessage = async (message: Message) => {
   const authorAsGuildMember = await message.guild?.members.fetch(
@@ -11,11 +12,13 @@ export const syncMessage = async (message: Message) => {
   await syncUser(message.author, authorAsGuildMember)
   await syncMessageChannel(message.channel)
 
+  const content = await parseMessageContent(message)
+
   await db
     .insertInto('messages')
     .values({
       snowflakeId: message.id,
-      content: message.content,
+      content,
       createdAt: message.createdAt,
       editedAt: message.editedAt,
       userId: message.author.id,
@@ -23,7 +26,7 @@ export const syncMessage = async (message: Message) => {
       replyToMessageId: message.reference?.messageId,
     })
     .onDuplicateKeyUpdate({
-      content: message.content,
+      content,
       editedAt: message.editedAt,
     })
     .executeTakeFirst()

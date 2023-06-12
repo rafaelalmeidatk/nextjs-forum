@@ -71,3 +71,11 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   log('Synced user (%s)', user.id)
   usersCache.set(user.id, true)
 }
+
+export const getUserById = async (id: string) => {
+  return db
+    .selectFrom('users')
+    .select('username')
+    .where('snowflakeId', '=', id)
+    .executeTakeFirst()
+}
