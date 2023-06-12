@@ -38,7 +38,7 @@ export const Post = ({
             alt={`${author.username}'s avatar`}
             className="rounded-full w-5 h-5"
           />
-          <div className="text-sm opacity-90">
+          <div className="text-sm opacity-90 no-underline">
             {author.username} asked on{' '}
             <time dateTime={createdAtTimes.iso} title={createdAtTimes.tooltip}>
               {createdAtTimes.text}
