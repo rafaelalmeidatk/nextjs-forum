@@ -24,7 +24,7 @@ export const Message = ({
 
   return (
     <div id={`message-${snowflakeId}`} className="group ">
-      <div className="flex pt-16 -mt-16 pointer-events-none [&>*]:pointer-events-auto">
+      <div className="flex flex-row items-start pointer-events-none [&>*]:pointer-events-auto">
         <div className="flex justify-start items-start w-[50px] sm:w-[60px] shrink-0">
           {isFirstRow ? (
             <img
