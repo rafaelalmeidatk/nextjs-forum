@@ -14,13 +14,11 @@ export const syncMessage = async (message: Message) => {
     syncMessageChannel(message.channel),
   ])
 
-  const content = await parseMessageContent(message)
-
   await db
     .insertInto('messages')
     .values({
       snowflakeId: message.id,
-      content,
+      content: message.content,
       createdAt: message.createdAt,
       editedAt: message.editedAt,
       userId: message.author.id,
@@ -28,7 +26,7 @@ export const syncMessage = async (message: Message) => {
       replyToMessageId: message.reference?.messageId,
     })
     .onDuplicateKeyUpdate({
-      content,
+      content: message.content,
       editedAt: message.editedAt,
     })
     .executeTakeFirst()
