@@ -13,26 +13,36 @@ export const syncMessageChannel = async (messageChannel: Channel) => {
   if (
     mainChannel.type !== ChannelType.GuildForum &&
     mainChannel.type !== ChannelType.GuildText
-  )
+  ) {
     return
+  }
 
-  const isCached = channelsCache.get(mainChannel.id)
+  await syncChannel(mainChannel)
+}
+
+export const syncChannel = async (channel: Channel) => {
+  const isCached = channelsCache.get(channel.id)
   if (isCached) return
+
+  const isGuildBasedChannel = 'guild' in channel
+  if (!isGuildBasedChannel) return
+
+  const topic = 'topic' in channel ? channel.topic : null
 
   await db
     .insertInto('channels')
     .values({
-      snowflakeId: mainChannel.id,
-      name: mainChannel.name,
-      type: mainChannel.type,
-      topic: mainChannel.topic ?? '',
+      snowflakeId: channel.id,
+      name: channel.name,
+      type: channel.type,
+      topic: topic ?? '',
     })
     .onDuplicateKeyUpdate({
-      name: mainChannel.name,
-      topic: mainChannel.topic ?? '',
+      name: channel.name,
+      topic: topic ?? '',
     })
     .executeTakeFirst()
 
-  log('Synced channel (#%s)', mainChannel.name)
-  channelsCache.set(mainChannel.id, true)
+  log('Synced channel (#%s)', channel.name)
+  channelsCache.set(channel.id, true)
 }
