@@ -28,3 +28,7 @@
   background: rgba(100, 100, 100, 0.4);
   border-radius: 4px;
 }
+
+.d-mention {
+  @apply px-0.5 text-white bg-[#7f8aff40] rounded font-medium;
+}
