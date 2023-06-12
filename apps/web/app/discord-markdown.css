@@ -27,6 +27,7 @@
   font-size: 85%;
   background: rgba(100, 100, 100, 0.4);
   border-radius: 4px;
+  white-space: pre-wrap;
 }
 
 .d-mention {
