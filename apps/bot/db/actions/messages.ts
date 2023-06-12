@@ -9,8 +9,10 @@ export const syncMessage = async (message: Message) => {
     message.author.id
   )
 
-  await syncUser(message.author, authorAsGuildMember)
-  await syncMessageChannel(message.channel)
+  await Promise.all([
+    syncUser(message.author, authorAsGuildMember),
+    syncMessageChannel(message.channel),
+  ])
 
   const content = await parseMessageContent(message)
 
