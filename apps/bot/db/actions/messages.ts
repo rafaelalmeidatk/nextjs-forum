@@ -1,8 +1,7 @@
-import { Message } from 'discord.js'
+import { Collection, Message } from 'discord.js'
 import { db } from '@nextjs-forum/db/node'
 import { syncUser } from './users.js'
-import { syncMessageChannel } from './channels.js'
-import { parseMessageContent } from '../../lib/message-parser.js'
+import { syncChannel, syncMessageChannel } from './channels.js'
 
 export const syncMessage = async (message: Message) => {
   const authorAsGuildMember = await message.guild?.members.fetch(
@@ -12,15 +11,17 @@ export const syncMessage = async (message: Message) => {
   await Promise.all([
     syncUser(message.author, authorAsGuildMember),
     syncMessageChannel(message.channel),
+    ...message.mentions.channels.mapValues((c) => syncChannel(c)),
+    ...(message.mentions.members
+      ? message.mentions.members.mapValues((m) => syncUser(m.user, m))
+      : []),
   ])
-
-  const content = await parseMessageContent(message)
 
   await db
     .insertInto('messages')
     .values({
       snowflakeId: message.id,
-      content,
+      content: message.content,
       createdAt: message.createdAt,
       editedAt: message.editedAt,
       userId: message.author.id,
@@ -28,13 +29,14 @@ export const syncMessage = async (message: Message) => {
       replyToMessageId: message.reference?.messageId,
     })
     .onDuplicateKeyUpdate({
-      content,
+      content: message.content,
       editedAt: message.editedAt,
     })
     .executeTakeFirst()
 
   if (message.attachments.size === 0) return
 
+  // Replace attachments
   await db.transaction().execute(async (trx) => {
     await trx
       .deleteFrom('attachments')

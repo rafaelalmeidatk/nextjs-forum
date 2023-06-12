@@ -12,11 +12,11 @@ type MessageContentProps = {
   attachments: Attachment[]
 }
 
-export const MessageContent = ({
+export const MessageContent = async ({
   content,
   attachments,
 }: MessageContentProps) => {
-  const htmlContent = parseDiscordMessage(content)
+  const htmlContent = await parseDiscordMessage(content)
 
   return (
     <>

@@ -59,6 +59,7 @@ export const Message = ({
             </div>
           )}
 
+          {/* @ts-expect-error: async component */}
           <MessageContent content={content} attachments={attachments} />
         </div>
       </div>

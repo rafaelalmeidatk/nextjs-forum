@@ -237,6 +237,7 @@ const Post = async ({ params }: PostProps) => {
                 maskImage: 'linear-gradient(180deg, #000 80%, transparent)',
               }}
             >
+              {/* @ts-expect-error: async component */}
               <MessageContent
                 content={answerMessage.content}
                 attachments={answerMessage.attachments}
