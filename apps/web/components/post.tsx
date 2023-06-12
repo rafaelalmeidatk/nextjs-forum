@@ -26,9 +26,9 @@ export const Post = ({
   const borderColor = hasAnswer ? 'border-green-700' : 'border-neutral-700'
 
   return (
-    <Link href={`/post/${id}`} className='mb-[4px]'>
+    <Link href={`/post/${id}`} className='block text-white no-underline'>
       <div className={`px-4 py-3 border bg-neutral-800 ${borderColor} rounded hover:opacity-75`}>
-        <p className="text-white inline-block pr-2 text-lg font-semibold hover:opacity-75">
+        <p className="text-white inline-block pr-2 text-lg font-semibold">
           {title}
         </p>
 
