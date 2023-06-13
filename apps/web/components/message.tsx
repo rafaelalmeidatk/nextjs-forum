@@ -2,12 +2,13 @@ import { buildPostTimeValues } from '@/utils/datetime'
 import { DisplayLocalTime } from './local-time'
 import 'highlight.js/styles/github-dark-dimmed.css'
 import { Attachment, MessageContent } from './message-content'
+import { IncognitoIcon } from './icons/incognito'
 
 type MessageProps = {
   snowflakeId: string
   content: string
   isFirstRow: boolean
-  author: { username: string; avatarUrl: string }
+  author: { username: string; avatarUrl: string, isPublic: boolean }
   createdAt: Date
   attachments: Attachment[]
 }
@@ -48,6 +49,11 @@ export const Message = ({
             <div className="flex items-center space-x-2">
               <div className="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
                 {author.username}
+                {!author.isPublic && 
+                  <i title="User's profile isn't public">
+                    <IncognitoIcon className='pl-1'/>
+                  </i>
+                }
               </div>
               <time
                 className="mt-[1px] text-xs opacity-70"
