@@ -26,6 +26,7 @@ const getPost = async (snowflakeId: string) => {
       'posts.createdAt',
       'posts.answerId',
       'users.username',
+      'users.isPublic as userIsPublic',
       'users.avatarUrl as userAvatar',
       'channels.name as channelName',
       (eb) =>
@@ -51,6 +52,7 @@ const getPostMessage = async (postId: string) => {
       selectUuid('users.id').as('authorId'),
       'users.avatarUrl as authorAvatarUrl',
       'users.username as authorUsername',
+      'users.isPublic as userIsPublic',
       sql<Attachment[]>`
         if(
           count(attachments.id) > 0,
@@ -86,6 +88,7 @@ const getMessages = async (postId: string) => {
       selectUuid('users.id').as('authorId'),
       'users.avatarUrl as authorAvatarUrl',
       'users.username as authorUsername',
+      'users.isPublic as userIsPublic',
       sql<Attachment[]>`
         if(
           count(attachments.id) > 0,
@@ -206,6 +209,7 @@ const Post = async ({ params }: PostProps) => {
               author={{
                 username: postMessage.authorUsername,
                 avatarUrl: postMessage.authorAvatarUrl,
+                isPublic: postMessage.userIsPublic == 1,
               }}
               attachments={postMessage.attachments}
               isFirstRow
@@ -277,6 +281,7 @@ const Post = async ({ params }: PostProps) => {
                 author={{
                   username: message.authorUsername,
                   avatarUrl: message.authorAvatarUrl,
+                  isPublic: message.userIsPublic == 1,
                 }}
                 attachments={message.attachments}
               />
