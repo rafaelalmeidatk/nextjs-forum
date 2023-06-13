@@ -79,3 +79,13 @@ export const markMessageAsSolution = async (
     .where('snowflakeId', '=', postId)
     .executeTakeFirst()
 }
+
+export const getInstructionsMessageId = async (postId: string) => {
+  return (
+    await db
+      .selectFrom('posts')
+      .select('instructionsMessageId')
+      .where('snowflakeId', '=', postId)
+      .executeTakeFirst()
+  )?.instructionsMessageId
+}

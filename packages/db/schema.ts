@@ -42,6 +42,7 @@ export interface Posts {
   userId: string | null;
   channelId: string | null;
   answerId: string | null;
+  instructionsMessageId: string | null;
 }
 
 export interface Users {

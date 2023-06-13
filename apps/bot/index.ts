@@ -1,12 +1,13 @@
-import discord, {
+import {
   Colors,
   Events,
   GatewayIntentBits,
   Partials,
+  Client
 } from 'discord.js'
 import { env } from './env.js'
 import { deleteMessage, syncMessage } from './db/actions/messages.js'
-import { deletePost, syncPost } from './db/actions/posts.js'
+import { deletePost, setInstructionsMessageId, syncPost } from './db/actions/posts.js'
 import { baseLog } from './log.js'
 import {
   isMessageInForumChannel,
@@ -18,7 +19,7 @@ import { contextMenuCommands } from './commands/context/index.js'
 import { usersCache } from './lib/cache.js'
 import { syncUser } from './db/actions/users.js'
 
-const client = new discord.Client({
+const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
@@ -53,7 +54,7 @@ client.on(Events.MessageUpdate, async (_, newMessage) => {
 
   try {
     const message = await newMessage.fetch()
-    if (!isMessageSupported(message)) return
+    if (!isMessageSupported(message)) return    
 
     await syncMessage(message)
     baseLog('Updated a message in post %s', message.channelId)
@@ -80,7 +81,7 @@ client.on(Events.ThreadCreate, async (thread) => {
     await syncPost(thread)
     baseLog('Created a new post (%s)', thread.id)
 
-    await thread.send({
+    const message = await thread.send({
       embeds: [
         {
           title: 'Post created!',
@@ -99,6 +100,10 @@ client.on(Events.ThreadCreate, async (thread) => {
         },
       ],
     })
+    
+    // Save the instructions message id to the database
+    await setInstructionsMessageId(thread.id, message.id)
+
   } catch (err) {
     console.error('Failed to create thread:', err)
   }

@@ -1,7 +1,9 @@
 import {
   ApplicationCommandType,
+  ButtonStyle,
   ChannelType,
   Colors,
+  ComponentType,
   ContextMenuCommandBuilder,
   PermissionFlagsBits,
 } from 'discord.js'
@@ -12,7 +14,7 @@ import {
   replyWithEmbed,
   replyWithEmbedError,
 } from '../../utils.js'
-import { markMessageAsSolution } from '../../db/actions/messages.js'
+import { markMessageAsSolution, getInstructionsMessageId } from '../../db/actions/messages.js'
 
 export const command: ContextMenuCommand = {
   data: new ContextMenuCommandBuilder()
@@ -106,5 +108,36 @@ export const command: ContextMenuCommand = {
         },
       ],
     })
+
+    // edit instructions message to add the button for message url
+    const instructionsMessageId = await getInstructionsMessageId(interaction.channelId)
+    if (instructionsMessageId) {
+      try {
+        const instructionsMessage = await interaction.channel.messages.fetch(instructionsMessageId)
+        
+        if (instructionsMessage) {
+          instructionsMessage.edit({
+            components: [
+              {
+                type: ComponentType.ActionRow,
+                components: [
+                  {
+                    type: ComponentType.Button,
+                    style: ButtonStyle.Link,
+                    label: 'Jump to Answer',
+                    url: interaction.targetMessage.url,
+                  },
+                ],
+              },
+            ],
+          })
+        }
+
+      }
+      catch (err) {
+        console.error('Failed to update instructions message:', err)
+      }
+    }
+
   },
 }
