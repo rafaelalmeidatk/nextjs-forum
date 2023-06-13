@@ -110,7 +110,7 @@ export const command: ContextMenuCommand = {
     })
 
     // edit instructions message to add the button for message url (get the first message sent by the bot)
-    const instructionsMessage = (await interaction.channel.messages.fetch({ cache: true, after: '1' }))
+    const instructionsMessage = (await interaction.channel.messages.fetch({ cache: true, after: interaction.channel.id }))
       .filter(m => m.author.id === interaction.client.user?.id).last()
 
     if (instructionsMessage) {
