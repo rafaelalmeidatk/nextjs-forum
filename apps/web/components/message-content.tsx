@@ -33,7 +33,7 @@ export const MessageContent = async ({
             className="flex max-h-[350px] rounded-lg overflow-hidden"
           >
               {isVideoLink(attachment.url) ? (
-                  <video src={attachment.url} className="max-w-full h-auto object-cover"></video>
+                  <video src={attachment.url} className="max-w-full h-auto object-cover" controls></video>
               ) : (
                   <img
                       src={attachment.url}
