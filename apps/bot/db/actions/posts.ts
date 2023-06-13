@@ -29,14 +29,3 @@ export const deletePost = async (postId: string) => {
   await db.deleteFrom('posts').where('snowflakeId', '=', postId).execute()
   await db.deleteFrom('messages').where('postId', '=', postId).execute()
 }
-
-export const setInstructionsMessageId = async (
-  postId: string,
-  instructionsMessageId: string
-) => {
-  await db
-    .updateTable('posts')
-    .set({ instructionsMessageId })
-    .where('snowflakeId', '=', postId)
-    .execute()
-}

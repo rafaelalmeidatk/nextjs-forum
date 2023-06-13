@@ -14,7 +14,7 @@ import {
   replyWithEmbed,
   replyWithEmbedError,
 } from '../../utils.js'
-import { markMessageAsSolution, getInstructionsMessageId } from '../../db/actions/messages.js'
+import { markMessageAsSolution } from '../../db/actions/messages.js'
 
 export const command: ContextMenuCommand = {
   data: new ContextMenuCommandBuilder()
@@ -109,12 +109,14 @@ export const command: ContextMenuCommand = {
       ],
     })
 
-    // edit instructions message to add the button for message url
-    const instructionsMessageId = await getInstructionsMessageId(interaction.channelId)
-    if (instructionsMessageId) {
+    // edit instructions message to add the button for message url (get the first message sent by the bot)
+    const instructionsMessage = (await interaction.channel.messages.fetch({ cache: true, after: '1' }))
+      .filter(m => m.author.id === interaction.client.user?.id).last()
+
+    if (instructionsMessage) {
       try {
 
-        interaction.channel.messages.edit(instructionsMessageId, {
+        instructionsMessage.edit({
           components: [
             {
               type: ComponentType.ActionRow,

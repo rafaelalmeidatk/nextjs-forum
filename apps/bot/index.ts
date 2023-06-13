@@ -7,7 +7,7 @@ import {
 } from 'discord.js'
 import { env } from './env.js'
 import { deleteMessage, syncMessage } from './db/actions/messages.js'
-import { deletePost, setInstructionsMessageId, syncPost } from './db/actions/posts.js'
+import { deletePost, syncPost } from './db/actions/posts.js'
 import { baseLog } from './log.js'
 import {
   isMessageInForumChannel,
@@ -54,7 +54,7 @@ client.on(Events.MessageUpdate, async (_, newMessage) => {
 
   try {
     const message = await newMessage.fetch()
-    if (!isMessageSupported(message)) return    
+    if (!isMessageSupported(message)) return
 
     await syncMessage(message)
     baseLog('Updated a message in post %s', message.channelId)
@@ -81,7 +81,7 @@ client.on(Events.ThreadCreate, async (thread) => {
     await syncPost(thread)
     baseLog('Created a new post (%s)', thread.id)
 
-    const message = await thread.send({
+    await thread.send({
       embeds: [
         {
           title: 'Post created!',
@@ -100,9 +100,6 @@ client.on(Events.ThreadCreate, async (thread) => {
         },
       ],
     })
-    
-    // Save the instructions message id to the database
-    await setInstructionsMessageId(thread.id, message.id)
 
   } catch (err) {
     console.error('Failed to create thread:', err)
