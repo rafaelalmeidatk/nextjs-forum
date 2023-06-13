@@ -113,25 +113,22 @@ export const command: ContextMenuCommand = {
     const instructionsMessageId = await getInstructionsMessageId(interaction.channelId)
     if (instructionsMessageId) {
       try {
-        const instructionsMessage = await interaction.channel.messages.fetch(instructionsMessageId)
-        
-        if (instructionsMessage) {
-          instructionsMessage.edit({
-            components: [
-              {
-                type: ComponentType.ActionRow,
-                components: [
-                  {
-                    type: ComponentType.Button,
-                    style: ButtonStyle.Link,
-                    label: 'Jump to Answer',
-                    url: interaction.targetMessage.url,
-                  },
-                ],
-              },
-            ],
-          })
-        }
+
+        interaction.channel.messages.edit(instructionsMessageId, {
+          components: [
+            {
+              type: ComponentType.ActionRow,
+              components: [
+                {
+                  type: ComponentType.Button,
+                  style: ButtonStyle.Link,
+                  label: 'Jump to Answer',
+                  url: interaction.targetMessage.url,
+                },
+              ],
+            },
+          ],
+        })
 
       }
       catch (err) {

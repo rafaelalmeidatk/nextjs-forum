@@ -80,7 +80,7 @@ export const markMessageAsSolution = async (
     .executeTakeFirst()
 }
 
-export const getInstructionsMessageId = async (postId: string) => {
+export const getInstructionsMessageId = async (postId: string): Promise<string | null | undefined> => {
   return (
     await db
       .selectFrom('posts')
