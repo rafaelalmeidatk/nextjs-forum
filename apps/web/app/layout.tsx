@@ -55,7 +55,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
 
             <a
               href="/"
-              className="hover:opacity-75 text-white hover:no-underline"
+              className="hover:opacity-75 text-white hover:no-underline transition-all duration-200"
             >
               <span className="flex flex-col xs:flex-row xs:space-x-2  xs:items-center">
                 <NextIcon className="w-[90px]" />
@@ -71,7 +71,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
                 target="_blank"
                 rel="noopener"
                 aria-label="Discord Server Invite"
-                className="hover:opacity-75 text-white"
+                className="hover:opacity-75 text-white transition-all duration-200"
               >
                 <DiscordIcon size={7} />
               </a>
@@ -81,7 +81,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
                 target="_blank"
                 rel="noopener"
                 aria-label="Github Repository"
-                className="hover:opacity-75 text-white"
+                className="hover:opacity-75 text-white transition-all duration-200"
               >
                 <GitHubIcon size={7} />
               </a>
