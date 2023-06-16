@@ -13,6 +13,7 @@ import { getCanonicalPostUrl } from '@/utils/urls'
 import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
 import { Attachment, MessageContent } from '@/components/message-content'
 import { ArrowDownIcon } from '@/components/icons/arrow-down'
+import type { QAPage, WithContext } from 'schema-dts'
 
 const getPost = async (snowflakeId: string) => {
   return await db
@@ -164,132 +165,165 @@ const Post = async ({ params }: PostProps) => {
   const hasAnswer =
     post.answerId && messages.some((m) => m.snowflakeId === post.answerId)
 
+  const jsonLd: WithContext<QAPage> = {
+    '@context': 'https://schema.org',
+    '@type': 'QAPage',
+    mainEntity: {
+      '@type': 'Question',
+      name: post.title,
+      text: postMessage?.content || 'Original message was deleted.',
+      dateCreated: post.createdAt.toJSON(),
+      answerCount: messages.length,
+      author: {
+        '@type': 'Person',
+        name: post.username,
+      },
+      acceptedAnswer: hasAnswer && answerMessage ? {
+        '@type': 'Answer',
+        text: answerMessage.content,
+        url: `${getCanonicalPostUrl(params.id)}#message-${answerMessage.snowflakeId}`,
+        dateCreated: answerMessage.createdAt.toJSON(),
+        author: {
+          '@type': 'Person',
+          name: answerMessage.authorUsername,
+        }
+      } : undefined,
+    }
+  }
+
   return (
-    <LayoutWithSidebar className="mt-4">
-      <div>
-        <h1 className="mb-4 font-semibold text-3xl">{post.title}</h1>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <LayoutWithSidebar className="mt-4">
+        <div>
+          <h1 className="mb-4 font-semibold text-3xl">{post.title}</h1>
 
-        <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between">
-          <div className="flex flex-wrap items-center gap-2">
-            {hasAnswer ? (
-              <div className="px-2.5 py-1 border border-green-400 text-green-400 rounded-full opacity-60">
-                Answered
-              </div>
-            ) : (
-              <div className="px-2.5 py-1 border rounded-full opacity-50">
-                Unanswered
-              </div>
-            )}
-            <div className="opacity-90">
-              {truncate(post.username, 32)} posted this in{' '}
-              <span className="opacity-80 font-semibold">
-                #{post.channelName}
-              </span>
-            </div>
-          </div>
-
-          <a
-            href={`https://discord.com/channels/752553802359505017/${post.snowflakeId}/${post.snowflakeId}`}
-            className="shrink-0 w-fit px-4 py-1.5 font-semibold text-white border-neutral-700 border rounded hover:bg-neutral-700 hover:no-underline transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Open in Discord
-          </a>
-        </div>
-      </div>
-
-      <div className="mt-4 space-y-1">
-        <MessageGroup isAnswer={false}>
-          {postMessage ? (
-            <Message
-              snowflakeId={postMessage.id.toString()}
-              createdAt={postMessage.createdAt}
-              content={postMessage.content}
-              author={{
-                username: postMessage.authorUsername,
-                avatarUrl: postMessage.authorAvatarUrl,
-                isPublic: postMessage.userIsPublic == 1,
-              }}
-              attachments={postMessage.attachments}
-              isFirstRow
-            />
-          ) : (
-            <span className="px-4 opacity-80">
-              Original message was deleted.
-            </span>
-          )}
-        </MessageGroup>
-
-        {answerMessage && (
-          <div className="p-2 sm:p-3 space-y-1.5 border border-green-400 rounded">
-            <div className="flex space-x-2 items-center text-green-400">
-              <CheckCircleSolidIcon />
-              <div className="text-sm">
-                Answered by{' '}
-                <span className="font-semibold">
-                  {answerMessage.authorUsername}
+          <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between">
+            <div className="flex flex-wrap items-center gap-2">
+              {hasAnswer ? (
+                <div className="px-2.5 py-1 border border-green-400 text-green-400 rounded-full opacity-60">
+                  Answered
+                </div>
+              ) : (
+                <div className="px-2.5 py-1 border rounded-full opacity-50">
+                  Unanswered
+                </div>
+              )}
+              <div className="opacity-90">
+                {truncate(post.username, 32)} posted this in{' '}
+                <span className="opacity-80 font-semibold">
+                  #{post.channelName}
                 </span>
               </div>
             </div>
 
-            <div
-              className="max-h-32 overflow-hidden"
-              style={{
-                WebkitMaskImage:
-                  'linear-gradient(180deg, #000 80%, transparent)',
-                maskImage: 'linear-gradient(180deg, #000 80%, transparent)',
-              }}
-            >
-              {/* @ts-expect-error: async component */}
-              <MessageContent
-                content={answerMessage.content}
-                attachments={answerMessage.attachments}
-              />
-            </div>
-
             <a
-              href={`#message-${answerMessage.snowflakeId}`}
-              className="mt-2 opacity-80 font-semibold text-sm space-x-1"
+              href={`https://discord.com/channels/752553802359505017/${post.snowflakeId}/${post.snowflakeId}`}
+              className="shrink-0 w-fit px-4 py-1.5 font-semibold text-white border-neutral-700 border rounded hover:bg-neutral-700 hover:no-underline transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <span>View full answer</span>
-              <ArrowDownIcon size={4} />
+              Open in Discord
             </a>
           </div>
-        )}
-      </div>
+        </div>
 
-      <h2 className="my-4 text-lg font-semibold">
-        {messages.length} {plur('Reply', messages.length)}
-      </h2>
-
-      <div className="space-y-2">
-        {groupedMessages.map((group) => (
-          <MessageGroup
-            key={group.id}
-            isAnswer={group.messages.some(
-              (m) => m.snowflakeId === post.answerId
-            )}
-          >
-            {group.messages.map((message, i) => (
+        <div className="mt-4 space-y-1">
+          <MessageGroup isAnswer={false}>
+            {postMessage ? (
               <Message
-                key={message.id.toString()}
-                snowflakeId={message.snowflakeId}
-                createdAt={message.createdAt}
-                content={message.content}
-                isFirstRow={i === 0}
+                snowflakeId={postMessage.id.toString()}
+                createdAt={postMessage.createdAt}
+                content={postMessage.content}
                 author={{
-                  username: message.authorUsername,
-                  avatarUrl: message.authorAvatarUrl,
-                  isPublic: message.userIsPublic == 1,
+                  username: postMessage.authorUsername,
+                  avatarUrl: postMessage.authorAvatarUrl,
+                  isPublic: postMessage.userIsPublic == 1,
                 }}
-                attachments={message.attachments}
+                attachments={postMessage.attachments}
+                isFirstRow
               />
-            ))}
+            ) : (
+              <span className="px-4 opacity-80">
+                Original message was deleted.
+              </span>
+            )}
           </MessageGroup>
-        ))}
-      </div>
-    </LayoutWithSidebar>
+
+          {answerMessage && (
+            <div className="p-2 sm:p-3 space-y-1.5 border border-green-400 rounded">
+              <div className="flex space-x-2 items-center text-green-400">
+                <CheckCircleSolidIcon />
+                <div className="text-sm">
+                  Answered by{' '}
+                  <span className="font-semibold">
+                    {answerMessage.authorUsername}
+                  </span>
+                </div>
+              </div>
+
+              <div
+                className="max-h-32 overflow-hidden"
+                style={{
+                  WebkitMaskImage:
+                    'linear-gradient(180deg, #000 80%, transparent)',
+                  maskImage: 'linear-gradient(180deg, #000 80%, transparent)',
+                }}
+              >
+                {/* @ts-expect-error: async component */}
+                <MessageContent
+                  content={answerMessage.content}
+                  attachments={answerMessage.attachments}
+                />
+              </div>
+
+              <a
+                href={`#message-${answerMessage.snowflakeId}`}
+                className="mt-2 opacity-80 font-semibold text-sm space-x-1"
+              >
+                <span>View full answer</span>
+                <ArrowDownIcon size={4} />
+              </a>
+            </div>
+          )}
+        </div>
+
+        <h2 className="my-4 text-lg font-semibold">
+          {messages.length} {plur('Reply', messages.length)}
+        </h2>
+
+        <div className="space-y-2">
+          {groupedMessages.map((group) => (
+            <MessageGroup
+              key={group.id}
+              isAnswer={group.messages.some(
+                (m) => m.snowflakeId === post.answerId
+              )}
+            >
+              {group.messages.map((message, i) => (
+                <Message
+                  key={message.id.toString()}
+                  snowflakeId={message.snowflakeId}
+                  createdAt={message.createdAt}
+                  content={message.content}
+                  isFirstRow={i === 0}
+                  author={{
+                    username: message.authorUsername,
+                    avatarUrl: message.authorAvatarUrl,
+                    isPublic: message.userIsPublic == 1,
+                  }}
+                  attachments={message.attachments}
+                />
+              ))}
+            </MessageGroup>
+          ))}
+        </div>
+      </LayoutWithSidebar>
+    </>
+
   )
 }
 
