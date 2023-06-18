@@ -1,4 +1,5 @@
 import { parseDiscordMessage } from '@/utils/discord-markdown'
+import { isVideoLink } from '@/utils/video'
 
 export type Attachment = {
   id: string
@@ -31,11 +32,19 @@ export const MessageContent = async ({
             key={attachment.id}
             className="flex max-h-[350px] rounded-lg overflow-hidden"
           >
-            <img
-              src={attachment.url}
-              alt="Image"
-              className="max-w-full h-auto object-cover"
-            />
+            {isVideoLink(attachment.url) ? (
+              <video
+                src={attachment.url}
+                className="max-w-full h-auto object-cover"
+                controls
+              ></video>
+            ) : (
+              <img
+                src={attachment.url}
+                alt="Image"
+                className="max-w-full h-auto object-cover"
+              />
+            )}
           </div>
         ))}
       </div>
