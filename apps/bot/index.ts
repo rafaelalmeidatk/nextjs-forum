@@ -1,8 +1,9 @@
-import discord, {
+import {
   Colors,
   Events,
   GatewayIntentBits,
   Partials,
+  Client
 } from 'discord.js'
 import { env } from './env.js'
 import { deleteMessage, syncMessage } from './db/actions/messages.js'
@@ -18,7 +19,7 @@ import { contextMenuCommands } from './commands/context/index.js'
 import { usersCache } from './lib/cache.js'
 import { syncUser } from './db/actions/users.js'
 
-const client = new discord.Client({
+const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
@@ -99,6 +100,7 @@ client.on(Events.ThreadCreate, async (thread) => {
         },
       ],
     })
+
   } catch (err) {
     console.error('Failed to create thread:', err)
   }

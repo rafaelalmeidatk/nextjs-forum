@@ -1,7 +1,9 @@
 import {
   ApplicationCommandType,
+  ButtonStyle,
   ChannelType,
   Colors,
+  ComponentType,
   ContextMenuCommandBuilder,
   PermissionFlagsBits,
 } from 'discord.js'
@@ -106,5 +108,35 @@ export const command: ContextMenuCommand = {
         },
       ],
     })
+
+    // edit instructions message to add the button for message url (get the first message sent by the bot)
+    const instructionsMessage = (await interaction.channel.messages.fetch({ cache: true, after: interaction.channel.id }))
+      .filter(m => m.author.id === interaction.client.user?.id).last()
+
+    if (instructionsMessage) {
+      try {
+
+        instructionsMessage.edit({
+          components: [
+            {
+              type: ComponentType.ActionRow,
+              components: [
+                {
+                  type: ComponentType.Button,
+                  style: ButtonStyle.Link,
+                  label: 'Jump to Answer',
+                  url: interaction.targetMessage.url,
+                },
+              ],
+            },
+          ],
+        })
+
+      }
+      catch (err) {
+        console.error('Failed to update instructions message:', err)
+      }
+    }
+
   },
 }
