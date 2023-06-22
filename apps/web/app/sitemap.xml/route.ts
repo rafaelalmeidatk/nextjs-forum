@@ -1,5 +1,6 @@
+import { largerDate } from '@/utils/datetime';
 import { getBaseUrl } from '@/utils/urls'
-import { db } from '@nextjs-forum/db/node'
+import { db, sql } from '@nextjs-forum/db/node'
 
 // We shouldn't need this but for some reason Next isn't revalidating this route with `revalidatePath`
 export const revalidate = 60
@@ -7,7 +8,13 @@ export const revalidate = 60
 const generateSiteMap = async () => {
   const posts = await db
     .selectFrom('posts')
-    .select('snowflakeId')
+    .select([
+      'posts.snowflakeId',
+      sql<Date>`MAX(IFNULL(posts.editedAt, posts.createdAt))`.as('lastModTime'),
+      sql<Date>`MAX(IFNULL(messages.editedAt, messages.createdAt))`.as('lastMessageModTime')
+    ])
+    .leftJoin('messages', 'posts.snowflakeId', 'messages.postId')
+    .groupBy('posts.snowflakeId')
     .limit(50_000) // we will probably need to chunk the sitemap in the future
     .execute()
 
@@ -22,9 +29,10 @@ const generateSiteMap = async () => {
        .map((p) => {
          return `
        <url>
-           <loc>${getBaseUrl()}/post/${p.snowflakeId}</loc>
-           <changefreq>weekly</changefreq>
+          <loc>${getBaseUrl()}/post/${p.snowflakeId}</loc>
+          <changefreq>weekly</changefreq>
           <priority>0.9</priority>
+          <lastmod>${largerDate(p.lastModTime, p.lastMessageModTime).toISOString()}</lastmod>
        </url>
      `
        })
