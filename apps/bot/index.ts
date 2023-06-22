@@ -131,16 +131,8 @@ client.on(Events.ThreadDelete, async (thread) => {
 })
 
 client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
-  if (!env.PUBLIC_PROFILE_ROLE_ID) return
-
-  const hadRole = oldMember.roles.cache.has(env.PUBLIC_PROFILE_ROLE_ID)
-  const hasRole = newMember.roles.cache.has(env.PUBLIC_PROFILE_ROLE_ID)
-
-  // If the user changed the public profile role, trigger a resync
-  if ((hadRole && !hasRole) || (!hadRole && hasRole)) {
-    usersCache.delete(newMember.user.id)
-    await syncUser(newMember.user, newMember)
-  }
+  if (newMember.user.bot) return 
+  await syncUser(newMember.user, newMember)
 })
 
 client.on(Events.InteractionCreate, async (interaction) => {
