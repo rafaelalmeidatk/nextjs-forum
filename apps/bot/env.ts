@@ -12,6 +12,7 @@ const envVars = z.object({
   DISCORD_CLIENT_ID: z.string(),
   DEV_GUILD_ID: z.string().optional(),
   PUBLIC_PROFILE_ROLE_ID: z.string().optional(),
+  MODERATOR_ROLE_ID: z.string().optional(),
   INDEXABLE_CHANNEL_IDS: z.string().transform((str) => str.split(',')),
 
   // Database

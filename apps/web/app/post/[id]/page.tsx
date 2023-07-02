@@ -54,6 +54,7 @@ const getPostMessage = async (postId: string) => {
       'users.avatarUrl as authorAvatarUrl',
       'users.username as authorUsername',
       'users.isPublic as userIsPublic',
+      'users.isModerator as userIsModerator',
       sql<Attachment[]>`
         if(
           count(attachments.id) > 0,
@@ -90,6 +91,7 @@ const getMessages = async (postId: string) => {
       'users.avatarUrl as authorAvatarUrl',
       'users.username as authorUsername',
       'users.isPublic as userIsPublic',
+      'users.isModerator as userIsModerator',
       sql<Attachment[]>`
         if(
           count(attachments.id) > 0,
@@ -248,6 +250,7 @@ const Post = async ({ params }: PostProps) => {
                   avatarUrl: postMessage.authorAvatarUrl,
                   isPublic: postMessage.userIsPublic == 1,
                   isOP: true,
+                  isModerator: postMessage.userIsModerator == 1,
                 }}
                 attachments={postMessage.attachments}
                 isFirstRow
@@ -323,6 +326,7 @@ const Post = async ({ params }: PostProps) => {
                     isOP: postMessage
                       ? message.authorId === postMessage.authorId
                       : false,
+                    isModerator: message.userIsModerator == 1,
                   }}
                   attachments={message.attachments}
                 />
