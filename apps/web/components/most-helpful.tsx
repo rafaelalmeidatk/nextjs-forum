@@ -1,5 +1,8 @@
 import { db, selectUuid } from '@nextjs-forum/db/node'
 import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
+import { unstable_cache } from 'next/cache'
+
+const QUERY_REVALIDATE_TIME = 24 * 60 * 60
 
 const getMostHelpfulUsers = async () => {
   return db
@@ -11,9 +14,12 @@ const getMostHelpfulUsers = async () => {
       (eb) =>
         eb
           .selectFrom('posts')
-          .innerJoin('messages', 'messages.snowflakeId', 'posts.answerId')
           .select(eb.fn.countAll<number>().as('count'))
-          .where('messages.userId', '=', eb.ref('users.snowflakeId'))
+          .innerJoin('messages', (join) =>
+            join
+              .onRef('messages.snowflakeId', '=', 'posts.answerId')
+              .onRef('messages.userId', '=', 'users.snowflakeId')
+          )
           .as('answersCount'),
     ])
     .orderBy('answersCount', 'desc')
@@ -23,7 +29,9 @@ const getMostHelpfulUsers = async () => {
 }
 
 export const MostHelpful = async () => {
-  const users = await getMostHelpfulUsers()
+  const users = await unstable_cache(getMostHelpfulUsers, [], {
+    revalidate: QUERY_REVALIDATE_TIME,
+  })()
 
   if (users.length === 0) return null
 
