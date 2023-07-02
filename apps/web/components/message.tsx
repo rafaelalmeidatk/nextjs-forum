@@ -8,7 +8,12 @@ type MessageProps = {
   snowflakeId: string
   content: string
   isFirstRow: boolean
-  author: { username: string; avatarUrl: string, isPublic: boolean }
+  author: {
+    username: string
+    avatarUrl: string
+    isPublic: boolean
+    isOP: boolean
+  }
   createdAt: Date
   attachments: Attachment[]
 }
@@ -49,11 +54,16 @@ export const Message = ({
             <div className="flex items-center space-x-2">
               <div className="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
                 {author.username}
-                {!author.isPublic && 
+                {!author.isPublic && (
                   <i title="User's profile isn't public">
-                    <IncognitoIcon className='pl-1'/>
+                    <IncognitoIcon className="pl-2" />
                   </i>
-                }
+                )}
+                {author.isOP && (
+                  <span className="ml-2 px-1 py-0.5 text-xs text-neutral-900 bg-neutral-300 rounded-full select-none">
+                    OP
+                  </span>
+                )}
               </div>
               <time
                 className="mt-[1px] text-xs opacity-70"

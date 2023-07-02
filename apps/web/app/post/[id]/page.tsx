@@ -178,17 +178,22 @@ const Post = async ({ params }: PostProps) => {
         '@type': 'Person',
         name: post.username,
       },
-      acceptedAnswer: hasAnswer && answerMessage ? {
-        '@type': 'Answer',
-        text: answerMessage.content,
-        url: `${getCanonicalPostUrl(params.id)}#message-${answerMessage.snowflakeId}`,
-        dateCreated: answerMessage.createdAt.toJSON(),
-        author: {
-          '@type': 'Person',
-          name: answerMessage.authorUsername,
-        }
-      } : undefined,
-    }
+      acceptedAnswer:
+        hasAnswer && answerMessage
+          ? {
+              '@type': 'Answer',
+              text: answerMessage.content,
+              url: `${getCanonicalPostUrl(params.id)}#message-${
+                answerMessage.snowflakeId
+              }`,
+              dateCreated: answerMessage.createdAt.toJSON(),
+              author: {
+                '@type': 'Person',
+                name: answerMessage.authorUsername,
+              },
+            }
+          : undefined,
+    },
   }
 
   return (
@@ -242,6 +247,7 @@ const Post = async ({ params }: PostProps) => {
                   username: postMessage.authorUsername,
                   avatarUrl: postMessage.authorAvatarUrl,
                   isPublic: postMessage.userIsPublic == 1,
+                  isOP: true,
                 }}
                 attachments={postMessage.attachments}
                 isFirstRow
@@ -314,6 +320,9 @@ const Post = async ({ params }: PostProps) => {
                     username: message.authorUsername,
                     avatarUrl: message.authorAvatarUrl,
                     isPublic: message.userIsPublic == 1,
+                    isOP: postMessage
+                      ? message.authorId === postMessage.authorId
+                      : false,
                   }}
                   attachments={message.attachments}
                 />
@@ -323,7 +332,6 @@ const Post = async ({ params }: PostProps) => {
         </div>
       </LayoutWithSidebar>
     </>
-
   )
 }
 
