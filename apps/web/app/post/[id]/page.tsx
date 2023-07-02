@@ -193,6 +193,22 @@ const Post = async ({ params }: PostProps) => {
                 '@type': 'Person',
                 name: answerMessage.authorUsername,
               },
+              upvoteCount: 1,
+            }
+          : undefined,
+      suggestedAnswer:
+        !hasAnswer && messages[0]
+          ? {
+              '@type': 'Answer',
+              text: messages[0].content,
+              url: `${getCanonicalPostUrl(params.id)}#message-${
+                messages[0].snowflakeId
+              }`,
+              dateCreated: messages[0].createdAt.toJSON(),
+              author: {
+                '@type': 'Person',
+                name: messages[0].authorUsername,
+              },
             }
           : undefined,
     },
