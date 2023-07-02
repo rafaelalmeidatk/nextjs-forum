@@ -11,9 +11,12 @@ const getMostHelpfulUsers = async () => {
       (eb) =>
         eb
           .selectFrom('posts')
-          .innerJoin('messages', 'messages.snowflakeId', 'posts.answerId')
           .select(eb.fn.countAll<number>().as('count'))
-          .where('messages.userId', '=', eb.ref('users.snowflakeId'))
+          .innerJoin('messages', (join) =>
+            join
+              .onRef('messages.snowflakeId', '=', 'posts.answerId')
+              .onRef('messages.userId', '=', 'users.snowflakeId')
+          )
           .as('answersCount'),
     ])
     .orderBy('answersCount', 'desc')
