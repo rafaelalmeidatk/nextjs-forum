@@ -48,7 +48,6 @@ export interface Users {
   id: Generated<Buffer>;
   snowflakeId: string;
   isPublic: Generated<number>;
-  isModerator: Generated<number>;
   username: string;
   discriminator: string;
   avatarUrl: string;

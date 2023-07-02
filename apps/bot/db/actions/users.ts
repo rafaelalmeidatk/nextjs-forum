@@ -2,7 +2,7 @@ import { GuildMember, User } from 'discord.js'
 import { baseLog } from '../../log.js'
 import { db } from '@nextjs-forum/db/node'
 import { AnimalModule, Faker, en } from '@faker-js/faker'
-import { type CacheUser, usersCache } from '../../lib/cache.js'
+import { usersCache } from '../../lib/cache.js'
 import { env } from '../../env.js'
 
 const log = baseLog.extend('users')
@@ -22,44 +22,19 @@ const allowedAnimalTypes: Array<keyof AnimalModule> = [
   'rabbit',
 ]
 
-const userChangedCheck = (userId: string, cacheUser: CacheUser) => {
-  const user = usersCache.get(userId)
-  if (!user) return true
-  if (user.isPublic !== cacheUser.isPublic) return true
-  if (user.isModerator !== cacheUser.isModerator) return true
-  if (cacheUser.isPublic) {
-    if (user.username !== cacheUser.username) return true
-    if (user.discriminator !== cacheUser.discriminator) return true
-    if (user.avatarUrl !== cacheUser.avatarUrl) return true
-  }
-  return false
-}
-
 export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
-  let isPublicProfile = false
-  let isModerator = false
+  const isCached = usersCache.get(user.id)
+  if (isCached) return
 
-  if (asGuildMember) {
-    if (env.PUBLIC_PROFILE_ROLE_ID) {
-      isPublicProfile = asGuildMember.roles.cache.has(env.PUBLIC_PROFILE_ROLE_ID)
-    }
-    if (env.MODERATOR_ROLE_ID) {
-      isModerator = asGuildMember.roles.cache.has(env.MODERATOR_ROLE_ID)
-    }
+  let isPublicProfile = false
+
+  if (env.PUBLIC_PROFILE_ROLE_ID && asGuildMember) {
+    isPublicProfile = asGuildMember.roles.cache.has(env.PUBLIC_PROFILE_ROLE_ID)
   }
 
   let username = user.username
   let discriminator = user.discriminator
   let avatarUrl = user.displayAvatarURL({ size: 256 })
-
-  const userCheck: CacheUser = {
-    username,
-    discriminator,
-    avatarUrl,
-    isPublic: isPublicProfile,
-    isModerator,
-  }
-  if (!userChangedCheck(user.id, userCheck)) return 
 
   if (!isPublicProfile) {
     // The docs says its unlikely I need to create a new instance but I am afraid of using a single
@@ -81,14 +56,12 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     .values({
       snowflakeId: user.id,
       isPublic: isPublicProfile ? 1 : 0,
-      isModerator: isModerator ? 1 : 0,
       username,
       discriminator,
       avatarUrl,
     })
     .onDuplicateKeyUpdate({
       isPublic: isPublicProfile ? 1 : 0,
-      isModerator: isModerator ? 1 : 0,
       username,
       discriminator,
       avatarUrl,
@@ -96,7 +69,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     .executeTakeFirst()
 
   log('Synced user (%s)', user.id)
-  usersCache.set(user.id, userCheck)
+  usersCache.set(user.id, true)
 }
 
 export const getUserById = async (id: string) => {

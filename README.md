@@ -36,8 +36,7 @@ If you are developing locally, you need to create `.env` files in both the `apps
 | `DISCORD_CLIENT_ID`      | Client ID of the bot app                                                                                                | ✔️        |
 | `DEV_GUILD_ID`           | The ID of the Discord server to register dev commands with `yarn dev:register-commands`                                 | ❌        |
 | `PUBLIC_PROFILE_ROLE_ID` | The ID of the role to make Discord profiles public in the database                                                      | ❌        |
-| `MODERATOR_ROLE_ID`      | The ID of the role to set moderator status in the database                                                              | ❌        |
-| `INDEXABLE_CHANNEL_IDS`  | Comma-separated list of forum channels to index                                                                         | ✔️        |
+| `INDEXABLE_CHANNEL_IDS`  | Comman-separated list of forum channels to index                                                                        | ✔️        |
 | `DATABASE_URL`           | The connection string to connect to the DB                                                                              | ✔️        |
 | `REVALIDATE_SECRET`      | The same secret from the `web` project                                                                                  | ✔️        |
 | `WEB_URL`                | The address of the web service, used to make the call to revalidate the cache                                           | ✔️        |

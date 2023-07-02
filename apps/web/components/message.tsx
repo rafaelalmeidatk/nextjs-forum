@@ -3,13 +3,12 @@ import { DisplayLocalTime } from './local-time'
 import 'highlight.js/styles/github-dark-dimmed.css'
 import { Attachment, MessageContent } from './message-content'
 import { IncognitoIcon } from './icons/incognito'
-import { ShieldCheckIcon } from './icons/shield-check'
 
 type MessageProps = {
   snowflakeId: string
   content: string
   isFirstRow: boolean
-  author: { username: string; avatarUrl: string, isPublic: boolean, isModerator: boolean }
+  author: { username: string; avatarUrl: string, isPublic: boolean }
   createdAt: Date
   attachments: Attachment[]
 }
@@ -50,14 +49,9 @@ export const Message = ({
             <div className="flex items-center space-x-2">
               <div className="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
                 {author.username}
-                {!author.isPublic &&
+                {!author.isPublic && 
                   <i title="User's profile isn't public">
-                    <IncognitoIcon className='pl-1' />
-                  </i>
-                }
-                {author.isModerator &&
-                  <i title="User is a moderator">
-                    <ShieldCheckIcon className='pl-1' />
+                    <IncognitoIcon className='pl-1'/>
                   </i>
                 }
               </div>
