@@ -68,12 +68,12 @@ export const parseDiscordMessage = async (content: string) => {
     discordCallback: {
       user: (node) => {
         const user = users.find((u) => u.snowflakeId === node.id)
-        const userName = sanitizeText(user?.username) ?? 'Unknown User'
+        const userName = sanitizeText(user?.username ?? 'Unknown User')
         return `@${userName}`
       },
       channel: (node) => {
         const channel = channels.find((c) => c.snowflakeId === node.id)
-        const channelName = sanitizeText(channel?.name) ?? 'Unknown Channel'
+        const channelName = sanitizeText(channel?.name ?? 'Unknown Channel')
         return `#${channelName}`
       },
     },
