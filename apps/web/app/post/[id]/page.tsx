@@ -14,6 +14,7 @@ import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
 import { Attachment, MessageContent } from '@/components/message-content'
 import { ArrowDownIcon } from '@/components/icons/arrow-down'
 import type { QAPage, WithContext } from 'schema-dts'
+import { parseDiscordMessageBasic } from '@/utils/discord-markdown'
 
 const getPost = async (snowflakeId: string) => {
   return await db
@@ -173,7 +174,9 @@ const Post = async ({ params }: PostProps) => {
     mainEntity: {
       '@type': 'Question',
       name: post.title,
-      text: postMessage?.content || 'Original message was deleted.',
+      text: postMessage 
+        ? await parseDiscordMessageBasic(postMessage?.content) 
+        : 'Original message was deleted.',
       dateCreated: post.createdAt.toJSON(),
       answerCount: messages.length,
       author: {
@@ -184,7 +187,7 @@ const Post = async ({ params }: PostProps) => {
         hasAnswer && answerMessage
           ? {
               '@type': 'Answer',
-              text: answerMessage.content,
+              text: await parseDiscordMessageBasic(answerMessage.content),
               url: `${getCanonicalPostUrl(params.id)}#message-${
                 answerMessage.snowflakeId
               }`,
@@ -200,7 +203,7 @@ const Post = async ({ params }: PostProps) => {
         !hasAnswer && messages[0]
           ? {
               '@type': 'Answer',
-              text: messages[0].content,
+              text: await parseDiscordMessageBasic(messages[0].content),
               url: `${getCanonicalPostUrl(params.id)}#message-${
                 messages[0].snowflakeId
               }`,

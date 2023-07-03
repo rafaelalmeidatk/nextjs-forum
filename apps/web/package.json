@@ -21,7 +21,8 @@
     "react-dom": "^18.2.0",
     "react-wrap-balancer": "^0.5.0",
     "tailwind-merge": "^1.10.0",
-    "simple-markdown": "^0.7.3"
+    "simple-markdown": "^0.7.3",
+    "lru-cache": "^8.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
