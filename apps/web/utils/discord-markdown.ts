@@ -150,7 +150,7 @@ export const parseDiscordMessage = async (content: string) => {
     discordCallback: {
       user: (node) => {
         const user = users.find((u) => u.snowflakeId === node.id)
-        if (!user) return `<i>@Unknown Channel</i>`
+        if (!user) return `<i>@Unknown User</i>`
         const userName = sanitizeText(user.username)
         return `@${userName}`
       },
@@ -159,7 +159,7 @@ export const parseDiscordMessage = async (content: string) => {
         let channelName = channel && sanitizeText(channel.name)
         if (!channelName) {
           const post = posts.find((p) => p.snowflakeId === node.id)
-          channelName = post ? sanitizeText(post.title) : '<i>#Unknown User</i>'
+          channelName = post ? sanitizeText(post.title) : '<i>#Unknown Channel</i>'
         }
         return `#${channelName}`
       },

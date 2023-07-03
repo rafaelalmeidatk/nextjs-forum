@@ -127,7 +127,8 @@ export const generateMetadata = async ({
   const postMessage = await getPostMessage(params.id)
 
   const title = post?.title
-  const description = truncate(postMessage?.content || '', 230)
+  const postMessageFormatted = await parseDiscordMessageBasic(postMessage?.content || '')
+  const description = truncate(postMessageFormatted, 230)
   const url = getCanonicalPostUrl(params.id)
 
   return {
