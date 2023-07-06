@@ -25,29 +25,35 @@ interface PostCache {
 const QUERY_REVALIDATE_TIME = 60 // 1 minute
 
 const fetchUser = (userId: string) => unstable_cache(async () => {
-  return await db
-    .selectFrom('users')
-    .select(['snowflakeId', 'username'])
-    .where('snowflakeId', '=', userId)
-    .executeTakeFirst()
+  return (
+    await db
+      .selectFrom('users')
+      .select(['snowflakeId', 'username'])
+      .where('snowflakeId', '=', userId)
+      .executeTakeFirst()
+  ) || null
 
 }, [userId], { revalidate: QUERY_REVALIDATE_TIME })()
 
 const fetchChannel = (channelId: string) => unstable_cache(async () => {
-  return await db
-    .selectFrom('channels')
-    .select(['snowflakeId', 'name'])
-    .where('snowflakeId', '=', channelId)
-    .executeTakeFirst()
+  return (
+    await db
+      .selectFrom('channels')
+      .select(['snowflakeId', 'name'])
+      .where('snowflakeId', '=', channelId)
+      .executeTakeFirst()
+  ) || null
 
 }, [channelId], { revalidate: QUERY_REVALIDATE_TIME })()
 
 const fetchPost = (postId: string) => unstable_cache(async () => {
-  return await db
-    .selectFrom('posts')
-    .select(['snowflakeId', 'title'])
-    .where('snowflakeId', '=', postId)
-    .executeTakeFirst()
+  return (
+    await db
+      .selectFrom('posts')
+      .select(['snowflakeId', 'title'])
+      .where('snowflakeId', '=', postId)
+      .executeTakeFirst()
+  ) || null
 
 }, [postId], { revalidate: QUERY_REVALIDATE_TIME })()
 
@@ -73,11 +79,15 @@ export const fetchMentions = async (content: string) => {
   ]))
 
   // Filter out null values
-  const postsFiltered = posts.filter((p) => p !== null) as PostCache[]
-  const usersFiltered = users.filter((u) => u !== null) as UserCache[]
-  const channelsFiltered = channels.filter((c) => c !== null) as ChannelCache[]
+  const postsFiltered = posts.filter((p) => p) as PostCache[]
+  const usersFiltered = users.filter((u) => u) as UserCache[]
+  const channelsFiltered = channels.filter((c) => c) as ChannelCache[]
 
-  return { posts: postsFiltered, users: usersFiltered, channels: channelsFiltered }
+  return {
+    posts: postsFiltered,
+    users: usersFiltered,
+    channels: channelsFiltered
+  }
 }
 
 const internalLink = (content: string, posts: PostCache[]) => {
@@ -104,8 +114,8 @@ export const parseDiscordMessageBasic = async (content: string) => {
   // Replace channel mentions
   content = content.replace(channelMention, (match, channelId) => {
     const channel = channels.find((c) => c.snowflakeId === channelId)
-
     let channelName = channel && sanitizeText(channel.name)
+
     if (!channelName) {
       const post = posts.find((p) => p.snowflakeId === channelId)
       channelName = post ? sanitizeText(post.title) : 'Unknown Channel'
@@ -132,15 +142,18 @@ export const parseDiscordMessage = async (content: string) => {
       user: (node) => {
         const user = users.find((u) => u.snowflakeId === node.id)
         if (!user) return `<i>@Unknown User</i>`
+
         const userName = sanitizeText(user.username)
         return `@${userName}`
       },
       channel: (node) => {
         const channel = channels.find((c) => c.snowflakeId === node.id)
         let channelName = channel && sanitizeText(channel.name)
+
         if (!channelName) {
           const post = posts.find((p) => p.snowflakeId === node.id)
-          channelName = post ? sanitizeText(post.title) : '<i>#Unknown Channel</i>'
+          if (!post) return `<i>#Unknown Channel</i>`
+          channelName = post.title
         }
         return `#${channelName}`
       },
