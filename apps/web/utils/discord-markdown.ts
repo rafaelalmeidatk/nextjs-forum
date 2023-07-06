@@ -3,77 +3,158 @@ import { load } from 'cheerio'
 import { db } from '@nextjs-forum/db/node'
 import { getCanonicalPostUrl } from './urls'
 import { sanitizeText } from 'simple-markdown'
+import LRUCache from 'lru-cache'
+import { unstable_cache } from 'next/cache'
+
+
+interface UserCache {
+  snowflakeId: string
+  username: string
+}
+
+interface ChannelCache {
+  snowflakeId: string
+  name: string
+}
+
+interface PostCache {
+  snowflakeId: string
+  title: string
+}
+
+const QUERY_REVALIDATE_TIME = 60 // 1 minute
+
+const fetchUser = (userId: string) => unstable_cache(async () => {
+  return (
+    await db
+      .selectFrom('users')
+      .select(['snowflakeId', 'username'])
+      .where('snowflakeId', '=', userId)
+      .executeTakeFirst()
+  ) || null
+
+}, [userId], { revalidate: QUERY_REVALIDATE_TIME })()
+
+const fetchChannel = (channelId: string) => unstable_cache(async () => {
+  return (
+    await db
+      .selectFrom('channels')
+      .select(['snowflakeId', 'name'])
+      .where('snowflakeId', '=', channelId)
+      .executeTakeFirst()
+  ) || null
+
+}, [channelId], { revalidate: QUERY_REVALIDATE_TIME })()
+
+const fetchPost = (postId: string) => unstable_cache(async () => {
+  return (
+    await db
+      .selectFrom('posts')
+      .select(['snowflakeId', 'title'])
+      .where('snowflakeId', '=', postId)
+      .executeTakeFirst()
+  ) || null
+
+}, [postId], { revalidate: QUERY_REVALIDATE_TIME })()
+
+const channelLinkRegex = /https:\/\/discord\.com\/channels\/(?<guild>\d+)\/(?<channel>\d+)(\/(?<message>\d+))?/g;
+const userMention = /<@!?(?<user>\d+)>/g;
+const channelMention = /<#(?<channel>\d+)>/g;
+
+export const extractMentions = (content: string) => {
+  const postIds = new Set<string>(Array.from(content.matchAll(channelLinkRegex), (m) => m.groups?.channel ?? ''))
+  const memberIds = new Set<string>(Array.from(content.matchAll(userMention), (m) => m.groups?.user ?? ''))
+  const channelIds = new Set<string>(Array.from(content.matchAll(channelMention), (m) => m.groups?.channel ?? ''))
+  return { postIds, memberIds, channelIds }
+}
+
+export const fetchMentions = async (content: string) => {
+  const { postIds, memberIds, channelIds } = extractMentions(content)
+
+  // Fetch from db/cache
+  const [posts, users, channels] = (await Promise.all([
+    Promise.all(Array.from(postIds).map(fetchPost)),
+    Promise.all(Array.from(memberIds).map(fetchUser)),
+    Promise.all(Array.from(channelIds).map(fetchChannel)),
+  ]))
+
+  // Filter out null values
+  const postsFiltered = posts.filter((p) => p) as PostCache[]
+  const usersFiltered = users.filter((u) => u) as UserCache[]
+  const channelsFiltered = channels.filter((c) => c) as ChannelCache[]
+
+  return {
+    posts: postsFiltered,
+    users: usersFiltered,
+    channels: channelsFiltered
+  }
+}
+
+const internalLink = (content: string, posts: PostCache[]) => {
+  // Replace internal links
+  content = content.replace(channelLinkRegex, (match, guildId, channelId, _, messageId) => {
+    const post = posts.find((p) => p.snowflakeId === channelId)
+    if (!post) return match
+    return `${getCanonicalPostUrl(post.snowflakeId)}${messageId ? `#message-${messageId}` : ''}`
+  })
+  return content
+}
+
+export const parseDiscordMessageBasic = async (content: string) => {
+  // Get mentions
+  const { users, channels, posts } = await fetchMentions(content)
+
+  // Replace user mentions
+  content = content.replace(userMention, (match, userId) => {
+    const member = users.find((u) => u.snowflakeId === userId)
+    const userName = sanitizeText(member?.username ?? 'Unknown User')
+    return `@${userName}`
+  })
+
+  // Replace channel mentions
+  content = content.replace(channelMention, (match, channelId) => {
+    const channel = channels.find((c) => c.snowflakeId === channelId)
+    let channelName = channel && sanitizeText(channel.name)
+
+    if (!channelName) {
+      const post = posts.find((p) => p.snowflakeId === channelId)
+      channelName = post ? sanitizeText(post.title) : 'Unknown Channel'
+    }
+    return `#${channelName}`
+  })
+
+  // Replace internal links
+  content = internalLink(content, posts)
+
+  return content
+}
 
 export const parseDiscordMessage = async (content: string) => {
-  // Mentions handling
-  const memberIds = new Set<string>()
-  const channelIds = new Set<string>()
+  // Get mentions
+  const { users, channels, posts } = await fetchMentions(content)
 
-  // convert https://discord.com/channels/<guild_id>/<post_id> to https://nextjs-forum.com/posts/<post_id>
-  // or https://discord.com/channels/<guild_id>/<channel_id>/<message_id> to https://nextjs-forum.com/posts/<post_id>#message-<message_id>
-  const regex = /https:\/\/discord\.com\/channels\/(?<guild>\d+)\/(?<channel>\d+)(\/(?<message>\d+))?/g;
-  const postIds = new Set<string>(Array.from(content.matchAll(regex), (m) => m.groups?.channel ?? ''))
+  // Replace internal links
+  content = internalLink(content, posts)
 
-  const posts =
-    postIds.size > 0
-      ? await db
-        .selectFrom('posts')
-        .select(['snowflakeId', 'title'])
-        .where('snowflakeId', 'in', Array.from(postIds))
-        .execute()
-      : []
-
-  // Parse the content again, this time replacing the link
-  content = content.replace(regex, (match, guild, channel, _, message) => {
-    const post = posts.find((p) => p.snowflakeId === channel)
-    if (!post) return match
-    return `${getCanonicalPostUrl(post.snowflakeId)}${message ? `#message-${message}` : ''}`
-  })
-
-  // The library doesn't allow async callbacks, so we have to do this in two steps
-  toHTML(content, {
-    discordOnly: true,
-    discordCallback: {
-      user(node) {
-        memberIds.add(node.id)
-        return ''
-      },
-      channel(node) {
-        channelIds.add(node.id)
-        return ''
-      },
-    },
-  })
-
-  const users =
-    memberIds.size > 0
-      ? await db
-        .selectFrom('users')
-        .select(['snowflakeId', 'username'])
-        .where('snowflakeId', 'in', Array.from(memberIds))
-        .execute()
-      : []
-
-  const channels =
-    channelIds.size > 0
-      ? await db
-        .selectFrom('channels')
-        .select(['snowflakeId', 'name'])
-        .where('snowflakeId', 'in', Array.from(channelIds))
-        .execute()
-      : []
-
-  // Parse the content again, this time replacing the nodes and the rest of the stuff
+  // Parse the content
   const html = toHTML(content, {
     discordCallback: {
       user: (node) => {
         const user = users.find((u) => u.snowflakeId === node.id)
-        const userName = sanitizeText(user?.username ?? 'Unknown User')
+        if (!user) return `<i>@Unknown User</i>`
+
+        const userName = sanitizeText(user.username)
         return `@${userName}`
       },
       channel: (node) => {
         const channel = channels.find((c) => c.snowflakeId === node.id)
-        const channelName = sanitizeText(channel?.name ?? 'Unknown Channel')
+        let channelName = channel && sanitizeText(channel.name)
+
+        if (!channelName) {
+          const post = posts.find((p) => p.snowflakeId === node.id)
+          if (!post) return `<i>#Unknown Channel</i>`
+          channelName = post.title
+        }
         return `#${channelName}`
       },
     },
