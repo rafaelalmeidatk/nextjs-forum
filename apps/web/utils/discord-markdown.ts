@@ -4,11 +4,8 @@ import { db } from '@nextjs-forum/db/node'
 import { getCanonicalPostUrl } from './urls'
 import { sanitizeText } from 'simple-markdown'
 import LRUCache from 'lru-cache'
+import { unstable_cache } from 'next/cache'
 
-
-const userCache = new LRUCache<string, UserCache>({ max: 15, ttl: 1000 * 60 })
-const channelCache = new LRUCache<string, ChannelCache>({ max: 15, ttl: 1000 * 60 })
-const postCache = new LRUCache<string, PostCache>({ max: 15, ttl: 1000 * 60 })
 
 interface UserCache {
   snowflakeId: string
@@ -25,57 +22,41 @@ interface PostCache {
   title: string
 }
 
-const fetchUser = async (userId: string) => {
-  const user = userCache.get(userId)
-  if (user) return user
+const QUERY_REVALIDATE_TIME = 60 // 1 minute
 
-  const dbUser = await db
+const fetchUser = (userId: string) => unstable_cache(async () => {
+  return await db
     .selectFrom('users')
     .select(['snowflakeId', 'username'])
     .where('snowflakeId', '=', userId)
     .executeTakeFirst()
 
-  if (!dbUser) return null
-  userCache.set(userId, dbUser)
-  return dbUser
-}
+}, [userId], { revalidate: QUERY_REVALIDATE_TIME })()
 
-const fetchChannel = async (channelId: string) => {
-  const channel = channelCache.get(channelId)
-  if (channel) return channel
-
-  const dbChannel = await db
+const fetchChannel = (channelId: string) => unstable_cache(async () => {
+  return await db
     .selectFrom('channels')
     .select(['snowflakeId', 'name'])
     .where('snowflakeId', '=', channelId)
     .executeTakeFirst()
 
-  if (!dbChannel) return null
-  channelCache.set(channelId, dbChannel)
-  return dbChannel
-}
+}, [channelId], { revalidate: QUERY_REVALIDATE_TIME })()
 
-const fetchPost = async (postId: string) => {
-  const post = postCache.get(postId)
-  if (post) return post
-
-  const dbPost = await db
+const fetchPost = (postId: string) => unstable_cache(async () => {
+  return await db
     .selectFrom('posts')
     .select(['snowflakeId', 'title'])
     .where('snowflakeId', '=', postId)
     .executeTakeFirst()
 
-  if (!dbPost) return null
-  postCache.set(postId, dbPost)
-  return dbPost
-}
+}, [postId], { revalidate: QUERY_REVALIDATE_TIME })()
 
-const linkRegex = /https:\/\/discord\.com\/channels\/(?<guild>\d+)\/(?<channel>\d+)(\/(?<message>\d+))?/g;
+const channelLinkRegex = /https:\/\/discord\.com\/channels\/(?<guild>\d+)\/(?<channel>\d+)(\/(?<message>\d+))?/g;
 const userMention = /<@!?(?<user>\d+)>/g;
 const channelMention = /<#(?<channel>\d+)>/g;
 
 export const extractMentions = (content: string) => {
-  const postIds = new Set<string>(Array.from(content.matchAll(linkRegex), (m) => m.groups?.channel ?? ''))
+  const postIds = new Set<string>(Array.from(content.matchAll(channelLinkRegex), (m) => m.groups?.channel ?? ''))
   const memberIds = new Set<string>(Array.from(content.matchAll(userMention), (m) => m.groups?.user ?? ''))
   const channelIds = new Set<string>(Array.from(content.matchAll(channelMention), (m) => m.groups?.channel ?? ''))
   return { postIds, memberIds, channelIds }
@@ -101,7 +82,7 @@ export const fetchMentions = async (content: string) => {
 
 const internalLink = (content: string, posts: PostCache[]) => {
   // Replace internal links
-  content = content.replace(linkRegex, (match, guildId, channelId, _, messageId) => {
+  content = content.replace(channelLinkRegex, (match, guildId, channelId, _, messageId) => {
     const post = posts.find((p) => p.snowflakeId === channelId)
     if (!post) return match
     return `${getCanonicalPostUrl(post.snowflakeId)}${messageId ? `#message-${messageId}` : ''}`
