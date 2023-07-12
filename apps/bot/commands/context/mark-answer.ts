@@ -24,14 +24,19 @@ export const command: ContextMenuCommand = {
     .setType(ApplicationCommandType.Message),
 
   async execute(interaction) {
-    if (
-      !interaction.channel ||
-      !isMessageInForumChannel(interaction.channel) ||
-      !isMessageSupported(interaction.targetMessage)
-    ) {
+    if (!interaction.channel || !isMessageInForumChannel(interaction.channel)) {
       await replyWithEmbedError(interaction, {
         description:
           'This command can only be used in a supported forum channel',
+      })
+
+      return
+    }
+
+    if (!isMessageSupported(interaction.targetMessage)) {
+      await replyWithEmbedError(interaction, {
+        description:
+          "This type of message is not supported. Make sure the author isn't a bot and the post is indexed",
       })
 
       return
@@ -73,7 +78,17 @@ export const command: ContextMenuCommand = {
       !interactionMember.permissions.has(PermissionFlagsBits.ManageMessages)
     ) {
       await replyWithEmbedError(interaction, {
-        description: `Only the post author or moderators can mark a message as the answer`,
+        description:
+          'Only the post author or moderators can mark a message as the answer',
+      })
+
+      return
+    }
+
+    if (interaction.targetId === interaction.channelId) {
+      await replyWithEmbedError(interaction, {
+        description:
+          "You can't mark the post itself as the answer. If you figured out the issue by yourself, please send it as a separate message and mark it as the answer",
       })
 
       return
