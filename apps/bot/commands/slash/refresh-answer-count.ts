@@ -1,7 +1,7 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
+import { Colors, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 import { SlashCommand } from '../types.js'
 import { replyWithEmbed } from '../../utils.js'
-// import { db } from '@nextjs-forum/db/node.js'
+import { db } from '@nextjs-forum/db/node'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -13,10 +13,48 @@ export const command: SlashCommand = {
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
   async execute(interaction) {
-    const embed = await replyWithEmbed(interaction, {
+    await replyWithEmbed(interaction, {
       title: '⌛ Processing...',
       description:
         'Your request has been queued. This might take a while to complete...',
     })
+
+    try {
+      await db
+        .updateTable('users')
+        .set({
+          answersCount: (eb) =>
+            eb
+              .selectFrom('posts')
+              .select(eb.fn.countAll<number>().as('count'))
+              .innerJoin('messages', (join) =>
+                join
+                  .onRef('messages.snowflakeId', '=', 'posts.answerId')
+                  .onRef('messages.userId', '=', 'users.snowflakeId')
+              ),
+        })
+        .execute()
+
+      await interaction.editReply({
+        embeds: [
+          {
+            title: '✅ Success!',
+            description: 'The answer count of the users has been updated',
+            color: Colors.Green,
+          },
+        ],
+      })
+    } catch (err) {
+      const description = err instanceof Error ? err.message : 'Unknown reason'
+
+      await interaction.editReply({
+        embeds: [
+          {
+            title: 'Error',
+            description,
+          },
+        ],
+      })
+    }
   },
 }
