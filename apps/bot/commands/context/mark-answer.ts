@@ -79,6 +79,11 @@ export const command: ContextMenuCommand = {
       return
     }
 
+    await markMessageAsSolution(
+      interaction.targetMessage.id,
+      interaction.channelId
+    )
+
     const answeredTagId = mainChannel.availableTags.find((t) =>
       t.name.includes('Answered')
     )?.id
@@ -89,11 +94,6 @@ export const command: ContextMenuCommand = {
       )
       interaction.channel.setAppliedTags(newTags)
     }
-
-    await markMessageAsSolution(
-      interaction.targetMessage.id,
-      interaction.channelId
-    )
 
     await replyWithEmbed(interaction, {
       title: '✅ Success!',
@@ -110,12 +110,17 @@ export const command: ContextMenuCommand = {
     })
 
     // edit instructions message to add the button for message url (get the first message sent by the bot)
-    const instructionsMessage = (await interaction.channel.messages.fetch({ cache: true, after: interaction.channel.id }))
-      .filter(m => m.author.id === interaction.client.user?.id).last()
+    const instructionsMessage = (
+      await interaction.channel.messages.fetch({
+        cache: true,
+        after: interaction.channel.id,
+      })
+    )
+      .filter((m) => m.author.id === interaction.client.user?.id)
+      .last()
 
     if (instructionsMessage) {
       try {
-
         instructionsMessage.edit({
           components: [
             {
@@ -131,12 +136,9 @@ export const command: ContextMenuCommand = {
             },
           ],
         })
-
-      }
-      catch (err) {
+      } catch (err) {
         console.error('Failed to update instructions message:', err)
       }
     }
-
   },
 }

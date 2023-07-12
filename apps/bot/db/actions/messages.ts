@@ -1,5 +1,5 @@
-import { Collection, Message } from 'discord.js'
-import { db } from '@nextjs-forum/db/node'
+import { Message } from 'discord.js'
+import { db, sql } from '@nextjs-forum/db/node'
 import { syncUser } from './users.js'
 import { syncChannel, syncMessageChannel } from './channels.js'
 
@@ -73,9 +73,44 @@ export const markMessageAsSolution = async (
   messageId: string,
   postId: string
 ) => {
-  await db
-    .updateTable('posts')
-    .set({ answerId: messageId })
-    .where('snowflakeId', '=', postId)
-    .executeTakeFirst()
+  await db.transaction().execute(async (trx) => {
+    const currentAnswer = await trx
+      .selectFrom('posts')
+      .innerJoin('messages', 'messages.snowflakeId', 'posts.answerId')
+      .select('messages.userId')
+      .where('posts.snowflakeId', '=', postId)
+      .executeTakeFirst()
+
+    if (currentAnswer) {
+      await trx
+        .updateTable('users')
+        .set((eb) => ({
+          answersCount: sql`greatest(${eb.ref('answersCount')} - 1, 0)`,
+        }))
+        .where('snowflakeId', '=', currentAnswer.userId)
+        .execute()
+    }
+
+    const newAnswer = await trx
+      .selectFrom('messages')
+      .select('userId')
+      .where('snowflakeId', '=', messageId)
+      .executeTakeFirst()
+
+    if (newAnswer) {
+      await trx
+        .updateTable('posts')
+        .set({ answerId: messageId })
+        .where('snowflakeId', '=', postId)
+        .executeTakeFirst()
+
+      await trx
+        .updateTable('users')
+        .set((eb) => ({
+          answersCount: sql`${eb.ref('answersCount')} + 1`,
+        }))
+        .where('snowflakeId', '=', newAnswer.userId)
+        .execute()
+    }
+  })
 }
