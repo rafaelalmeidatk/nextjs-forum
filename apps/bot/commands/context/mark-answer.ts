@@ -79,6 +79,15 @@ export const command: ContextMenuCommand = {
       return
     }
 
+    if (interaction.targetId === interaction.channelId) {
+      await replyWithEmbedError(interaction, {
+        description:
+          "You can't mark the post itself as the answer. If you figured out the issue by yourself, please send it as a separate message and mark it as the answer",
+      })
+
+      return
+    }
+
     await markMessageAsSolution(
       interaction.targetMessage.id,
       interaction.channelId
