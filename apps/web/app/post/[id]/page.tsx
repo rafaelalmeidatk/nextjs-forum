@@ -14,7 +14,7 @@ import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
 import { Attachment, MessageContent } from '@/components/message-content'
 import { ArrowDownIcon } from '@/components/icons/arrow-down'
 import type { QAPage, WithContext } from 'schema-dts'
-import { parseDiscordMessageBasic } from '@/utils/discord-markdown'
+import { parseDiscordMessage } from '@/utils/discord-markdown'
 
 const getPost = async (snowflakeId: string) => {
   return await db
@@ -127,7 +127,7 @@ export const generateMetadata = async ({
   const postMessage = await getPostMessage(params.id)
 
   const title = post?.title
-  const postMessageFormatted = await parseDiscordMessageBasic(postMessage?.content || '')
+  const postMessageFormatted = await parseDiscordMessage(postMessage?.content || '', true)
   const description = truncate(postMessageFormatted, 230)
   const url = getCanonicalPostUrl(params.id)
 
@@ -176,7 +176,7 @@ const Post = async ({ params }: PostProps) => {
       '@type': 'Question',
       name: post.title,
       text: postMessage 
-        ? await parseDiscordMessageBasic(postMessage?.content) 
+        ? await parseDiscordMessage(postMessage?.content, true) 
         : 'Original message was deleted.',
       dateCreated: post.createdAt.toJSON(),
       answerCount: messages.length,
@@ -188,7 +188,7 @@ const Post = async ({ params }: PostProps) => {
         hasAnswer && answerMessage
           ? {
               '@type': 'Answer',
-              text: await parseDiscordMessageBasic(answerMessage.content),
+              text: await parseDiscordMessage(answerMessage.content, true),
               url: `${getCanonicalPostUrl(params.id)}#message-${
                 answerMessage.snowflakeId
               }`,
@@ -204,7 +204,7 @@ const Post = async ({ params }: PostProps) => {
         !hasAnswer && messages[0]
           ? {
               '@type': 'Answer',
-              text: await parseDiscordMessageBasic(messages[0].content),
+              text: await parseDiscordMessage(messages[0].content, true),
               url: `${getCanonicalPostUrl(params.id)}#message-${
                 messages[0].snowflakeId
               }`,

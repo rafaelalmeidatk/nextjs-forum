@@ -3,7 +3,7 @@ import { load } from 'cheerio'
 import { db } from '@nextjs-forum/db/node'
 import { getCanonicalPostUrl } from './urls'
 import { sanitizeText } from 'simple-markdown'
-import LRUCache from 'lru-cache'
+import { cache } from 'react'
 import { unstable_cache } from 'next/cache'
 
 
@@ -62,7 +62,7 @@ export const extractMentions = (content: string) => {
   return { postIds, memberIds, channelIds }
 }
 
-export const fetchMentions = async (content: string) => {
+export const fetchMentions = cache(async (content: string) => {
   const { postIds, memberIds, channelIds } = extractMentions(content)
 
   // Fetch from db/cache
@@ -73,53 +73,19 @@ export const fetchMentions = async (content: string) => {
   ]))
 
   return { posts, users, channels }
-}
+})
 
-const internalLink = (content: string, posts: (PostCache | undefined)[]) => {
+
+export const parseDiscordMessage = cache(async (content: string, justText = false) => {
+  // Get mentions
+  const { users, channels, posts } = await fetchMentions(content)
+
   // Replace internal links
   content = content.replace(channelLinkRegex, (match, guildId, channelId, _, messageId) => {
     const post = posts.find((p) => p?.snowflakeId === channelId)
     if (!post) return match
     return `${getCanonicalPostUrl(post.snowflakeId)}${messageId ? `#message-${messageId}` : ''}`
   })
-  return content
-}
-
-export const parseDiscordMessageBasic = async (content: string) => {
-  // Get mentions
-  const { users, channels, posts } = await fetchMentions(content)
-
-  // Replace user mentions
-  content = content.replace(userMention, (match, userId) => {
-    const member = users.find((u) => u?.snowflakeId === userId)
-    const userName = sanitizeText(member?.username ?? 'Unknown User')
-    return `@${userName}`
-  })
-
-  // Replace channel mentions
-  content = content.replace(channelMention, (match, channelId) => {
-    const channel = channels.find((c) => c?.snowflakeId === channelId)
-    let channelName = channel && sanitizeText(channel.name)
-
-    if (!channelName) {
-      const post = posts.find((p) => p?.snowflakeId === channelId)
-      channelName = post ? sanitizeText(post.title) : 'Unknown Channel'
-    }
-    return `#${channelName}`
-  })
-
-  // Replace internal links
-  content = internalLink(content, posts)
-
-  return content
-}
-
-export const parseDiscordMessage = async (content: string) => {
-  // Get mentions
-  const { users, channels, posts } = await fetchMentions(content)
-
-  // Replace internal links
-  content = internalLink(content, posts)
 
   // Parse the content
   const html = toHTML(content, {
@@ -157,5 +123,9 @@ export const parseDiscordMessage = async (content: string) => {
   // Inline code
   $('code:not(pre *)').addClass('d-code-inline')
 
+  if (justText) {
+    return $('body').text() ?? ''
+  }
+
   return $('body').html() ?? ''
-}
+})
