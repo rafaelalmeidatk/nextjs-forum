@@ -24,36 +24,30 @@ interface PostCache {
 
 const QUERY_REVALIDATE_TIME = 60 // 1 minute
 
-const fetchUser = (userId: string) => unstable_cache(async () => {
-  return (
-    await db
-      .selectFrom('users')
-      .select(['snowflakeId', 'username'])
-      .where('snowflakeId', '=', userId)
-      .executeTakeFirst()
-  ) || null
+const fetchUser = (userId: string) => unstable_cache(() => {
+  return db
+    .selectFrom('users')
+    .select(['snowflakeId', 'username'])
+    .where('snowflakeId', '=', userId)
+    .executeTakeFirst()
 
 }, [userId], { revalidate: QUERY_REVALIDATE_TIME })()
 
-const fetchChannel = (channelId: string) => unstable_cache(async () => {
-  return (
-    await db
-      .selectFrom('channels')
-      .select(['snowflakeId', 'name'])
-      .where('snowflakeId', '=', channelId)
-      .executeTakeFirst()
-  ) || null
+const fetchChannel = (channelId: string) => unstable_cache(() => {
+  return db
+    .selectFrom('channels')
+    .select(['snowflakeId', 'name'])
+    .where('snowflakeId', '=', channelId)
+    .executeTakeFirst()
 
 }, [channelId], { revalidate: QUERY_REVALIDATE_TIME })()
 
-const fetchPost = (postId: string) => unstable_cache(async () => {
-  return (
-    await db
-      .selectFrom('posts')
-      .select(['snowflakeId', 'title'])
-      .where('snowflakeId', '=', postId)
-      .executeTakeFirst()
-  ) || null
+const fetchPost = (postId: string) => unstable_cache(() => {
+  return db
+    .selectFrom('posts')
+    .select(['snowflakeId', 'title'])
+    .where('snowflakeId', '=', postId)
+    .executeTakeFirst()
 
 }, [postId], { revalidate: QUERY_REVALIDATE_TIME })()
 
@@ -78,22 +72,13 @@ export const fetchMentions = async (content: string) => {
     Promise.all(Array.from(channelIds).map(fetchChannel)),
   ]))
 
-  // Filter out null values
-  const postsFiltered = posts.filter((p) => p) as PostCache[]
-  const usersFiltered = users.filter((u) => u) as UserCache[]
-  const channelsFiltered = channels.filter((c) => c) as ChannelCache[]
-
-  return {
-    posts: postsFiltered,
-    users: usersFiltered,
-    channels: channelsFiltered
-  }
+  return { posts, users, channels }
 }
 
-const internalLink = (content: string, posts: PostCache[]) => {
+const internalLink = (content: string, posts: (PostCache | undefined)[]) => {
   // Replace internal links
   content = content.replace(channelLinkRegex, (match, guildId, channelId, _, messageId) => {
-    const post = posts.find((p) => p.snowflakeId === channelId)
+    const post = posts.find((p) => p?.snowflakeId === channelId)
     if (!post) return match
     return `${getCanonicalPostUrl(post.snowflakeId)}${messageId ? `#message-${messageId}` : ''}`
   })
@@ -106,18 +91,18 @@ export const parseDiscordMessageBasic = async (content: string) => {
 
   // Replace user mentions
   content = content.replace(userMention, (match, userId) => {
-    const member = users.find((u) => u.snowflakeId === userId)
+    const member = users.find((u) => u?.snowflakeId === userId)
     const userName = sanitizeText(member?.username ?? 'Unknown User')
     return `@${userName}`
   })
 
   // Replace channel mentions
   content = content.replace(channelMention, (match, channelId) => {
-    const channel = channels.find((c) => c.snowflakeId === channelId)
+    const channel = channels.find((c) => c?.snowflakeId === channelId)
     let channelName = channel && sanitizeText(channel.name)
 
     if (!channelName) {
-      const post = posts.find((p) => p.snowflakeId === channelId)
+      const post = posts.find((p) => p?.snowflakeId === channelId)
       channelName = post ? sanitizeText(post.title) : 'Unknown Channel'
     }
     return `#${channelName}`
@@ -140,18 +125,18 @@ export const parseDiscordMessage = async (content: string) => {
   const html = toHTML(content, {
     discordCallback: {
       user: (node) => {
-        const user = users.find((u) => u.snowflakeId === node.id)
+        const user = users.find((u) => u?.snowflakeId === node.id)
         if (!user) return `<i>@Unknown User</i>`
 
         const userName = sanitizeText(user.username)
         return `@${userName}`
       },
       channel: (node) => {
-        const channel = channels.find((c) => c.snowflakeId === node.id)
+        const channel = channels.find((c) => c?.snowflakeId === node.id)
         let channelName = channel && sanitizeText(channel.name)
 
         if (!channelName) {
-          const post = posts.find((p) => p.snowflakeId === node.id)
+          const post = posts.find((p) => p?.snowflakeId === node.id)
           if (!post) return `<i>#Unknown Channel</i>`
           channelName = post.title
         }
