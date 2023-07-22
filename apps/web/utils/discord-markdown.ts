@@ -22,47 +22,45 @@ interface PostCache {
   title: string
 }
 
-const QUERY_REVALIDATE_TIME = 60 // 1 minute
-
-const fetchUser = (userId: string) => unstable_cache(() => {
+const fetchUser = cache((userId: string) => {
   return db
     .selectFrom('users')
     .select(['snowflakeId', 'username'])
     .where('snowflakeId', '=', userId)
     .executeTakeFirst()
 
-}, [userId], { revalidate: QUERY_REVALIDATE_TIME })()
+});
 
-const fetchChannel = (channelId: string) => unstable_cache(() => {
+const fetchChannel = cache((channelId: string) => {
   return db
     .selectFrom('channels')
     .select(['snowflakeId', 'name'])
     .where('snowflakeId', '=', channelId)
     .executeTakeFirst()
 
-}, [channelId], { revalidate: QUERY_REVALIDATE_TIME })()
+});
 
-const fetchPost = (postId: string) => unstable_cache(() => {
+const fetchPost = cache((postId: string) => {
   return db
     .selectFrom('posts')
     .select(['snowflakeId', 'title'])
     .where('snowflakeId', '=', postId)
     .executeTakeFirst()
 
-}, [postId], { revalidate: QUERY_REVALIDATE_TIME })()
+});
 
 const channelLinkRegex = /https:\/\/discord\.com\/channels\/(?<guild>\d+)\/(?<channel>\d+)(\/(?<message>\d+))?/g;
 const userMention = /<@!?(?<user>\d+)>/g;
 const channelMention = /<#(?<channel>\d+)>/g;
 
-export const extractMentions = (content: string) => {
+export const extractMentions = cache((content: string) => {
   const postIds = new Set<string>(Array.from(content.matchAll(channelLinkRegex), (m) => m.groups?.channel ?? ''))
   const memberIds = new Set<string>(Array.from(content.matchAll(userMention), (m) => m.groups?.user ?? ''))
   const channelIds = new Set<string>(Array.from(content.matchAll(channelMention), (m) => m.groups?.channel ?? ''))
   return { postIds, memberIds, channelIds }
-}
+});
 
-export const fetchMentions = cache(async (content: string) => {
+export const fetchMentions = (async (content: string) => {
   const { postIds, memberIds, channelIds } = extractMentions(content)
 
   // Fetch from db/cache
@@ -76,7 +74,7 @@ export const fetchMentions = cache(async (content: string) => {
 })
 
 
-export const parseDiscordMessage = cache(async (content: string, justText = false) => {
+export const parseDiscordMessage = (async (content: string, justText = false) => {
   // Get mentions
   const { users, channels, posts } = await fetchMentions(content)
 
