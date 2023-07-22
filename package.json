@@ -32,5 +32,8 @@
   "packageManager": "yarn@1.22.19",
   "lint-staged": {
     "*.{js,ts,tsx,md,json}": "prettier --write"
+  },
+  "resolutions": {
+    "@types/react": "18.2.15"
   }
 }

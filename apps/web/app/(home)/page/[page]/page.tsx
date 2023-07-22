@@ -31,7 +31,6 @@ const PaginationPage = async ({ params }: PaginationPageProps) => {
     notFound()
   }
 
-  // @ts-expect-error: async component
   return <PostsList page={page} />
 }
 
