@@ -13,22 +13,23 @@
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
     "@nextjs-forum/db": "*",
+    "@t3-oss/env-core": "^0.6.0",
     "debug": "^4.3.4",
     "discord.js": "^14.11.0",
-    "dotenv": "^16.0.3",
-    "kysely": "^0.23.5",
-    "lru-cache": "^8.0.4",
-    "mysql2": "^3.2.0",
+    "dotenv": "^16.3.1",
+    "kysely": "^0.26.1",
+    "lru-cache": "^10.0.0",
+    "mysql2": "^3.5.2",
     "zod": "^3.21.4"
   },
   "devDependencies": {
     "@nextjs-forum/eslint-config-custom": "*",
-    "@types/debug": "^4.1.7",
+    "@types/debug": "^4.1.8",
     "@types/node": "^18.15.3",
-    "eslint": "^8.36.0",
-    "kysely-codegen": "^0.9.0",
-    "nodemon": "^2.0.21",
+    "eslint": "^8.45.0",
+    "kysely-codegen": "^0.10.1",
+    "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.2"
+    "typescript": "^5.1.6"
   }
 }

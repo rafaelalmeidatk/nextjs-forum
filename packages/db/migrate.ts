@@ -24,11 +24,11 @@ const { error, results } = await (op === 'latest'
 results?.forEach((it) => {
   if (it.status === 'Success') {
     console.log(
-      `[${it.direction}] migration "${it.migrationName}" was executed successfully`
+      `[${it.direction}] migration "${it.migrationName}" was executed successfully`,
     )
   } else if (it.status === 'Error') {
     console.error(
-      `[${it.direction}] failed to execute migration "${it.migrationName}"`
+      `[${it.direction}] failed to execute migration "${it.migrationName}"`,
     )
   }
 })

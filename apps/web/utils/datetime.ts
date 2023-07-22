@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon'
+import { DateTime } from '@/utils/luxon'
 
 export const formatPostDate = (date: DateTime) => {
   return DateTime.now().year === date.year

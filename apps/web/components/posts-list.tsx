@@ -73,7 +73,7 @@ export const PostsList = async ({ page }: PostsListProps) => {
             id={post.snowflakeId}
             title={post.title}
             createdAt={post.createdAt}
-            messagesCount={post.messagesCount}
+            messagesCount={post.messagesCount ?? 0}
             hasAnswer={post.hasAnswer === 1}
             author={{ avatar: post.userAvatar, username: post.username }}
           />

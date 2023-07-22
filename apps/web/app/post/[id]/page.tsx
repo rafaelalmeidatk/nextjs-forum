@@ -302,7 +302,6 @@ const Post = async ({ params }: PostProps) => {
                   maskImage: 'linear-gradient(180deg, #000 80%, transparent)',
                 }}
               >
-                {/* @ts-expect-error: async component */}
                 <MessageContent
                   content={answerMessage.content}
                   attachments={answerMessage.attachments}
@@ -329,7 +328,7 @@ const Post = async ({ params }: PostProps) => {
             <MessageGroup
               key={group.id}
               isAnswer={group.messages.some(
-                (m) => m.snowflakeId === post.answerId
+                (m) => m.snowflakeId === post.answerId,
               )}
             >
               {group.messages.map((message, i) => (

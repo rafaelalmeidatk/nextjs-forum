@@ -10,7 +10,7 @@ export const MessageGroup = ({ isAnswer, children }: MessageGroupProps) => {
       <div
         className={twMerge(
           'px-2 py-2 sm:px-3 sm:py-3 border border-neutral-800 rounded space-y-0.5',
-          isAnswer && 'border-green-600 border-2'
+          isAnswer && 'border-green-600 border-2',
         )}
       >
         {children}

@@ -16,7 +16,7 @@ export const db = new Kysely<DB>({
 })
 
 export const selectUuid = <SE extends SelectExpression<DB, keyof DB>>(
-  selection: SE
+  selection: SE,
 ) => sql<string>`bin_to_uuid(${sql.ref(selection.toString())})`
 
 export { sql } from 'kysely'

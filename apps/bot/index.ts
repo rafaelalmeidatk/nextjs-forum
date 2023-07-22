@@ -1,10 +1,4 @@
-import {
-  Colors,
-  Events,
-  GatewayIntentBits,
-  Partials,
-  Client
-} from 'discord.js'
+import { Colors, Events, GatewayIntentBits, Partials, Client } from 'discord.js'
 import { env } from './env.js'
 import { deleteMessage, syncMessage } from './db/actions/messages.js'
 import { deletePost, syncPost } from './db/actions/posts.js'
@@ -16,6 +10,7 @@ import {
   isThreadSupported,
 } from './utils.js'
 import { contextMenuCommands } from './commands/context/index.js'
+import { slashCommands } from './commands/slash/index.js'
 import { usersCache } from './lib/cache.js'
 import { syncUser } from './db/actions/users.js'
 
@@ -100,7 +95,6 @@ client.on(Events.ThreadCreate, async (thread) => {
         },
       ],
     })
-
   } catch (err) {
     console.error('Failed to create thread:', err)
   }
@@ -131,7 +125,7 @@ client.on(Events.ThreadDelete, async (thread) => {
 })
 
 client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
-  if (newMember.user.bot) return 
+  if (newMember.user.bot) return
   await syncUser(newMember.user, newMember)
 })
 
@@ -139,6 +133,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
   if (interaction.isMessageContextMenuCommand()) {
     contextMenuCommands
       .find((c) => c.data.name === interaction.commandName)
+      ?.execute(interaction)
+  }
+
+  if (interaction.isChatInputCommand()) {
+    slashCommands
+      ?.find((c) => c.data.name === interaction.commandName)
       ?.execute(interaction)
   }
 })
