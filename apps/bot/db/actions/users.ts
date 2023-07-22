@@ -42,7 +42,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   if (asGuildMember) {
     if (env.PUBLIC_PROFILE_ROLE_ID) {
       isPublicProfile = asGuildMember.roles.cache.has(
-        env.PUBLIC_PROFILE_ROLE_ID
+        env.PUBLIC_PROFILE_ROLE_ID,
       )
     }
     if (env.MODERATOR_ROLE_ID) {

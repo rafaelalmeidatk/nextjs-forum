@@ -5,7 +5,7 @@ import { syncChannel, syncMessageChannel } from './channels.js'
 
 export const syncMessage = async (message: Message) => {
   const authorAsGuildMember = await message.guild?.members.fetch(
-    message.author.id
+    message.author.id,
   )
 
   await Promise.all([
@@ -52,7 +52,7 @@ export const syncMessage = async (message: Message) => {
           name: attachment.name,
           contentType: attachment.contentType,
           messageId: message.id,
-        }))
+        })),
       )
       .execute()
   })
@@ -71,7 +71,7 @@ export const deleteMessage = async (messageId: string) => {
 
 export const markMessageAsSolution = async (
   messageId: string,
-  postId: string
+  postId: string,
 ) => {
   await db.transaction().execute(async (trx) => {
     const currentAnswer = await trx

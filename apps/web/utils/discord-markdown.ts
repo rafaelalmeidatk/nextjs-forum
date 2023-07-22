@@ -14,7 +14,7 @@ export const parseDiscordMessage = async (content: string) => {
   const regex =
     /https:\/\/discord\.com\/channels\/(?<guild>\d+)\/(?<channel>\d+)(\/(?<message>\d+))?/g
   const postIds = new Set<string>(
-    Array.from(content.matchAll(regex), (m) => m.groups?.channel ?? '')
+    Array.from(content.matchAll(regex), (m) => m.groups?.channel ?? ''),
   )
 
   const posts =

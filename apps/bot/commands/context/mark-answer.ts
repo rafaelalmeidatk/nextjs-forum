@@ -62,7 +62,7 @@ export const command: ContextMenuCommand = {
     }
 
     const interactionMember = await interaction.guild?.members.fetch(
-      interaction.user
+      interaction.user,
     )
     if (!interactionMember) {
       await replyWithEmbedError(interaction, {
@@ -96,16 +96,16 @@ export const command: ContextMenuCommand = {
 
     await markMessageAsSolution(
       interaction.targetMessage.id,
-      interaction.channelId
+      interaction.channelId,
     )
 
     const answeredTagId = mainChannel.availableTags.find((t) =>
-      t.name.includes('Answered')
+      t.name.includes('Answered'),
     )?.id
 
     if (answeredTagId) {
       const newTags = Array.from(
-        new Set([...interaction.channel.appliedTags, answeredTagId])
+        new Set([...interaction.channel.appliedTags, answeredTagId]),
       )
       interaction.channel.setAppliedTags(newTags)
     }

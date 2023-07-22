@@ -11,7 +11,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .createTable('users')
     .addColumn('id', UuidDataType, uuidColumnBuilder)
     .addColumn('snowflakeId', SnowflakeDataType, (col) =>
-      col.notNull().unique()
+      col.notNull().unique(),
     )
     .addColumn('isPublic', 'boolean', (col) => col.notNull().defaultTo(false))
     .addColumn('username', 'varchar(32)', (col) => col.notNull())
@@ -30,7 +30,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .createTable('channels')
     .addColumn('id', UuidDataType, uuidColumnBuilder)
     .addColumn('snowflakeId', SnowflakeDataType, (col) =>
-      col.notNull().unique()
+      col.notNull().unique(),
     )
     .addColumn('name', 'varchar(256)', (col) => col.notNull())
     .addColumn('type', 'int2', (col) => col.notNull())
@@ -42,7 +42,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .createTable('posts')
     .addColumn('id', UuidDataType, uuidColumnBuilder)
     .addColumn('snowflakeId', SnowflakeDataType, (col) =>
-      col.notNull().unique()
+      col.notNull().unique(),
     )
     .addColumn('title', 'text', (col) => col.notNull())
     .addColumn('isLocked', 'boolean', (col) => col.notNull())
@@ -74,7 +74,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .createTable('messages')
     .addColumn('id', UuidDataType, uuidColumnBuilder)
     .addColumn('snowflakeId', SnowflakeDataType, (col) =>
-      col.notNull().unique()
+      col.notNull().unique(),
     )
     .addColumn('content', 'text', (col) => col.notNull())
     .addColumn('createdAt', 'datetime', (col) => col.notNull())
@@ -110,7 +110,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .createTable('attachments')
     .addColumn('id', UuidDataType, uuidColumnBuilder)
     .addColumn('snowflakeId', SnowflakeDataType, (col) =>
-      col.notNull().unique()
+      col.notNull().unique(),
     )
     .addColumn('url', 'varchar(2048)', (col) => col.notNull())
     .addColumn('name', 'varchar(256)', (col) => col.notNull())

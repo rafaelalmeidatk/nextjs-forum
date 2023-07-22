@@ -23,7 +23,7 @@
     "@nextjs-forum/eslint-config-custom": "*",
     "husky": ">=7",
     "lint-staged": ">=10",
-    "prettier": "^2.8.4",
+    "prettier": "^3.0.0",
     "turbo": "^1.10.3"
   },
   "engines": {

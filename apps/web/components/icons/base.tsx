@@ -20,7 +20,7 @@ export const IconSvg = ({ size = 6, className, ...props }: IconProps) => {
     <svg
       className={twMerge(
         `${sizes[size]} inline-block shrink-0 text-current align-middle`,
-        className
+        className,
       )}
       fill="none"
       {...props}

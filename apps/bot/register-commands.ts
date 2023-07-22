@@ -8,7 +8,7 @@ const guildId = env.DEV_GUILD_ID
 
 if (isDevRegister && !guildId) {
   throw new Error(
-    'The DEV_GUILD_ID env variable should be set to register commands in dev'
+    'The DEV_GUILD_ID env variable should be set to register commands in dev',
   )
 }
 
@@ -25,7 +25,7 @@ const data = (await rest.put(
   isDevRegister
     ? Routes.applicationGuildCommands(env.DISCORD_CLIENT_ID, guildId ?? '')
     : Routes.applicationCommands(env.DISCORD_CLIENT_ID),
-  { body: commands }
+  { body: commands },
 )) as unknown[]
 
 console.log(`Successfully reloaded ${data.length} application commands.`)

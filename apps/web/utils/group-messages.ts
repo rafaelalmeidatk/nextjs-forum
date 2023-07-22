@@ -14,7 +14,7 @@ type GroupedMessages<T> = Array<{
 
 export const groupMessagesByUser = <T extends RequiredMessageFields>(
   messages: T[],
-  answerId: string | null = null
+  answerId: string | null = null,
 ) => {
   return messages.reduce<GroupedMessages<T>>((acc, message) => {
     const lastGroup = acc[acc.length - 1]

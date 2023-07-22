@@ -7,7 +7,7 @@ export const command: SlashCommand = {
   data: new SlashCommandBuilder()
     .setName('refresh-answer-count')
     .setDescription(
-      'Refreshes the count of answers for every user (expensive call so only use it if really necessary)'
+      'Refreshes the count of answers for every user (expensive call so only use it if really necessary)',
     )
     .setDMPermission(false)
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
@@ -30,7 +30,7 @@ export const command: SlashCommand = {
               .innerJoin('messages', (join) =>
                 join
                   .onRef('messages.snowflakeId', '=', 'posts.answerId')
-                  .onRef('messages.userId', '=', 'users.snowflakeId')
+                  .onRef('messages.userId', '=', 'users.snowflakeId'),
               ),
         })
         .execute()

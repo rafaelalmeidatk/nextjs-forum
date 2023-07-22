@@ -12,7 +12,7 @@ const generateSiteMap = async () => {
       'posts.snowflakeId',
       sql<Date>`MAX(IFNULL(posts.editedAt, posts.createdAt))`.as('lastModTime'),
       sql<Date>`MAX(IFNULL(messages.editedAt, messages.createdAt))`.as(
-        'lastMessageModTime'
+        'lastMessageModTime',
       ),
     ])
     .leftJoin('messages', 'posts.snowflakeId', 'messages.postId')
@@ -36,7 +36,7 @@ const generateSiteMap = async () => {
           <priority>0.9</priority>
           <lastmod>${largerDate(
             p.lastModTime,
-            p.lastMessageModTime
+            p.lastMessageModTime,
           ).toISOString()}</lastmod>
        </url>
      `

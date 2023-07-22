@@ -12,7 +12,7 @@ import { env } from './env.js'
 const START_INDEXING_AFTER = 1686438000000
 
 export const isMessageInForumChannel = (
-  channel: Channel
+  channel: Channel,
 ): channel is AnyThreadChannel<true> => {
   return (
     channel.isThread() &&
@@ -46,7 +46,7 @@ type Replyable = {
 
 export const replyWithEmbed = (
   replyable: Replyable,
-  { color = Colors.Blue, ...opts }: APIEmbed
+  { color = Colors.Blue, ...opts }: APIEmbed,
 ) => {
   return replyable.reply({
     embeds: [
@@ -60,7 +60,7 @@ export const replyWithEmbed = (
 
 export const replyWithEmbedError = (
   replyable: Replyable,
-  { title = '❌ Error!', color = Colors.Red, ...opts }: APIEmbed
+  { title = '❌ Error!', color = Colors.Red, ...opts }: APIEmbed,
 ) => {
   return replyable.reply({
     ephemeral: true,

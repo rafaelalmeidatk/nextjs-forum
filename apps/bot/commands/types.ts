@@ -8,7 +8,7 @@ import {
 export type ContextMenuCommand = {
   data: ContextMenuCommandBuilder
   execute: (
-    interaction: MessageContextMenuCommandInteraction
+    interaction: MessageContextMenuCommandInteraction,
   ) => void | Promise<void>
 }
 

@@ -324,7 +324,7 @@ const Post = async ({ params }: PostProps) => {
             <MessageGroup
               key={group.id}
               isAnswer={group.messages.some(
-                (m) => m.snowflakeId === post.answerId
+                (m) => m.snowflakeId === post.answerId,
               )}
             >
               {group.messages.map((message, i) => (
