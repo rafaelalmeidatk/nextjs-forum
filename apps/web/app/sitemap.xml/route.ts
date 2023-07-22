@@ -1,4 +1,4 @@
-import { largerDate } from '@/utils/datetime';
+import { largerDate } from '@/utils/datetime'
 import { getBaseUrl } from '@/utils/urls'
 import { db, sql } from '@nextjs-forum/db/node'
 
@@ -11,7 +11,9 @@ const generateSiteMap = async () => {
     .select([
       'posts.snowflakeId',
       sql<Date>`MAX(IFNULL(posts.editedAt, posts.createdAt))`.as('lastModTime'),
-      sql<Date>`MAX(IFNULL(messages.editedAt, messages.createdAt))`.as('lastMessageModTime')
+      sql<Date>`MAX(IFNULL(messages.editedAt, messages.createdAt))`.as(
+        'lastMessageModTime'
+      ),
     ])
     .leftJoin('messages', 'posts.snowflakeId', 'messages.postId')
     .groupBy('posts.snowflakeId')
@@ -32,7 +34,10 @@ const generateSiteMap = async () => {
           <loc>${getBaseUrl()}/post/${p.snowflakeId}</loc>
           <changefreq>weekly</changefreq>
           <priority>0.9</priority>
-          <lastmod>${largerDate(p.lastModTime, p.lastMessageModTime).toISOString()}</lastmod>
+          <lastmod>${largerDate(
+            p.lastModTime,
+            p.lastMessageModTime
+          ).toISOString()}</lastmod>
        </url>
      `
        })

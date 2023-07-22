@@ -11,23 +11,28 @@ export const parseDiscordMessage = async (content: string) => {
 
   // convert https://discord.com/channels/<guild_id>/<post_id> to https://nextjs-forum.com/posts/<post_id>
   // or https://discord.com/channels/<guild_id>/<channel_id>/<message_id> to https://nextjs-forum.com/posts/<post_id>#message-<message_id>
-  const regex = /https:\/\/discord\.com\/channels\/(?<guild>\d+)\/(?<channel>\d+)(\/(?<message>\d+))?/g;
-  const postIds = new Set<string>(Array.from(content.matchAll(regex), (m) => m.groups?.channel ?? ''))
+  const regex =
+    /https:\/\/discord\.com\/channels\/(?<guild>\d+)\/(?<channel>\d+)(\/(?<message>\d+))?/g
+  const postIds = new Set<string>(
+    Array.from(content.matchAll(regex), (m) => m.groups?.channel ?? '')
+  )
 
   const posts =
     postIds.size > 0
       ? await db
-        .selectFrom('posts')
-        .select(['snowflakeId', 'title'])
-        .where('snowflakeId', 'in', Array.from(postIds))
-        .execute()
+          .selectFrom('posts')
+          .select(['snowflakeId', 'title'])
+          .where('snowflakeId', 'in', Array.from(postIds))
+          .execute()
       : []
 
   // Parse the content again, this time replacing the link
   content = content.replace(regex, (match, guild, channel, _, message) => {
     const post = posts.find((p) => p.snowflakeId === channel)
     if (!post) return match
-    return `${getCanonicalPostUrl(post.snowflakeId)}${message ? `#message-${message}` : ''}`
+    return `${getCanonicalPostUrl(post.snowflakeId)}${
+      message ? `#message-${message}` : ''
+    }`
   })
 
   // The library doesn't allow async callbacks, so we have to do this in two steps
@@ -48,19 +53,19 @@ export const parseDiscordMessage = async (content: string) => {
   const users =
     memberIds.size > 0
       ? await db
-        .selectFrom('users')
-        .select(['snowflakeId', 'username'])
-        .where('snowflakeId', 'in', Array.from(memberIds))
-        .execute()
+          .selectFrom('users')
+          .select(['snowflakeId', 'username'])
+          .where('snowflakeId', 'in', Array.from(memberIds))
+          .execute()
       : []
 
   const channels =
     channelIds.size > 0
       ? await db
-        .selectFrom('channels')
-        .select(['snowflakeId', 'name'])
-        .where('snowflakeId', 'in', Array.from(channelIds))
-        .execute()
+          .selectFrom('channels')
+          .select(['snowflakeId', 'name'])
+          .where('snowflakeId', 'in', Array.from(channelIds))
+          .execute()
       : []
 
   // Parse the content again, this time replacing the nodes and the rest of the stuff

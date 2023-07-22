@@ -41,7 +41,9 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
 
   if (asGuildMember) {
     if (env.PUBLIC_PROFILE_ROLE_ID) {
-      isPublicProfile = asGuildMember.roles.cache.has(env.PUBLIC_PROFILE_ROLE_ID)
+      isPublicProfile = asGuildMember.roles.cache.has(
+        env.PUBLIC_PROFILE_ROLE_ID
+      )
     }
     if (env.MODERATOR_ROLE_ID) {
       isModerator = asGuildMember.roles.cache.has(env.MODERATOR_ROLE_ID)
@@ -59,7 +61,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     isPublic: isPublicProfile,
     isModerator,
   }
-  if (!userChangedCheck(user.id, userCheck)) return 
+  if (!userChangedCheck(user.id, userCheck)) return
 
   if (!isPublicProfile) {
     // The docs says its unlikely I need to create a new instance but I am afraid of using a single
