@@ -14,6 +14,7 @@ import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
 import { Attachment, MessageContent } from '@/components/message-content'
 import { ArrowDownIcon } from '@/components/icons/arrow-down'
 import type { QAPage, WithContext } from 'schema-dts'
+import { parseDiscordMessage } from '@/utils/discord-markdown'
 
 const getPost = async (snowflakeId: string) => {
   return await db
@@ -126,7 +127,8 @@ export const generateMetadata = async ({
   const postMessage = await getPostMessage(params.id)
 
   const title = post?.title
-  const description = truncate(postMessage?.content || '', 230)
+  const postMessageFormatted = await parseDiscordMessage(postMessage?.content || '', true)
+  const description = truncate(postMessageFormatted, 230)
   const url = getCanonicalPostUrl(params.id)
 
   return {
@@ -173,7 +175,9 @@ const Post = async ({ params }: PostProps) => {
     mainEntity: {
       '@type': 'Question',
       name: post.title,
-      text: postMessage?.content || 'Original message was deleted.',
+      text: postMessage 
+        ? await parseDiscordMessage(postMessage?.content, true) 
+        : 'Original message was deleted.',
       dateCreated: post.createdAt.toJSON(),
       answerCount: messages.length,
       author: {
@@ -184,7 +188,7 @@ const Post = async ({ params }: PostProps) => {
         hasAnswer && answerMessage
           ? {
               '@type': 'Answer',
-              text: answerMessage.content,
+              text: await parseDiscordMessage(answerMessage.content, true),
               url: `${getCanonicalPostUrl(params.id)}#message-${
                 answerMessage.snowflakeId
               }`,
@@ -200,7 +204,7 @@ const Post = async ({ params }: PostProps) => {
         !hasAnswer && messages[0]
           ? {
               '@type': 'Answer',
-              text: messages[0].content,
+              text: await parseDiscordMessage(messages[0].content, true),
               url: `${getCanonicalPostUrl(params.id)}#message-${
                 messages[0].snowflakeId
               }`,
