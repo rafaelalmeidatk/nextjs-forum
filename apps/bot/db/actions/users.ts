@@ -22,15 +22,15 @@ const allowedAnimalTypes: Array<keyof AnimalModule> = [
   'rabbit',
 ]
 
-const userChangedCheck = (userId: string, cacheUser: CacheUser) => {
-  const user = usersCache.get(userId)
-  if (!user) return true
-  if (user.isPublic !== cacheUser.isPublic) return true
-  if (user.isModerator !== cacheUser.isModerator) return true
-  if (cacheUser.isPublic) {
-    if (user.username !== cacheUser.username) return true
-    if (user.discriminator !== cacheUser.discriminator) return true
-    if (user.avatarUrl !== cacheUser.avatarUrl) return true
+const userChangedCheck = (userId: string, user: CacheUser) => {
+  const cachedUser = usersCache.get(userId)
+  if (!cachedUser) return true
+  if (cachedUser.isPublic !== user.isPublic) return true
+  if (cachedUser.isModerator !== user.isModerator) return true
+  if (user.isPublic) {
+    if (cachedUser.username !== user.username) return true
+    if (cachedUser.discriminator !== user.discriminator) return true
+    if (cachedUser.avatarUrl !== user.avatarUrl) return true
   }
   return false
 }
@@ -50,9 +50,9 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     }
   }
 
-  let username = user.username
+  let username = asGuildMember?.displayName || user.displayName
   let discriminator = user.discriminator
-  let avatarUrl = user.displayAvatarURL({ size: 256 })
+  let avatarUrl = asGuildMember?.displayAvatarURL({ size: 256 }) || user.displayAvatarURL({ size: 256 })
 
   const userCheck: CacheUser = {
     username,
