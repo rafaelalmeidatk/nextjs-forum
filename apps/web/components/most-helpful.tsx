@@ -12,7 +12,7 @@ const getMostHelpfulUsers = async () => {
     ])
     .orderBy('answersCount', 'desc')
     .orderBy('id', 'desc')
-    .limit(5)
+    .limit(15)
     .execute()
 }
 
