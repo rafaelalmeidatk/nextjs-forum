@@ -15,7 +15,7 @@
     "@nextjs-forum/db": "*",
     "@t3-oss/env-core": "^0.6.0",
     "debug": "^4.3.4",
-    "discord.js": "^14.11.0",
+    "discord.js": "^14.12.1",
     "dotenv": "^16.3.1",
     "kysely": "^0.26.1",
     "lru-cache": "^10.0.0",
