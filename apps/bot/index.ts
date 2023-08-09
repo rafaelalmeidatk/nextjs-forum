@@ -1,4 +1,5 @@
 import { Colors, Events, GatewayIntentBits, Partials, Client } from 'discord.js'
+import { dedent } from 'ts-dedent'
 import { env } from './env.js'
 import { deleteMessage, syncMessage } from './db/actions/messages.js'
 import { deletePost, syncPost } from './db/actions/posts.js'
@@ -11,7 +12,6 @@ import {
 } from './utils.js'
 import { contextMenuCommands } from './commands/context/index.js'
 import { slashCommands } from './commands/slash/index.js'
-import { usersCache } from './lib/cache.js'
 import { syncUser } from './db/actions/users.js'
 
 const client = new Client({
@@ -80,13 +80,14 @@ client.on(Events.ThreadCreate, async (thread) => {
       embeds: [
         {
           title: 'Post created!',
-          description: `
-          🔎 This post has been indexed in our web forum and will be seen by search engines so other users can find it outside Discord
+          description: dedent`
+            🔎 This post has been indexed in our web forum and will be seen by search engines so other users can find it outside Discord
 
-          🕵️ Your user profile is private by default and won't be visible to users outside Discord, if you want to be visible in the web forum you can add the "Public Profile" role in <id:customize>
+            🕵️ Your user profile is private by default and won't be visible to users outside Discord, if you want to be visible in the web forum you can add the "Public Profile" role in <id:customize>
 
-          ✅ You can mark a message as the answer for your post with \`Right click -> Apps -> Mark Solution\`
-          (if you don't see the option, try refreshing Discord with Ctrl + R)`,
+            ✅ You can mark a message as the answer for your post with \`Right click -> Apps -> Mark Solution\`
+            (if you don't see the option, try refreshing Discord with Ctrl + R)
+          `,
           color: Colors.Blurple,
           image: {
             url: 'https://cdn.discordapp.com/attachments/1043615796787683408/1117191182133501962/image.png',
