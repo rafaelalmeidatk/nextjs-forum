@@ -20,6 +20,7 @@
     "kysely": "^0.26.1",
     "lru-cache": "^10.0.0",
     "mysql2": "^3.5.2",
+    "ts-dedent": "^2.2.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {
