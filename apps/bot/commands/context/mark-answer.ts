@@ -15,6 +15,7 @@ import {
   replyWithEmbedError,
 } from '../../utils.js'
 import { markMessageAsSolution } from '../../db/actions/messages.js'
+import { env } from '../../env.js'
 
 export const command: ContextMenuCommand = {
   data: new ContextMenuCommandBuilder()
@@ -75,11 +76,14 @@ export const command: ContextMenuCommand = {
 
     if (
       interaction.channel.ownerId !== interaction.user.id &&
-      !interactionMember.permissions.has(PermissionFlagsBits.ManageMessages)
+      !interactionMember.permissions.has(PermissionFlagsBits.ManageMessages) &&
+      (env.HELPER_ROLE_ID
+        ? !interactionMember.roles.cache.has(env.HELPER_ROLE_ID)
+        : true)
     ) {
       await replyWithEmbedError(interaction, {
         description:
-          'Only the post author or moderators can mark a message as the answer',
+          'Only the post author, helpers or moderators can mark a message as the answer',
       })
 
       return
