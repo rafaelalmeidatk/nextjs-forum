@@ -77,7 +77,9 @@ export const command: ContextMenuCommand = {
     if (
       interaction.channel.ownerId !== interaction.user.id &&
       !interactionMember.permissions.has(PermissionFlagsBits.ManageMessages) &&
-      !interactionMember.roles.cache.has(env.HELPER_ROLE_ID)
+      (env.HELPER_ROLE_ID
+        ? !interactionMember.roles.cache.has(env.HELPER_ROLE_ID)
+        : true)
     ) {
       await replyWithEmbedError(interaction, {
         description:
