@@ -1,14 +1,8 @@
 import { DateTime } from '@/utils/luxon'
 
-export const formatPostDate = (date: DateTime) => {
-  return DateTime.now().year === date.year
-    ? date.toLocaleString({ month: 'short', day: 'numeric' })
-    : date.toLocaleString({ year: 'numeric', month: 'short', day: 'numeric' })
-}
-
 export const buildPostTimeValues = (createdAt: Date) => {
   const datetime = DateTime.fromJSDate(createdAt)
-  const text = formatPostDate(datetime)
+  const text = datetime.toLocaleString(DateTime.DATETIME_SHORT)
   const shortText = datetime.toLocaleString({
     hour: 'numeric',
     minute: 'numeric',
