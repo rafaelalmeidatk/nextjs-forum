@@ -1,4 +1,9 @@
-import { Colors, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
+import {
+  ChannelType,
+  Colors,
+  PermissionFlagsBits,
+  SlashCommandBuilder,
+} from 'discord.js'
 import { dedent } from 'ts-dedent'
 import { SlashCommand } from '../types.js'
 import { replyWithEmbedError } from '../../utils.js'
@@ -16,6 +21,20 @@ export const command: SlashCommand = {
         description: 'This command can only be used in a thread/forum post',
       })
       return
+    }
+
+    const mainChannel = interaction.channel.parent
+    if (mainChannel && mainChannel.type === ChannelType.GuildForum) {
+      const lockedTagId = mainChannel.availableTags.find((t) =>
+        t.name.includes('Locked'),
+      )?.id
+
+      if (lockedTagId) {
+        const newTags = Array.from(
+          new Set([...interaction.channel.appliedTags, lockedTagId]),
+        )
+        interaction.channel.setAppliedTags(newTags)
+      }
     }
 
     interaction.reply({ content: 'Ok!', ephemeral: true })
