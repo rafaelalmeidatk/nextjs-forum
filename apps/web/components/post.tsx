@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import plur from 'plur'
 import { buildPostTimeValues } from '@/utils/datetime'
+import { DisplayLocalTime } from './local-time'
 
 type PostProps = {
   id: string
@@ -43,7 +44,7 @@ export const Post = ({
           <div className="text-sm opacity-90 no-underline">
             {author.username} asked on{' '}
             <time dateTime={createdAtTimes.iso} title={createdAtTimes.tooltip}>
-              {createdAtTimes.text}
+              <DisplayLocalTime dateStr={createdAt.toISOString()} />
             </time>{' '}
             · {messagesCount} {plur('Message', messagesCount)}
             {hasAnswer && (
