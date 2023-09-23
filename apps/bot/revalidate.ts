@@ -15,7 +15,3 @@ export const revalidateHomePage = () => {
     post('/api/revalidate-sitemap'),
   ])
 }
-
-export const revalidateSitemap = () => {
-  return post('/api/revalidate-sitemap')
-}

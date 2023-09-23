@@ -1,6 +1,6 @@
 import { AnyThreadChannel } from 'discord.js'
 import { db } from '@nextjs-forum/db/node'
-import { revalidateHomePage, revalidateSitemap } from '../../revalidate.js'
+import { revalidateHomePage } from '../../revalidate.js'
 
 export const syncPost = async (thread: AnyThreadChannel) => {
   const now = new Date()
@@ -38,7 +38,4 @@ export const updatePostLastActive = async (postId: string) => {
     .where('snowflakeId', '=', postId)
     .set({ lastActiveAt: new Date() })
     .execute()
-
-  // revalidate sitemap (its the only thing using the last active data)
-  await revalidateSitemap()
 }
