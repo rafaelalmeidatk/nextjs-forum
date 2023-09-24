@@ -10,8 +10,5 @@ const post = (endpoint: string) => {
 }
 
 export const revalidateHomePage = () => {
-  return Promise.all([
-    post('/api/revalidate-home'),
-    post('/api/revalidate-sitemap'),
-  ])
+  return post('/api/revalidate-home')
 }

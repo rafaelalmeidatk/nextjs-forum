@@ -1,8 +1,8 @@
 import { getBaseUrl } from '@/utils/urls'
 import { db } from '@nextjs-forum/db/node'
 
-// We shouldn't need this but for some reason Next isn't revalidating this route with `revalidatePath`
-export const revalidate = 60
+// Update sitemap only once every 6 hours
+export const revalidate = 21600
 
 const generateSiteMap = async () => {
   const posts = await db
@@ -38,8 +38,6 @@ export const GET = async () => {
   const sitemap = await generateSiteMap()
 
   return new Response(sitemap, {
-    headers: {
-      'Content-Type': 'application/xml',
-    },
+    headers: { 'Content-Type': 'application/xml' },
   })
 }
