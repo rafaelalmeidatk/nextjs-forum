@@ -25,7 +25,9 @@ export const command: SlashCommand = {
         .selectFrom('posts')
         .select([
           'posts.snowflakeId',
-          sql<Date>`MAX(IFNULL(posts.editedAt, posts.createdAt))`.as('lastModTime'),
+          sql<Date>`MAX(IFNULL(posts.editedAt, posts.createdAt))`.as(
+            'lastModTime',
+          ),
           sql<Date>`MAX(IFNULL(messages.editedAt, messages.createdAt))`.as(
             'lastMessageModTime',
           ),
@@ -35,8 +37,11 @@ export const command: SlashCommand = {
         .execute()
 
       for (const post of posts) {
-        const lastActive = post.lastMessageModTime > post.lastModTime ? post.lastMessageModTime : post.lastModTime
-        db
+        const lastActive =
+          post.lastMessageModTime > post.lastModTime
+            ? post.lastMessageModTime
+            : post.lastModTime
+        await db
           .updateTable('posts')
           .where('posts.snowflakeId', '=', post.snowflakeId)
           .set({ lastActiveAt: lastActive })
