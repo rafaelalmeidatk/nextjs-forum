@@ -7,10 +7,7 @@ export const revalidate = 60
 const generateSiteMap = async () => {
   const posts = await db
     .selectFrom('posts')
-    .select([
-      'posts.snowflakeId',
-      'posts.lastActiveAt'
-    ])
+    .select(['posts.snowflakeId', 'posts.lastActiveAt'])
     .limit(50_000) // we will probably need to chunk the sitemap in the future
     .execute()
 

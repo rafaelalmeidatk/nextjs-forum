@@ -127,7 +127,10 @@ export const generateMetadata = async ({
   const postMessage = await getPostMessage(params.id)
 
   const title = post?.title
-  const postMessageFormatted = await parseDiscordMessage(postMessage?.content || '', true)
+  const postMessageFormatted = await parseDiscordMessage(
+    postMessage?.content || '',
+    true,
+  )
   const description = truncate(postMessageFormatted, 230)
   const url = getCanonicalPostUrl(params.id)
 
@@ -175,8 +178,8 @@ const Post = async ({ params }: PostProps) => {
     mainEntity: {
       '@type': 'Question',
       name: post.title,
-      text: postMessage 
-        ? await parseDiscordMessage(postMessage?.content, true) 
+      text: postMessage
+        ? await parseDiscordMessage(postMessage?.content, true)
         : 'Original message was deleted.',
       dateCreated: post.createdAt.toJSON(),
       answerCount: messages.length,

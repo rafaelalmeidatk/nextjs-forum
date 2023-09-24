@@ -6,7 +6,6 @@ import { sanitizeText } from 'simple-markdown'
 import { cache } from 'react'
 import { unstable_cache } from 'next/cache'
 
-
 interface UserCache {
   snowflakeId: string
   username: string
@@ -28,8 +27,7 @@ const fetchUser = cache((userId: string) => {
     .select(['snowflakeId', 'username'])
     .where('snowflakeId', '=', userId)
     .executeTakeFirst()
-
-});
+})
 
 const fetchChannel = cache((channelId: string) => {
   return db
@@ -37,8 +35,7 @@ const fetchChannel = cache((channelId: string) => {
     .select(['snowflakeId', 'name'])
     .where('snowflakeId', '=', channelId)
     .executeTakeFirst()
-
-});
+})
 
 const fetchPost = cache((postId: string) => {
   return db
@@ -46,44 +43,63 @@ const fetchPost = cache((postId: string) => {
     .select(['snowflakeId', 'title'])
     .where('snowflakeId', '=', postId)
     .executeTakeFirst()
+})
 
-});
-
-const channelLinkRegex = /https:\/\/discord\.com\/channels\/(?<guild>\d+)\/(?<channel>\d+)(\/(?<message>\d+))?/g;
-const userMention = /<@!?(?<user>\d+)>/g;
-const channelMention = /<#(?<channel>\d+)>/g;
+const channelLinkRegex =
+  /https:\/\/discord\.com\/channels\/(?<guild>\d+)\/(?<channel>\d+)(\/(?<message>\d+))?/g
+const userMention = /<@!?(?<user>\d+)>/g
+const channelMention = /<#(?<channel>\d+)>/g
 
 export const extractMentions = cache((content: string) => {
-  const postIds = new Set<string>(Array.from(content.matchAll(channelLinkRegex), (m) => m.groups?.channel ?? ''))
-  const memberIds = new Set<string>(Array.from(content.matchAll(userMention), (m) => m.groups?.user ?? ''))
-  const channelIds = new Set<string>(Array.from(content.matchAll(channelMention), (m) => m.groups?.channel ?? ''))
+  const postIds = new Set<string>(
+    Array.from(
+      content.matchAll(channelLinkRegex),
+      (m) => m.groups?.channel ?? '',
+    ),
+  )
+  const memberIds = new Set<string>(
+    Array.from(content.matchAll(userMention), (m) => m.groups?.user ?? ''),
+  )
+  const channelIds = new Set<string>(
+    Array.from(
+      content.matchAll(channelMention),
+      (m) => m.groups?.channel ?? '',
+    ),
+  )
   return { postIds, memberIds, channelIds }
-});
+})
 
-export const fetchMentions = (async (content: string) => {
+export const fetchMentions = async (content: string) => {
   const { postIds, memberIds, channelIds } = extractMentions(content)
 
   // Fetch from db/cache
-  const [posts, users, channels] = (await Promise.all([
+  const [posts, users, channels] = await Promise.all([
     Promise.all(Array.from(postIds).map(fetchPost)),
     Promise.all(Array.from(memberIds).map(fetchUser)),
     Promise.all(Array.from(channelIds).map(fetchChannel)),
-  ]))
+  ])
 
   return { posts, users, channels }
-})
+}
 
-
-export const parseDiscordMessage = (async (content: string, justText = false) => {
+export const parseDiscordMessage = async (
+  content: string,
+  justText = false,
+) => {
   // Get mentions
   const { users, channels, posts } = await fetchMentions(content)
 
   // Replace internal links
-  content = content.replace(channelLinkRegex, (match, guildId, channelId, _, messageId) => {
-    const post = posts.find((p) => p?.snowflakeId === channelId)
-    if (!post) return match
-    return `${getCanonicalPostUrl(post.snowflakeId)}${messageId ? `#message-${messageId}` : ''}`
-  })
+  content = content.replace(
+    channelLinkRegex,
+    (match, guildId, channelId, _, messageId) => {
+      const post = posts.find((p) => p?.snowflakeId === channelId)
+      if (!post) return match
+      return `${getCanonicalPostUrl(post.snowflakeId)}${
+        messageId ? `#message-${messageId}` : ''
+      }`
+    },
+  )
 
   // Parse the content
   const html = toHTML(content, {
@@ -126,4 +142,4 @@ export const parseDiscordMessage = (async (content: string, justText = false) =>
   }
 
   return $('body').html() ?? ''
-})
+}

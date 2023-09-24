@@ -3,7 +3,9 @@ import { Kysely, sql } from 'kysely'
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .alterTable('posts')
-    .addColumn('lastActiveAt', 'datetime', (col) => col.notNull().defaultTo(sql`now()`))
+    .addColumn('lastActiveAt', 'datetime', (col) =>
+      col.notNull().defaultTo(sql`now()`),
+    )
     .execute()
 }
 

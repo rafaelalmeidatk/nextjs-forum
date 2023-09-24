@@ -14,13 +14,13 @@ export const syncPost = async (thread: AnyThreadChannel) => {
       isLocked: thread.locked ? 1 : 0,
       userId: thread.ownerId,
       channelId: thread.parentId,
-      lastActiveAt: now
+      lastActiveAt: now,
     })
     .onDuplicateKeyUpdate({
       title: thread.name,
       editedAt: now,
       isLocked: thread.locked ? 1 : 0,
-      lastActiveAt: now
+      lastActiveAt: now,
     })
     .executeTakeFirst()
 

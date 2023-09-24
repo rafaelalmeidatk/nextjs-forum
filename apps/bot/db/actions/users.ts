@@ -52,7 +52,9 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
 
   let username = asGuildMember?.displayName || user.displayName
   let discriminator = user.discriminator
-  let avatarUrl = asGuildMember?.displayAvatarURL({ size: 256 }) || user.displayAvatarURL({ size: 256 })
+  let avatarUrl =
+    asGuildMember?.displayAvatarURL({ size: 256 }) ||
+    user.displayAvatarURL({ size: 256 })
 
   const userCheck: CacheUser = {
     username,
