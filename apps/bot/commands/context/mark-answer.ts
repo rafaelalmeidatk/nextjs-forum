@@ -16,6 +16,7 @@ import {
 } from '../../utils.js'
 import { markMessageAsSolution } from '../../db/actions/messages.js'
 import { env } from '../../env.js'
+import { updatePostLastActive } from '../../db/actions/posts.js'
 
 export const command: ContextMenuCommand = {
   data: new ContextMenuCommandBuilder()
@@ -102,6 +103,8 @@ export const command: ContextMenuCommand = {
       interaction.targetMessage.id,
       interaction.channelId,
     )
+
+    await updatePostLastActive(interaction.channelId)
 
     const answeredTagId = mainChannel.availableTags.find((t) =>
       t.name.includes('Answered'),

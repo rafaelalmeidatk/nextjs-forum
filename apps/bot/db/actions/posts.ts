@@ -14,11 +14,13 @@ export const syncPost = async (thread: AnyThreadChannel) => {
       isLocked: thread.locked ? 1 : 0,
       userId: thread.ownerId,
       channelId: thread.parentId,
+      lastActiveAt: now
     })
     .onDuplicateKeyUpdate({
       title: thread.name,
       editedAt: now,
       isLocked: thread.locked ? 1 : 0,
+      lastActiveAt: now
     })
     .executeTakeFirst()
 
@@ -28,4 +30,12 @@ export const syncPost = async (thread: AnyThreadChannel) => {
 export const deletePost = async (postId: string) => {
   await db.deleteFrom('posts').where('snowflakeId', '=', postId).execute()
   await db.deleteFrom('messages').where('postId', '=', postId).execute()
+}
+
+export const updatePostLastActive = async (postId: string) => {
+  await db
+    .updateTable('posts')
+    .where('snowflakeId', '=', postId)
+    .set({ lastActiveAt: new Date() })
+    .execute()
 }

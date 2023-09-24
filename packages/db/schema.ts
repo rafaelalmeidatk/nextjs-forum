@@ -38,6 +38,7 @@ export interface Posts {
   title: string
   isLocked: number
   createdAt: Date
+  lastActiveAt: Date
   editedAt: Date | null
   userId: string | null
   channelId: string | null
