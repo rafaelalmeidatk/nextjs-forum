@@ -1,7 +1,8 @@
-import { Message } from 'discord.js'
+import { Message, PartialMessage } from 'discord.js'
 import { db, sql } from '@nextjs-forum/db/node'
 import { syncUser } from './users.js'
 import { syncChannel, syncMessageChannel } from './channels.js'
+import { updatePostLastActive } from './posts.js'
 
 export const syncMessage = async (message: Message) => {
   const authorAsGuildMember = await message.guild?.members.fetch(
@@ -34,6 +35,8 @@ export const syncMessage = async (message: Message) => {
     })
     .executeTakeFirst()
 
+  await updatePostLastActive(message.channelId)
+
   if (message.attachments.size === 0) return
 
   // Replace attachments
@@ -58,7 +61,7 @@ export const syncMessage = async (message: Message) => {
   })
 }
 
-export const deleteMessage = async (messageId: string) => {
+export const deleteMessage = async (messageId: string, postId: string) => {
   await db
     .deleteFrom('messages')
     .where('snowflakeId', '=', messageId)
@@ -67,6 +70,7 @@ export const deleteMessage = async (messageId: string) => {
     .deleteFrom('attachments')
     .where('messageId', '=', messageId)
     .execute()
+  await updatePostLastActive(postId)
 }
 
 export const markMessageAsSolution = async (
@@ -111,6 +115,8 @@ export const markMessageAsSolution = async (
         }))
         .where('snowflakeId', '=', newAnswer.userId)
         .execute()
+
+      await updatePostLastActive(postId)
     }
   })
 }

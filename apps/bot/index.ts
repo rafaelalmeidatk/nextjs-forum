@@ -2,7 +2,7 @@ import { Colors, Events, GatewayIntentBits, Partials, Client } from 'discord.js'
 import { dedent } from 'ts-dedent'
 import { env } from './env.js'
 import { deleteMessage, syncMessage } from './db/actions/messages.js'
-import { deletePost, syncPost, updatePostLastActive } from './db/actions/posts.js'
+import { deletePost, syncPost } from './db/actions/posts.js'
 import { baseLog } from './log.js'
 import {
   isMessageInForumChannel,
@@ -38,7 +38,6 @@ client.on(Events.MessageCreate, async (message) => {
 
   try {
     await syncMessage(message)
-    await updatePostLastActive(message.channelId)
     baseLog('Created a new message in post %s', message.channelId)
   } catch (err) {
     console.error('Failed to create message:', err)
@@ -53,7 +52,6 @@ client.on(Events.MessageUpdate, async (_, newMessage) => {
     if (!isMessageSupported(message)) return
 
     await syncMessage(message)
-    await updatePostLastActive(message.channelId)
     baseLog('Updated a message in post %s', message.channelId)
   } catch (err) {
     console.error('Failed to update message:', err)
@@ -64,8 +62,7 @@ client.on(Events.MessageDelete, async (message) => {
   if (!isMessageInForumChannel(message.channel)) return
 
   try {
-    await deleteMessage(message.id)
-    await updatePostLastActive(message.channelId)
+    await deleteMessage(message.id, message.channelId)
     baseLog('Deleted a message in post %s', message.channelId)
   } catch (err) {
     console.error('Failed to delete message:', err)
