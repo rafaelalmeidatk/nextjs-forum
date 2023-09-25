@@ -67,21 +67,6 @@ export const command: SlashCommand = {
         await new Promise((resolve) => setTimeout(resolve, 100))
       }
 
-      await db.transaction().execute(async (trx) => {
-        for (const post of posts) {
-          const lastActive =
-            post.lastMessageModTime > post.lastModTime
-              ? post.lastMessageModTime
-              : post.lastModTime
-
-          await trx
-            .updateTable('posts')
-            .where('posts.snowflakeId', '=', post.snowflakeId)
-            .set({ lastActiveAt: lastActive })
-            .execute()
-        }
-      })
-
       log('Transaction completed')
 
       await interaction.editReply({
