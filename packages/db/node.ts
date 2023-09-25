@@ -1,4 +1,10 @@
-import { Kysely, sql, MysqlDialect, SelectExpression } from 'kysely'
+import {
+  Kysely,
+  sql,
+  MysqlDialect,
+  SelectExpression,
+  Transaction,
+} from 'kysely'
 import { createPool } from 'mysql2'
 import { DB } from './schema.js'
 
@@ -20,3 +26,6 @@ export const selectUuid = <SE extends SelectExpression<DB, keyof DB>>(
 ) => sql<string>`bin_to_uuid(${sql.ref(selection.toString())})`
 
 export { sql } from 'kysely'
+
+export type TransactionDB = Transaction<DB>
+export type KyselyDB = Kysely<DB>

@@ -62,15 +62,17 @@ export const syncMessage = async (message: Message) => {
 }
 
 export const deleteMessage = async (messageId: string, postId: string) => {
-  await db
-    .deleteFrom('messages')
-    .where('snowflakeId', '=', messageId)
-    .executeTakeFirst()
-  await db
-    .deleteFrom('attachments')
-    .where('messageId', '=', messageId)
-    .execute()
-  await updatePostLastActive(postId)
+  await db.transaction().execute(async (trx) => {
+    await trx
+      .deleteFrom('messages')
+      .where('snowflakeId', '=', messageId)
+      .executeTakeFirst()
+    await trx
+      .deleteFrom('attachments')
+      .where('messageId', '=', messageId)
+      .execute()
+    await updatePostLastActive(postId, trx)
+  })
 }
 
 export const markMessageAsSolution = async (
@@ -116,7 +118,7 @@ export const markMessageAsSolution = async (
         .where('snowflakeId', '=', newAnswer.userId)
         .execute()
 
-      await updatePostLastActive(postId)
+      await updatePostLastActive(postId, trx)
     }
   })
 }
