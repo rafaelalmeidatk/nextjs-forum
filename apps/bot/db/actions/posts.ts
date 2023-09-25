@@ -1,5 +1,5 @@
 import { AnyThreadChannel } from 'discord.js'
-import { db } from '@nextjs-forum/db/node'
+import { db, TransactionDB, KyselyDB } from '@nextjs-forum/db/node'
 import { revalidateHomePage } from '../../revalidate.js'
 
 export const syncPost = async (thread: AnyThreadChannel) => {
@@ -32,8 +32,11 @@ export const deletePost = async (postId: string) => {
   await db.deleteFrom('messages').where('postId', '=', postId).execute()
 }
 
-export const updatePostLastActive = async (postId: string) => {
-  await db
+export const updatePostLastActive = async (
+  postId: string,
+  trx: TransactionDB | KyselyDB = db,
+) => {
+  await trx
     .updateTable('posts')
     .where('snowflakeId', '=', postId)
     .set({ lastActiveAt: new Date() })
