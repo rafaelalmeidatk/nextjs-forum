@@ -41,7 +41,31 @@ export const command: SlashCommand = {
         .groupBy('posts.snowflakeId')
         .execute()
 
-      log('Loaded %d posts, executing transaction', posts.length)
+      log('Loaded %d posts, starting transaction chunks', posts.length)
+
+      const chunkSize = 100
+      for (let i = 0; i < posts.length; i += chunkSize) {
+        const chunk = posts.slice(i, i + chunkSize)
+
+        log('Executing transaction chunk %d', i / chunkSize)
+
+        await db.transaction().execute(async (trx) => {
+          for (const post of chunk) {
+            const lastActive =
+              post.lastMessageModTime > post.lastModTime
+                ? post.lastMessageModTime
+                : post.lastModTime
+
+            await trx
+              .updateTable('posts')
+              .where('posts.snowflakeId', '=', post.snowflakeId)
+              .set({ lastActiveAt: lastActive })
+              .execute()
+          }
+        })
+
+        await new Promise((resolve) => setTimeout(resolve, 100))
+      }
 
       await db.transaction().execute(async (trx) => {
         for (const post of posts) {
