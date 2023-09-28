@@ -76,7 +76,7 @@ export const deleteMessage = async (messageId: string, postId: string) => {
 }
 
 export const markMessageAsSolution = async (
-  messageId: string,
+  messageId: string | false,
   postId: string,
 ) => {
   await db.transaction().execute(async (trx) => {
@@ -96,6 +96,18 @@ export const markMessageAsSolution = async (
         .where('snowflakeId', '=', currentAnswer.userId)
         .execute()
     }
+
+    if (messageId == false) {
+      await trx
+        .updateTable('posts')
+        .set({ answerId: null })
+        .where('snowflakeId', '=', postId)
+        .executeTakeFirst()
+
+      await updatePostLastActive(postId, trx)
+
+      return
+    } 
 
     const newAnswer = await trx
       .selectFrom('messages')
