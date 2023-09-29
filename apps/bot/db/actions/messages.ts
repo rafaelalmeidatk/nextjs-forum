@@ -76,7 +76,7 @@ export const deleteMessage = async (messageId: string, postId: string) => {
 }
 
 export const markMessageAsSolution = async (
-  messageId: string | false,
+  messageId: string | null,
   postId: string,
 ) => {
   await db.transaction().execute(async (trx) => {
@@ -97,7 +97,7 @@ export const markMessageAsSolution = async (
         .execute()
     }
 
-    if (messageId == false) {
+    if (messageId === null) {
       await trx
         .updateTable('posts')
         .set({ answerId: null })

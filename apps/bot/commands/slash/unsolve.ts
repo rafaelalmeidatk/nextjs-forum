@@ -11,8 +11,8 @@ import { markMessageAsSolution } from '../../db/actions/messages.js'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()
-    .setName('unsolve-post')
-    .setDescription('Unsolves a post incase it was solved by mistake')
+    .setName('remove-post-answer')
+    .setDescription('Removes the answer from a post')
     .setDMPermission(false)
     .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
 
@@ -66,13 +66,13 @@ export const command: SlashCommand = {
     ) {
       await replyWithEmbedError(interaction, {
         description:
-          'Only the post author, helpers or moderators can unmark a post as solved',
+          'Only the post author, helpers or moderators can remove an answer from apost',
       })
 
       return
     }
 
-    await markMessageAsSolution(false, interaction.channelId)
+    await markMessageAsSolution(null, interaction.channelId)
 
     const answeredTagId = mainChannel.availableTags.find((t) =>
       t.name.includes('Answered'),
@@ -86,7 +86,7 @@ export const command: SlashCommand = {
     await replyWithEmbed(interaction, {
       title: '✅ Success!',
       description:
-        'This question has been unmarked as answered.',
+        'This question\'s answer has been removed.',
       color: Colors.Orange,
     })
 
