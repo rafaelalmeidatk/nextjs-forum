@@ -15,7 +15,7 @@
     "discord-markdown": "^2.5.1",
     "highlight.js": "^11.8.0",
     "luxon": "^3.3.0",
-    "next": "^13.4.12",
+    "next": "^13.5.4-canary.4",
     "plur": "^5.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
