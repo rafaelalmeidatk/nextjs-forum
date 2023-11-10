@@ -1,9 +1,12 @@
-import { MostHelpful } from '@/components/most-helpful'
+import { MostHelpful, MostHelpfulLoading } from '@/components/most-helpful'
+import { Suspense } from 'react'
 
 export const Sidebar = () => {
   return (
     <aside className="w-[300px]">
-      <MostHelpful />
+      <Suspense fallback={<MostHelpfulLoading />}>
+        <MostHelpful />
+      </Suspense>
     </aside>
   )
 }
