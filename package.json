@@ -2,10 +2,6 @@
   "name": "nextjs-forum",
   "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "build": "turbo run build",
     "build:bot": "turbo run build --filter=bot...",
@@ -13,23 +9,22 @@
     "start:bot": "turbo run start --filter=bot",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "migrate": "yarn workspace @nextjs-forum/db migrate",
-    "register-commands": "yarn workspace @nextjs-forum/bot register-commands",
-    "dev:register-commands": "yarn workspace @nextjs-forum/bot dev:register-commands",
+    "migrate": "pnpm workspace @nextjs-forum/db migrate",
+    "register-commands": "pnpm workspace @nextjs-forum/bot register-commands",
+    "dev:register-commands": "pnpm workspace @nextjs-forum/bot dev:register-commands",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@nextjs-forum/eslint-config-custom": "*",
-    "husky": ">=7",
-    "lint-staged": ">=10",
-    "prettier": "^3.0.0",
-    "turbo": "^1.10.9"
+    "@nextjs-forum/eslint-config-custom": "workspace:*",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.1.0",
+    "prettier": "^3.1.0",
+    "turbo": "^1.10.16"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "packageManager": "yarn@1.22.19",
   "lint-staged": {
     "*.{js,ts,tsx,md,json}": "prettier --write"
   },
