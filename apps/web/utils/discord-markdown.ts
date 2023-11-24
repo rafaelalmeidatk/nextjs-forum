@@ -1,25 +1,9 @@
-import { toHTML } from 'discord-markdown'
+import { toHTML } from '@riskymh/discord-markdown'
 import { load } from 'cheerio'
 import { db } from '@nextjs-forum/db/node'
 import { getCanonicalPostUrl } from './urls'
-import { sanitizeText } from 'simple-markdown'
+import { default as SimpleMarkdown } from '@khanacademy/simple-markdown/dist/index'
 import { cache } from 'react'
-import { unstable_cache } from 'next/cache'
-
-interface UserCache {
-  snowflakeId: string
-  username: string
-}
-
-interface ChannelCache {
-  snowflakeId: string
-  name: string
-}
-
-interface PostCache {
-  snowflakeId: string
-  title: string
-}
 
 const fetchUser = cache((userId: string) => {
   return db
@@ -108,12 +92,12 @@ export const parseDiscordMessage = async (
         const user = users.find((u) => u?.snowflakeId === node.id)
         if (!user) return `<i>@Unknown User</i>`
 
-        const userName = sanitizeText(user.username)
+        const userName = SimpleMarkdown.sanitizeText(user.username)
         return `@${userName}`
       },
       channel: (node) => {
         const channel = channels.find((c) => c?.snowflakeId === node.id)
-        let channelName = channel && sanitizeText(channel.name)
+        let channelName = channel && SimpleMarkdown.sanitizeText(channel.name)
 
         if (!channelName) {
           const post = posts.find((p) => p?.snowflakeId === node.id)

@@ -182,6 +182,19 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
+"@khanacademy/perseus-core@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@khanacademy/perseus-core/-/perseus-core-1.3.0.tgz#5fbb4e6f9ba3e2542ed9ce380fb8bfb54942f548"
+  integrity sha512-JrixlsvbptQpo8lJJoctim2K0DtsPsKpGA1htGoAhfyMB5CQubnK5cVX/bX3EIwO/PpU+qiTPuDe20b4FGw1ag==
+
+"@khanacademy/simple-markdown@^0.10.4":
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/@khanacademy/simple-markdown/-/simple-markdown-0.10.4.tgz#86056a4d05206e2b46c6b1b43e965374cc8f0b23"
+  integrity sha512-GCplZa/3Bqxr68sM4RBSPvj6QzmKwQo6Yyn826dd4ivyYmlp2fDI1XLAtJydkS4fTxxQu7ppatTjoBBCDgaAZA==
+  dependencies:
+    "@khanacademy/perseus-core" "1.3.0"
+    "@types/react" ">=16.0.0"
+
 "@next/env@13.5.4":
   version "13.5.4"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-13.5.4.tgz#777c3af16de2cf2f611b6c8126910062d13d222c"
@@ -277,6 +290,14 @@
   resolved "https://registry.yarnpkg.com/@planetscale/database/-/database-1.8.0.tgz#d3a522e633a4b337739f38718017678ede25f353"
   integrity sha512-+zk04eXRiaJGaRnJZkCxXbBtBvQDQJXCoxqlXhLY3HzAovXfsBnh6DjXRujPRQQ7GKtT8/tOlyvZ9h6ReM+GLQ==
 
+"@riskymh/discord-markdown@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@riskymh/discord-markdown/-/discord-markdown-3.0.0.tgz#065fa9789f1cbec3fd104f8ad314f091a75b238a"
+  integrity sha512-95vmOW5ew2VQkDx/B8rsCEm8ITJQQlQ8Xi9udEeuGbST1uBCpVZJracfW+r0V+3kmX5NGQmT9zCe8qBstTfxZA==
+  dependencies:
+    "@khanacademy/simple-markdown" "^0.10.4"
+    highlight.js "^11.9.0"
+
 "@rushstack/eslint-patch@^1.1.3":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz#8be36a1f66f3265389e90b5f9c9962146758f728"
@@ -371,7 +392,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@>=16.0.0", "@types/react@^18.2.15":
+"@types/react@*", "@types/react@18.2.15", "@types/react@>=16.0.0", "@types/react@^18.2.15":
   version "18.2.15"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.15.tgz#14792b35df676c20ec3cf595b262f8c615a73066"
   integrity sha512-oEjE7TQt1fFTFSbf8kkNuc798ahTUzn3Le67/PWjE8MAfYAD/qB7O8hSTcromLFqHCt9bcdOg5GXMokzTjJ5SA==
@@ -976,14 +997,6 @@ discord-api-types@^0.37.50:
   version "0.37.51"
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.37.51.tgz#a9fe2ceddde1c9c2e4d29987d45241cd746b9319"
   integrity sha512-tdmdH98t3zgjQF6zwOHl0OB/PCBiE4aVsNTuN7m0PfU2jOLx3lNoU6xTeFALntUtlIxN80GTr9RPQR4t7msjSg==
-
-discord-markdown@^2.5.1:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/discord-markdown/-/discord-markdown-2.5.1.tgz#d18773c6e3cff8df90f305654ecbbc5e38c507eb"
-  integrity sha512-SGNlL1Y8NYjY2MA5Vj1SI5+Ue5GUW2HkkDAq5jPQ6fI5j/rwOB814lFNhfs2AJMT72Jij8usTEqWZfdU8C3uag==
-  dependencies:
-    highlight.js "^11.2.0"
-    simple-markdown "^0.7.3"
 
 discord.js@^14.12.1:
   version "14.12.1"
@@ -1758,15 +1771,15 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
-highlight.js@^11.2.0:
-  version "11.7.0"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.7.0.tgz#3ff0165bc843f8c9bce1fd89e2fda9143d24b11e"
-  integrity sha512-1rRqesRFhMO/PRF+G86evnyJkCgaZFOI+Z6kdj15TA18funfoqJXvgPCLSf0SWq3SRfg1j3HlDs8o4s3EGq1oQ==
-
 highlight.js@^11.8.0:
   version "11.8.0"
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.8.0.tgz#966518ea83257bae2e7c9a48596231856555bb65"
   integrity sha512-MedQhoqVdr0U6SSnWPzfiadUcDHfN/Wzq25AkXiQv9oiOO/sG0S7XkvpFIqWBl9Yq1UYyYOOVORs5UW2XlPyzg==
+
+highlight.js@^11.9.0:
+  version "11.9.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.9.0.tgz#04ab9ee43b52a41a047432c8103e2158a1b8b5b0"
+  integrity sha512-fJ7cW7fQGCYAkgv4CPfwFHrfd/cLS4Hau96JuJ+ZTOWhjnhoeN1ub1tFmALm/+lW5z4WCAuAV9bm05AP0mS6Gw==
 
 htmlparser2@^8.0.1:
   version "8.0.2"

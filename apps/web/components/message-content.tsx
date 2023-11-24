@@ -22,7 +22,7 @@ export const MessageContent = async ({
   return (
     <>
       <div
-        className="opacity-90 break-words"
+        className="opacity-90 break-words discord-markdown"
         dangerouslySetInnerHTML={{ __html: htmlContent }}
       />
 
