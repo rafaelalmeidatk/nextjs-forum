@@ -20,7 +20,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-wrap-balancer": "^1.0.0",
-    "simple-markdown": "^0.7.3",
+    "@khanacademy/simple-markdown": "^0.10.4",
     "tailwind-merge": "^1.14.0"
   },
   "devDependencies": {
