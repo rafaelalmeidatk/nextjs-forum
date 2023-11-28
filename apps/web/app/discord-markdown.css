@@ -33,3 +33,57 @@
 .d-mention {
   @apply px-0.5 text-white bg-[#7f8aff40] rounded font-medium;
 }
+
+/* Headings */
+.discord-markdown h1 {
+  @apply text-3xl font-bold mb-3;
+}
+
+.discord-markdown h2 {
+  @apply text-2xl font-bold mb-2;
+}
+
+.discord-markdown h3 {
+  @apply text-xl font-bold mb-1;
+}
+
+.discord-markdown h4 {
+  @apply text-lg font-bold;
+}
+
+.discord-markdown h5 {
+  @apply text-base font-bold;
+}
+
+.discord-markdown h6 {
+  @apply text-sm font-bold;
+}
+
+/* Lists */
+.discord-markdown ul,
+.discord-markdown ol {
+  @apply pl-4;
+}
+
+.discord-markdown ul {
+  @apply list-disc;
+}
+
+.discord-markdown ol {
+  @apply list-decimal;
+}
+
+.discord-markdown ul ul,
+.discord-markdown ol ul {
+  @apply list-inside list-disc;
+}
+
+.discord-markdown ul ol,
+.discord-markdown ol ol {
+  @apply list-inside list-decimal;
+}
+
+/* Blockquotes */
+.discord-markdown blockquote {
+  @apply border-l-4 border-gray-300 pl-2;
+}
