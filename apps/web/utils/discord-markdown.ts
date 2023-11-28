@@ -1,4 +1,4 @@
-import { toHTML } from '@riskymh/discord-markdown'
+import { rules, toHTML } from '@riskymh/discord-markdown'
 import { load } from 'cheerio'
 import { db } from '@nextjs-forum/db/node'
 import { getCanonicalPostUrl } from './urls'
@@ -84,6 +84,9 @@ export const parseDiscordMessage = async (
       }`
     },
   )
+
+  // disable list as its got different rules to discord
+  rules["list"]['match'] = () => false
 
   // Parse the content
   const html = toHTML(content, {
