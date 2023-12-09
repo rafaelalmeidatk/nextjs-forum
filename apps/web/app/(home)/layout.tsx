@@ -12,7 +12,7 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
       <div className="relative py-16 overflow-hidden">
         <div className="container max-w-3xl lg:max-w-5xl mx-auto flex items-center pl-4">
           <div className="flex-1 flex flex-col px-4 space-y-5 z-10">
-            <h2 className="font-bold text-[2.5rem] max-w-2xl leading-[1.1]">
+            <h2 className="font-bold text-[2.5rem] max-w-2xl leading-[1.1] bg-gradient-to-tr from-white/40 to-white text-transparent bg-clip-text">
               <Balancer ratio={0.55}>
                 Next.js Discord server indexed in the web
               </Balancer>
@@ -26,14 +26,13 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
               Join the server {'->'}
             </a>
           </div>
-
           <div
             className="flex absolute top-4 bottom-0 left-3/4 md:left-2/3 lg:left-1/2 min-w-full"
             style={{
               WebkitMaskImage:
                 'linear-gradient(to bottom, rgba(0, 0, 0, 1.0) 50%, transparent 100%)',
               maskImage:
-                'linear-gradient(to top, rgba(0, 0, 0, 1.0) 0%, transparent 100%)',
+                'linear-gradient(to bottom, rgba(0, 0, 0, 1.0) 50%, transparent 100%)',
             }}
           >
             <div>
@@ -46,11 +45,12 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
                   WebkitMaskImage:
                     'radial-gradient(90.98% 90.93% at 0 0, #000 0%, rgba(0, 0, 0, 0.00) 100%)',
                   maskImage:
-                    'linear-gradient(to top, rgba(0, 0, 0, 1.0) 0%, transparent 100%)',
+                    'radial-gradient(90.98% 90.93% at 0 0, #000 0%, rgba(0, 0, 0, 0.00) 100%)',
                 }}
               />
             </div>
           </div>
+          d
         </div>
       </div>
 

@@ -6,6 +6,7 @@ type PaginationLinkProps = {
   iconRight?: ReactNode
   href: string
   children: ReactNode
+  disabled?: boolean
 }
 
 export const PaginationLink = ({
@@ -17,7 +18,7 @@ export const PaginationLink = ({
   return (
     <Link
       href={href}
-      className="px-3 py-1.5 border border-neutral-700 rounded-lg text-neutral-300 hover:text-neutral-100"
+      className="px-3 py-1.5 rounded-lg text-neutral-300 hover:text-neutral-100"
     >
       <span className="flex items-center space-x-1 opacity-90">
         {iconLeft}
