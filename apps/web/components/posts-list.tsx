@@ -32,6 +32,7 @@ const getPostsByPage = async (pageNumber: number) => {
           .where('messages.snowflakeId', '!=', eb.ref('posts.snowflakeId'))
           .as('messagesCount'),
     ])
+    // .where('messages.snowflakeId', 'is not', null) TODO: apply filter later
     .orderBy('createdAt', 'desc')
     // Add one more result so we can know if there's a next page, not the
     // prettiest solution but it works great
@@ -42,6 +43,7 @@ const getPostsByPage = async (pageNumber: number) => {
 
 type PostsListProps = {
   page: number
+  filter?: 'answered' | 'unanswered' | 'no-replies'
 }
 
 export const PostsList = async ({ page }: PostsListProps) => {
@@ -66,7 +68,7 @@ export const PostsList = async ({ page }: PostsListProps) => {
 
   return (
     <>
-      <div className="space-y-2">
+      <div className="">
         {postsToRender.map((post) => (
           <Post
             key={post.id.toString()}
