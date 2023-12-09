@@ -23,8 +23,9 @@ export const buildPostTimeValues = (createdAt: Date) => {
     timeZoneName: 'short',
   }) // 17 September 2023 at 15:20:38 GMT+7
   const iso = datetime.toISO() // 2023-09-17T15:20:38.000+07:00
+  const relative = datetime.toRelative({})
 
-  return { text, shortText, tooltip, iso }
+  return { text, shortText, tooltip, iso, relative }
 }
 
 export const largerDate = (...dates: Date[]) => {
