@@ -45,9 +45,9 @@ type RootLayoutProps = { children: ReactNode }
 
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
-    <html lang="en" className={`${inter.className} dark`}>
-      <body className="bg-neutral-50 dark:bg-neutral-900 text-slate-900 dark:text-white">
-        <header className="border-b border-neutral-700">
+    <html lang="en" className={`${inter.className}`}>
+      <body className="bg-black text-slate-900 text-white/80 min flex flex-col min-h-screen">
+        <header className="">
           <div className="container max-w-7xl flex mx-auto px-4 py-6 justify-between items-center">
             <h1 aria-hidden="true" className="sr-only">
               Next.js Discord
@@ -55,7 +55,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
 
             <a
               href="/"
-              className="hover:opacity-75 text-white hover:no-underline transition-all duration-200"
+              className="hover:opacity-75 text-white/80 hover:no-underline transition-all duration-200"
             >
               <span className="flex flex-col xs:flex-row xs:space-x-2  xs:items-center">
                 <NextIcon className="w-[90px]" />
@@ -71,7 +71,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
                 target="_blank"
                 rel="noopener"
                 aria-label="Discord Server Invite"
-                className="hover:opacity-75 text-white transition-all duration-200"
+                className="hover:opacity-75 text-white/70 transition-all duration-200"
               >
                 <DiscordIcon size={7} />
               </a>
@@ -81,7 +81,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
                 target="_blank"
                 rel="noopener"
                 aria-label="Github Repository"
-                className="hover:opacity-75 text-white transition-all duration-200"
+                className="hover:opacity-75 text-white/70 transition-all duration-200"
               >
                 <GitHubIcon size={7} />
               </a>
@@ -89,7 +89,13 @@ const RootLayout = ({ children }: RootLayoutProps) => {
           </div>
         </header>
 
-        {children}
+        <div className="flex-grow">{children}</div>
+
+        <footer className="mt-12 pb-6">
+          <div className="container max-w-7xl flex flex-col mx-auto px-4 py-6 justify-start items-center text-center text-white/50">
+            Made by the Next.js Community
+          </div>
+        </footer>
 
         <Analytics />
       </body>
