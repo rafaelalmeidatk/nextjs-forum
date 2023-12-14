@@ -81,23 +81,21 @@ export const PostsList = async ({ page }: PostsListProps) => {
           />
         ))}
       </div>
-      <div className="mt-4 flex space-x-4 justify-center">
-        {hasPreviousPage && (
-          <PaginationLink
-            href={`/page/${page - 1}`}
-            iconLeft={<ArrowLeftIcon size={4} />}
-          >
-            Previous
-          </PaginationLink>
-        )}
-        {hasNextPage && (
-          <PaginationLink
-            href={`/page/${page + 1}`}
-            iconRight={<ArrowRightIcon size={4} />}
-          >
-            Next
-          </PaginationLink>
-        )}
+      <div className="mt-4 flex space-x-8 justify-center">
+        <PaginationLink
+          disabled={!hasPreviousPage}
+          href={`/page/${page - 1}`}
+          iconLeft={<ArrowLeftIcon size={4} />}
+        >
+          Previous
+        </PaginationLink>
+        <PaginationLink
+          disabled={!hasNextPage}
+          href={`/page/${page + 1}`}
+          iconRight={<ArrowRightIcon size={4} />}
+        >
+          Next
+        </PaginationLink>
       </div>
     </>
   )
