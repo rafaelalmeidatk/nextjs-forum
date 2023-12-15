@@ -32,6 +32,7 @@ const getPostsByPage = async (pageNumber: number) => {
           .where('messages.snowflakeId', '!=', eb.ref('posts.snowflakeId'))
           .as('messagesCount'),
     ])
+    // .where('messages.snowflakeId', 'is not', null) TODO: apply filter later
     .orderBy('createdAt', 'desc')
     // Add one more result so we can know if there's a next page, not the
     // prettiest solution but it works great
@@ -42,6 +43,7 @@ const getPostsByPage = async (pageNumber: number) => {
 
 type PostsListProps = {
   page: number
+  filter?: 'answered' | 'unanswered' | 'no-replies'
 }
 
 export const PostsList = async ({ page }: PostsListProps) => {
@@ -66,7 +68,7 @@ export const PostsList = async ({ page }: PostsListProps) => {
 
   return (
     <>
-      <div className="space-y-2">
+      <div className="">
         {postsToRender.map((post) => (
           <Post
             key={post.id.toString()}
@@ -79,23 +81,21 @@ export const PostsList = async ({ page }: PostsListProps) => {
           />
         ))}
       </div>
-      <div className="mt-4 flex space-x-4 justify-center">
-        {hasPreviousPage && (
-          <PaginationLink
-            href={`/page/${page - 1}`}
-            iconLeft={<ArrowLeftIcon size={4} />}
-          >
-            Previous
-          </PaginationLink>
-        )}
-        {hasNextPage && (
-          <PaginationLink
-            href={`/page/${page + 1}`}
-            iconRight={<ArrowRightIcon size={4} />}
-          >
-            Next
-          </PaginationLink>
-        )}
+      <div className="mt-4 flex space-x-8 justify-center">
+        <PaginationLink
+          disabled={!hasPreviousPage}
+          href={`/page/${page - 1}`}
+          iconLeft={<ArrowLeftIcon size={4} />}
+        >
+          Previous
+        </PaginationLink>
+        <PaginationLink
+          disabled={!hasNextPage}
+          href={`/page/${page + 1}`}
+          iconRight={<ArrowRightIcon size={4} />}
+        >
+          Next
+        </PaginationLink>
       </div>
     </>
   )

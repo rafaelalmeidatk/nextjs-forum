@@ -3,37 +3,38 @@ import Balancer from 'react-wrap-balancer'
 import discordImage from '@/discord.png'
 import Image from 'next/image'
 import { ReactNode } from 'react'
+import { Sidebar } from '@/components/sidebar'
+import { twMerge } from 'tailwind-merge'
 
 type HomeLayoutProps = { children: ReactNode }
 
 export default function HomeLayout({ children }: HomeLayoutProps) {
   return (
     <>
-      <div className="relative py-16 border-b border-neutral-800 bg-gradient-to-t from-neutral-900 to-neutral-800 overflow-hidden">
-        <div className="container max-w-7xl mx-auto flex items-center">
-          <div className="flex-1 flex flex-col px-4 space-y-4 z-10 text-center lg:text-left">
-            <h2 className="font-semibold text-5xl lg:max-w-2xl leading-[1.1]">
-              <Balancer ratio={0.75}>
-                The Next.js Discord server indexed in the web
+      <div className="relative py-16 overflow-hidden">
+        <div className="container max-w-3xl lg:max-w-5xl mx-auto flex items-center pl-4">
+          <div className="flex-1 flex flex-col px-4 space-y-5 z-10">
+            <h2 className="font-bold text-[2.5rem] max-w-2xl leading-[1.1] bg-gradient-to-tr from-white/50 to-white text-transparent bg-clip-text">
+              <Balancer ratio={0.55}>
+                Next.js Discord server indexed in the web
               </Balancer>
             </h2>
             <a
               href="https://nextjs.org/discord"
               target="_blank"
               rel="noopener"
-              className="mx-auto text-xl text-white w-fit hover:opacity-80 hover:no-underline transition-opacity lg:mx-0"
+              className="px-7 py-2 rounded-lg text-sm text-black font-semibold w-fit hover:opacity-80 hover:no-underline transition-opacity bg-white/80"
             >
-              Join the server ➔
+              Join the server {'->'}
             </a>
           </div>
-
           <div
-            className="hidden lg:flex absolute top-0 bottom-0 left-1/2"
+            className="flex absolute top-4 bottom-0 left-3/4 md:left-2/3 lg:left-1/2 min-w-full"
             style={{
               WebkitMaskImage:
                 'linear-gradient(to bottom, rgba(0, 0, 0, 1.0) 50%, transparent 100%)',
               maskImage:
-                'linear-gradient(to top, rgba(0, 0, 0, 1.0) 0%, transparent 100%)',
+                'linear-gradient(to bottom, rgba(0, 0, 0, 1.0) 50%, transparent 100%)',
             }}
           >
             <div>
@@ -41,12 +42,12 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
                 src={discordImage}
                 alt=""
                 quality={90}
-                className="block relative -top-11 -skew-x-3 opacity-90 "
+                className="block relative top-0 -skew-x-3 brightness-75 "
                 style={{
                   WebkitMaskImage:
-                    'linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 1.0) 20%, rgba(0, 0, 0, 1.0) 80%, transparent 100%)',
+                    'radial-gradient(90.98% 90.93% at 0 0, #000 0%, rgba(0, 0, 0, 0.00) 100%)',
                   maskImage:
-                    'linear-gradient(to top, rgba(0, 0, 0, 1.0) 0%, transparent 100%)',
+                    'radial-gradient(90.98% 90.93% at 0 0, #000 0%, rgba(0, 0, 0, 0.00) 100%)',
                 }}
               />
             </div>
@@ -54,7 +55,27 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
         </div>
       </div>
 
-      <LayoutWithSidebar>{children}</LayoutWithSidebar>
+      <div className={twMerge('container max-w-7xl mx-auto px-4 py-8')}>
+        <main className="flex flex-col lg:flex-row gap-12 lg:gap-8 px-4">
+          <section className="flex-1 min-w-0">
+            <header className="mb-8">
+              <h2 className="text-3xl mb-4 font-semibold bg-gradient-to-tr from-white/70 to-white text-transparent bg-clip-text">
+                Questions
+              </h2>
+              {/* <div className="flex flex-row gap-4 text-sm text-white/50 [&_div]:pb-2">
+                <div className="text-white border-b">All</div>
+                <div>Answered</div>
+                <div>Unanswered</div>
+                <div>No replies</div>
+              </div> */}
+            </header>
+            {children}
+          </section>
+          <div className="lg:w-[300px] lg:pt-10">
+            <Sidebar />
+          </div>
+        </main>
+      </div>
     </>
   )
 }
