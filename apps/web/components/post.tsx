@@ -30,7 +30,7 @@ export const Post = ({
     <div className="border-t border-t-white/5">
       <Link
         href={`/post/${id}`}
-        className={`block text-white no-underline hover:no-underline -ml-4 border border-transparent hover:bg-neutral-900/60 hover:border-neutral-900 rounded-md hover:brightness-125 transition-all duration-75 pb-0.5`}
+        className={`block text-white no-underline hover:no-underline -mx-4 border border-transparent hover:bg-neutral-900/60 hover:border-neutral-900 rounded-md hover:brightness-125 transition-all duration-75 pb-0.5`}
       >
         <div className="flex flex-row px-4 py-3 items-start">
           <div className={`flex-1  `}>

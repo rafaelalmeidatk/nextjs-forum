@@ -42,7 +42,7 @@ export const Message = ({
             />
           ) : (
             <time
-              className="hidden self-center text-center group-hover:flex w-full items-center text-xs opacity-70"
+              className="hidden self-center text-center group-hover:flex w-full h-[1.35lh] items-end text-xs opacity-70"
               dateTime={createdAtTimes.iso}
               title={createdAtTimes.tooltip}
             >
@@ -53,7 +53,7 @@ export const Message = ({
 
         <div className="flex-1 w-0">
           {isFirstRow && (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center mb-0.5">
               <div className="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
                 {author.username}
                 {!author.isPublic && (
@@ -67,18 +67,18 @@ export const Message = ({
                   </i>
                 )}
                 {author.isOP && (
-                  <span className="ml-2 px-1 py-0.5 text-xs text-neutral-900 bg-neutral-300 rounded-full select-none">
+                  <span className="ml-2 px-1 py-0.5 font-medium text-xs text-neutral-900 bg-neutral-300 rounded-md select-none">
                     OP
                   </span>
                 )}
+                <time
+                  className="mt-[1px] ml-2 text-xs opacity-70 font-normal"
+                  dateTime={createdAtTimes.iso}
+                  title={createdAtTimes.tooltip}
+                >
+                  <DisplayLocalTime dateStr={createdAt.toISOString()} />
+                </time>
               </div>
-              <time
-                className="mt-[1px] text-xs opacity-70"
-                dateTime={createdAtTimes.iso}
-                title={createdAtTimes.tooltip}
-              >
-                <DisplayLocalTime dateStr={createdAt.toISOString()} />
-              </time>
             </div>
           )}
 

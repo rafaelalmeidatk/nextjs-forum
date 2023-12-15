@@ -48,7 +48,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
     <html lang="en" className={`${inter.className}`}>
       <body className="bg-black text-slate-900 text-white/80 min flex flex-col min-h-screen">
         <header className="">
-          <div className="container max-w-7xl flex mx-auto px-4 py-6 justify-between items-center">
+          <div className="container max-w-7xl flex mx-auto px-4 py-6 justify-between items-center xl:mt-4">
             <h1 aria-hidden="true" className="sr-only">
               Next.js Discord
             </h1>
@@ -57,7 +57,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
               href="/"
               className="hover:opacity-75 text-white/80 hover:no-underline transition-all duration-200"
             >
-              <span className="flex flex-col xs:flex-row xs:space-x-2  xs:items-center">
+              <span className="flex flex-row xs:space-x-2  items-center">
                 <NextIcon className="w-[90px]" />
                 <span className=" text-2xl font-bold tracking-tighter">
                   Discord Forum
@@ -65,7 +65,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
               </span>
             </a>
 
-            <div className="flex space-x-5">
+            <div className=" space-x-5 hidden xs:flex">
               <a
                 href="https://nextjs.org/discord"
                 target="_blank"
@@ -93,7 +93,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
 
         <footer className="mt-12 pb-6">
           <div className="container max-w-7xl flex flex-col mx-auto px-4 py-6 justify-start items-center text-center text-white/50">
-            Made by the Next.js Community
+            Made by Rafael Almeida and the Next.js Community
           </div>
         </footer>
 

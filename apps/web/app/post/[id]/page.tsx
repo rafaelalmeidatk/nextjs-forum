@@ -227,29 +227,25 @@ const Post = async ({ params }: PostProps) => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LayoutWithSidebar className="mt-4">
-        <div>
-          <h1 className="mb-4 font-semibold text-3xl">{post.title}</h1>
+      <main className="flex flex-col max-w-5xl mx-auto px-4 py-8">
+        <header className="mb-2">
+          <h1 className="mb-1 font-semibold text-3xl">{post.title}</h1>
 
-          <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 sm:items-end justify-between">
+            <div className="flex flex-col flex-wrap items-start gap-2">
+              {/* <div className="opacity-90">
+                by { truncate(post.username, 32) }
+              </div> */}
               {hasAnswer ? (
-                <div className="px-2.5 py-1 border border-green-400 text-green-400 rounded-full opacity-60">
+                <span className="px-3 py-1 bg-green-600 text-black font-medium rounded-full text-sm">
                   Answered
-                </div>
-              ) : (
-                <div className="px-2.5 py-1 border rounded-full opacity-50">
-                  Unanswered
-                </div>
-              )}
-              <div className="opacity-90">
-                {truncate(post.username, 32)} posted this in{' '}
-                <span className="opacity-80 font-semibold">
-                  #{post.channelName}
                 </span>
-              </div>
+              ) : (
+                <span className="px-3 py-1 bg-neutral-600 text-black font-medium rounded-full text-sm">
+                  Unanswered
+                </span>
+              )}
             </div>
-
             <a
               href={`https://discord.com/channels/752553802359505017/${post.snowflakeId}/${post.snowflakeId}`}
               className="shrink-0 w-fit px-4 py-1.5 font-semibold text-white border-neutral-700 border rounded hover:bg-neutral-700 hover:no-underline transition-colors"
@@ -259,7 +255,7 @@ const Post = async ({ params }: PostProps) => {
               Open in Discord
             </a>
           </div>
-        </div>
+        </header>
 
         <div className="mt-4 space-y-1">
           <MessageGroup isAnswer={false}>
@@ -286,7 +282,7 @@ const Post = async ({ params }: PostProps) => {
           </MessageGroup>
 
           {answerMessage && (
-            <div className="p-2 sm:p-3 space-y-1.5 border border-green-400 rounded">
+            <div className="ml-16 p-2 sm:p-3 space-y-1.5 rounded bg-neutral-900">
               <div className="flex space-x-2 items-center text-green-400">
                 <CheckCircleSolidIcon />
                 <div className="text-sm">
@@ -322,7 +318,9 @@ const Post = async ({ params }: PostProps) => {
           )}
         </div>
 
-        <h2 className="my-4 text-lg font-semibold">
+        <hr className="w-full h-px mt-6 mb-1 border-neutral-800" />
+
+        <h2 className="my-4 text-base opacity-50">
           {messages.length} {plur('Reply', messages.length)}
         </h2>
 
@@ -356,7 +354,7 @@ const Post = async ({ params }: PostProps) => {
             </MessageGroup>
           ))}
         </div>
-      </LayoutWithSidebar>
+      </main>
     </>
   )
 }

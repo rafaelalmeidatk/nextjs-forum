@@ -3,6 +3,8 @@ import Balancer from 'react-wrap-balancer'
 import discordImage from '@/discord.png'
 import Image from 'next/image'
 import { ReactNode } from 'react'
+import { Sidebar } from '@/components/sidebar'
+import { twMerge } from 'tailwind-merge'
 
 type HomeLayoutProps = { children: ReactNode }
 
@@ -12,7 +14,7 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
       <div className="relative py-16 overflow-hidden">
         <div className="container max-w-3xl lg:max-w-5xl mx-auto flex items-center pl-4">
           <div className="flex-1 flex flex-col px-4 space-y-5 z-10">
-            <h2 className="font-bold text-[2.5rem] max-w-2xl leading-[1.1] bg-gradient-to-tr from-white/40 to-white text-transparent bg-clip-text">
+            <h2 className="font-bold text-[2.5rem] max-w-2xl leading-[1.1] bg-gradient-to-tr from-white/50 to-white text-transparent bg-clip-text">
               <Balancer ratio={0.55}>
                 Next.js Discord server indexed in the web
               </Balancer>
@@ -50,22 +52,30 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
               />
             </div>
           </div>
-          d
         </div>
       </div>
 
-      <LayoutWithSidebar>
-        <header className="mb-8">
-          <h2 className="text-3xl mb-4 font-medium">Questions</h2>
-          <div className="flex flex-row gap-4 text-sm text-white/50 [&_div]:pb-2">
-            <div className="text-white border-b">All</div>
-            <div>Answered</div>
-            <div>Unanswered</div>
-            <div>No replies</div>
+      <div className={twMerge('container max-w-7xl mx-auto px-4 py-8')}>
+        <main className="flex flex-col lg:flex-row gap-12 lg:gap-8 px-4">
+          <section className="flex-1 min-w-0">
+            <header className="mb-8">
+              <h2 className="text-3xl mb-4 font-semibold bg-gradient-to-tr from-white/70 to-white text-transparent bg-clip-text">
+                Questions
+              </h2>
+              {/* <div className="flex flex-row gap-4 text-sm text-white/50 [&_div]:pb-2">
+                <div className="text-white border-b">All</div>
+                <div>Answered</div>
+                <div>Unanswered</div>
+                <div>No replies</div>
+              </div> */}
+            </header>
+            {children}
+          </section>
+          <div className="lg:w-[300px] lg:pt-10">
+            <Sidebar />
           </div>
-        </header>
-        {children}
-      </LayoutWithSidebar>
+        </main>
+      </div>
     </>
   )
 }
