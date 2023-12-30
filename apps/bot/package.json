@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
-    "@nextjs-forum/db": "*",
+    "@nextjs-forum/db": "workspace:*",
     "@t3-oss/env-core": "^0.6.0",
     "debug": "^4.3.4",
     "discord.js": "^14.12.1",
@@ -24,7 +24,8 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@nextjs-forum/eslint-config-custom": "*",
+    "@nextjs-forum/eslint-config-custom": "workspace:*",
+    "@nextjs-forum/tsconfig": "workspace:*",
     "@types/debug": "^4.1.8",
     "@types/node": "^18.15.3",
     "eslint": "^8.45.0",

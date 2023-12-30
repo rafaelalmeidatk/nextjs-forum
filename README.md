@@ -13,7 +13,7 @@ This repo contains the code for both the Discord bot that index the posts and th
 ### Installing the dependencies
 
 ```sh
-yarn install
+pnpm install
 ```
 
 ### Configuring the env vars
@@ -34,7 +34,7 @@ If you are developing locally, you need to create `.env` files in both the `apps
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------- | --------- |
 | `DISCORD_BOT_TOKEN`      | The token for the bot. If you don't have a bot yet, go to the bot project section for more details on how to create one | ✔️        |
 | `DISCORD_CLIENT_ID`      | Client ID of the bot app                                                                                                | ✔️        |
-| `DEV_GUILD_ID`           | The ID of the Discord server to register dev commands with `yarn dev:register-commands`                                 | ❌        |
+| `DEV_GUILD_ID`           | The ID of the Discord server to register dev commands with `pnpm dev:register-commands`                                 | ❌        |
 | `PUBLIC_PROFILE_ROLE_ID` | The ID of the role to make Discord profiles public in the database                                                      | ❌        |
 | `HELPER_ROLE_ID`         | The ID of the role that allows for selecting answer on behalf of owner                                                  | ❌        |
 | `MODERATOR_ROLE_ID`      | The ID of the role to set moderator status in the database (also can select answer)                                     | ❌        |
@@ -54,7 +54,7 @@ If you are developing locally, you need to create `.env` files in both the `apps
 To run both the `web` and `bot` projects at the same time, use the following command:
 
 ```sh
-yarn dev
+pnpm dev
 ```
 
 > **Note**: You don't need to run both projects always at the same time, they can work separately
@@ -86,7 +86,7 @@ Copy the Generated URL and open it in your browser
 To use the context and slash commands you first need to register them in Discord. The easiest way to do that is by running this command:
 
 ```sh
-yarn dev:register-commands
+pnpm dev:register-commands
 ```
 
 Notice the `dev:` prefix in the command. Discord limits how many times you can register commands with their API, but by registering the command in a specific server you can do this as many times as you want. You need the `DEV_GUILD_ID` env var set to use this command
@@ -105,5 +105,5 @@ This project uses PlanetScale as the DB provider, you can create a free account 
 To run migrations you need a password with the `Admin` role, follow the previous steps to create one. Add the generated database URL to the `packages/db/.env` file and run this command:
 
 ```sh
-yarn migrate
+pnpm migrate
 ```

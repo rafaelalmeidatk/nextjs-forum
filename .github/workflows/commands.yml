@@ -17,16 +17,16 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '18'
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build bot
-        run: yarn build:bot
+        run: pnpm build:bot
 
       - name: Deploy Commands
-        run: yarn register-commands
+        run: pnpm register-commands
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
