@@ -127,7 +127,7 @@ export const command: ContextMenuCommand = {
         },
       ],
     })
-
+    await interaction.targetMessage.react('✅')
     // edit instructions message to add the button for message url (get the first message sent by the bot)
     const instructionsMessage = (
       await interaction.channel.messages.fetch({
