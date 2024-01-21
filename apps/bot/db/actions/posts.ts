@@ -1,6 +1,7 @@
 import { AnyThreadChannel } from 'discord.js'
 import { db, TransactionDB, KyselyDB } from '@nextjs-forum/db/node'
 import { revalidateHomePage } from '../../revalidate.js'
+import { removePointsFromUser } from './users.js'
 
 export const syncPost = async (thread: AnyThreadChannel) => {
   const now = new Date()
@@ -27,9 +28,15 @@ export const syncPost = async (thread: AnyThreadChannel) => {
   await revalidateHomePage()
 }
 
-export const deletePost = async (postId: string) => {
-  await db.deleteFrom('posts').where('snowflakeId', '=', postId).execute()
-  await db.deleteFrom('messages').where('postId', '=', postId).execute()
+export const deletePost = async (thread: AnyThreadChannel<boolean>) => {
+  await db.transaction().execute(async (trx) => {
+    await trx.deleteFrom('posts').where('snowflakeId', '=', thread.id).execute()
+    await trx.deleteFrom('messages').where('postId', '=', thread.id).execute()
+
+    if (thread.ownerId) {
+      await removePointsFromUser(thread.ownerId, 'question', trx)
+    }
+  })
 }
 
 export const updatePostLastActive = async (

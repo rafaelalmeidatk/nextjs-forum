@@ -1,6 +1,6 @@
 import { Message, PartialMessage } from 'discord.js'
 import { db, sql } from '@nextjs-forum/db/node'
-import { syncUser } from './users.js'
+import { addPointsToUser, removePointsFromUser, syncUser } from './users.js'
 import { syncChannel, syncMessageChannel } from './channels.js'
 import { updatePostLastActive } from './posts.js'
 
@@ -18,22 +18,26 @@ export const syncMessage = async (message: Message) => {
       : []),
   ])
 
-  await db
-    .insertInto('messages')
-    .values({
-      snowflakeId: message.id,
-      content: message.content,
-      createdAt: message.createdAt,
-      editedAt: message.editedAt,
-      userId: message.author.id,
-      postId: message.channelId,
-      replyToMessageId: message.reference?.messageId,
-    })
-    .onDuplicateKeyUpdate({
-      content: message.content,
-      editedAt: message.editedAt,
-    })
-    .executeTakeFirst()
+  await db.transaction().execute(async (trx) => {
+    await trx
+      .insertInto('messages')
+      .values({
+        snowflakeId: message.id,
+        content: message.content,
+        createdAt: message.createdAt,
+        editedAt: message.editedAt,
+        userId: message.author.id,
+        postId: message.channelId,
+        replyToMessageId: message.reference?.messageId,
+      })
+      .onDuplicateKeyUpdate({
+        content: message.content,
+        editedAt: message.editedAt,
+      })
+      .executeTakeFirst()
+
+    await addPointsToUser(message.author.id, 'message', trx)
+  })
 
   await updatePostLastActive(message.channelId)
 
@@ -61,17 +65,27 @@ export const syncMessage = async (message: Message) => {
   })
 }
 
-export const deleteMessage = async (messageId: string, postId: string) => {
+export const deleteMessage = async (
+  message: Message<boolean> | PartialMessage,
+) => {
   await db.transaction().execute(async (trx) => {
     await trx
       .deleteFrom('messages')
-      .where('snowflakeId', '=', messageId)
+      .where('snowflakeId', '=', message.id)
       .executeTakeFirst()
     await trx
       .deleteFrom('attachments')
-      .where('messageId', '=', messageId)
+      .where('messageId', '=', message.id)
       .execute()
-    await updatePostLastActive(postId, trx)
+
+    await updatePostLastActive(message.channelId, trx)
+
+    // If the message is partial we won't remove the points of the author
+    // but that is fine since it's a very minor edge case and I don't think
+    // doing a fetch here is worth it
+    if (message.author?.id) {
+      await removePointsFromUser(message.author.id, 'message', trx)
+    }
   })
 }
 
@@ -95,6 +109,8 @@ export const markMessageAsSolution = async (
         }))
         .where('snowflakeId', '=', currentAnswer.userId)
         .execute()
+
+      await removePointsFromUser(currentAnswer.userId, 'answer', trx)
     }
 
     if (messageId === null) {
@@ -107,7 +123,7 @@ export const markMessageAsSolution = async (
       await updatePostLastActive(postId, trx)
 
       return
-    } 
+    }
 
     const newAnswer = await trx
       .selectFrom('messages')
@@ -130,6 +146,7 @@ export const markMessageAsSolution = async (
         .where('snowflakeId', '=', newAnswer.userId)
         .execute()
 
+      await addPointsToUser(newAnswer.userId, 'answer', trx)
       await updatePostLastActive(postId, trx)
     }
   })

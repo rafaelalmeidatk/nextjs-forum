@@ -29,7 +29,6 @@
     "@types/debug": "^4.1.8",
     "@types/node": "^18.15.3",
     "eslint": "^8.45.0",
-    "kysely-codegen": "^0.10.1",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"

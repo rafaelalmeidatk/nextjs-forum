@@ -12,7 +12,7 @@ import {
 } from './utils.js'
 import { contextMenuCommands } from './commands/context/index.js'
 import { slashCommands } from './commands/slash/index.js'
-import { syncUser } from './db/actions/users.js'
+import { addPointsToUser, syncUser } from './db/actions/users.js'
 
 const client = new Client({
   intents: [
@@ -62,7 +62,7 @@ client.on(Events.MessageDelete, async (message) => {
   if (!isMessageInForumChannel(message.channel)) return
 
   try {
-    await deleteMessage(message.id, message.channelId)
+    await deleteMessage(message)
     baseLog('Deleted a message in post %s', message.channelId)
   } catch (err) {
     console.error('Failed to delete message:', err)
@@ -75,6 +75,10 @@ client.on(Events.ThreadCreate, async (thread) => {
   try {
     await syncPost(thread)
     baseLog('Created a new post (%s)', thread.id)
+
+    if (thread.ownerId) {
+      await addPointsToUser(thread.ownerId, 'question')
+    }
 
     await thread.send({
       embeds: [
@@ -118,7 +122,7 @@ client.on(Events.ThreadDelete, async (thread) => {
   if (!isThreadInForumChannel(thread) || !isThreadSupported(thread)) return
 
   try {
-    await deletePost(thread.id)
+    await deletePost(thread)
     baseLog('Deleted a post (%s)', thread.id)
   } catch (err) {
     console.error('Failed to delete thread:', err)
