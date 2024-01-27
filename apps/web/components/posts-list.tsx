@@ -32,6 +32,7 @@ const getPostsByPage = async (pageNumber: number) => {
           .where('messages.snowflakeId', '!=', eb.ref('posts.snowflakeId'))
           .as('messagesCount'),
     ])
+    .where('isIndexed', '=', 1)
     .orderBy('createdAt', 'desc')
     // Add one more result so we can know if there's a next page, not the
     // prettiest solution but it works great

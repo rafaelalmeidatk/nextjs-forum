@@ -43,6 +43,7 @@ export interface Posts {
   channelId: string | null
   answerId: string | null
   lastActiveAt: Generated<Date>
+  isIndexed: Generated<number>
 }
 
 export interface Users {

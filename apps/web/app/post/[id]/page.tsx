@@ -16,6 +16,16 @@ import { ArrowDownIcon } from '@/components/icons/arrow-down'
 import type { QAPage, WithContext } from 'schema-dts'
 import { parseDiscordMessage } from '@/utils/discord-markdown'
 
+const isPostIndexed = async (snowflakeId: string) => {
+  const post = await db
+    .selectFrom('posts')
+    .select('isIndexed')
+    .where('snowflakeId', '=', snowflakeId)
+    .executeTakeFirst()
+
+  return post ? post.isIndexed : false
+}
+
 const getPost = async (snowflakeId: string) => {
   return await db
     .selectFrom('posts')
@@ -160,6 +170,11 @@ type PostProps = {
 }
 
 const Post = async ({ params }: PostProps) => {
+  const isIndexed = await isPostIndexed(params.id)
+  if (!isIndexed) {
+    notFound()
+  }
+
   const post = await getPost(params.id)
   if (!post) {
     notFound()

@@ -17,6 +17,16 @@ const migrator = new Migrator({
   }),
 })
 
+if (op === 'list') {
+  const migrations = await migrator.getMigrations()
+  for (const migration of migrations) {
+    console.log(`${migration.name} - Executed at: ${migration.executedAt}`)
+  }
+
+  await db.destroy()
+  process.exit(0)
+}
+
 const { error, results } = await (op === 'latest'
   ? migrator.migrateToLatest()
   : migrator.migrateDown())

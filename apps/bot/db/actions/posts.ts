@@ -1,6 +1,6 @@
 import { AnyThreadChannel } from 'discord.js'
 import { db, TransactionDB, KyselyDB } from '@nextjs-forum/db/node'
-import { revalidateHomePage } from '../../revalidate.js'
+import { revalidateHomePage, revalidatePost } from '../../revalidate.js'
 import { removePointsFromUser } from './users.js'
 
 export const syncPost = async (thread: AnyThreadChannel) => {
@@ -48,4 +48,18 @@ export const updatePostLastActive = async (
     .where('snowflakeId', '=', postId)
     .set({ lastActiveAt: new Date() })
     .execute()
+}
+
+export const unindexPost = async (channel: AnyThreadChannel<boolean>) => {
+  await db
+    .updateTable('posts')
+    .where('snowflakeId', '=', channel.id)
+    .set({ isIndexed: 0 })
+    .execute()
+
+  if (channel.ownerId) {
+    await removePointsFromUser(channel.ownerId, 'question')
+  }
+
+  await revalidatePost(channel.id)
 }
