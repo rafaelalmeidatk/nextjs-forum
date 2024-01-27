@@ -24,7 +24,6 @@ export const tryToAssignRegularMemberRole = async (member: GuildMember) => {
   if (member.roles.cache.has(env.REGULAR_MEMBER_ROLE_ID)) return
 
   const user = await getUserById(member.id)
-  console.log('user points', user?.points)
   if (!user || user.points < REQUIRED_POINTS_FOR_ROLE) return
 
   await member.roles.add(env.REGULAR_MEMBER_ROLE_ID)
