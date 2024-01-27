@@ -107,7 +107,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
 export const getUserById = async (id: string) => {
   return db
     .selectFrom('users')
-    .select('username')
+    .select(['username', 'points'])
     .where('snowflakeId', '=', id)
     .executeTakeFirst()
 }
@@ -121,7 +121,7 @@ const updatePointsBySum = async (
     .updateTable('users')
     .where('snowflakeId', '=', userId)
     .set((eb) => ({
-      points: sql`${eb.ref('points')} + ${value}`,
+      points: sql`LEAST(999999, ${eb.ref('points')} + ${value})`,
     }))
     .execute()
 }

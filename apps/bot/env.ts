@@ -18,6 +18,7 @@ export const env = createEnv({
     PUBLIC_PROFILE_ROLE_ID: z.string().optional(),
     MODERATOR_ROLE_ID: z.string().optional(),
     HELPER_ROLE_ID: z.string().optional(),
+    REGULAR_MEMBER_ROLE_ID: z.string().optional(),
     INDEXABLE_CHANNEL_IDS: z.string().transform((str) => str.split(',')),
 
     // Database

@@ -3,6 +3,7 @@ import { db, sql } from '@nextjs-forum/db/node'
 import { addPointsToUser, removePointsFromUser, syncUser } from './users.js'
 import { syncChannel, syncMessageChannel } from './channels.js'
 import { updatePostLastActive } from './posts.js'
+import { tryToAssignRegularMemberRole } from '../../lib/points.js'
 
 export const syncMessage = async (message: Message) => {
   const authorAsGuildMember = await message.guild?.members.fetch(
@@ -37,32 +38,34 @@ export const syncMessage = async (message: Message) => {
       .executeTakeFirst()
 
     await addPointsToUser(message.author.id, 'message', trx)
+
+    await updatePostLastActive(message.channelId, trx)
+
+    // Replace attachments
+    if (message.attachments.size > 0) {
+      await trx
+        .deleteFrom('attachments')
+        .where('messageId', '=', message.id)
+        .execute()
+
+      await trx
+        .insertInto('attachments')
+        .values(
+          Array.from(message.attachments.values()).map((attachment) => ({
+            snowflakeId: attachment.id,
+            url: attachment.url,
+            name: attachment.name,
+            contentType: attachment.contentType,
+            messageId: message.id,
+          })),
+        )
+        .execute()
+    }
   })
 
-  await updatePostLastActive(message.channelId)
-
-  if (message.attachments.size === 0) return
-
-  // Replace attachments
-  await db.transaction().execute(async (trx) => {
-    await trx
-      .deleteFrom('attachments')
-      .where('messageId', '=', message.id)
-      .execute()
-
-    await trx
-      .insertInto('attachments')
-      .values(
-        Array.from(message.attachments.values()).map((attachment) => ({
-          snowflakeId: attachment.id,
-          url: attachment.url,
-          name: attachment.name,
-          contentType: attachment.contentType,
-          messageId: message.id,
-        })),
-      )
-      .execute()
-  })
+  if (authorAsGuildMember) {
+    await tryToAssignRegularMemberRole(authorAsGuildMember)
+  }
 }
 
 export const deleteMessage = async (
