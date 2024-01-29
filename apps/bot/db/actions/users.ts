@@ -132,6 +132,12 @@ export const addPointsToUser = async (
   trx: TransactionDB | KyselyDB = db,
 ) => updatePointsBySum(userId, POINTS_REWARDS[type], trx)
 
+export const addDirectPointsToUser = async (
+  userId: string,
+  value: number,
+  trx: TransactionDB | KyselyDB = db,
+) => updatePointsBySum(userId, value, trx)
+
 export const removePointsFromUser = async (
   userId: string,
   type: keyof typeof POINTS_REWARDS,
