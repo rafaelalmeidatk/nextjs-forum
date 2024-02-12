@@ -36,10 +36,12 @@ export const command: SlashCommand = {
       return
     }
 
+    await interaction.deferReply({ ephemeral: true })
+
     await syncUser(user, guildMember)
     await addDirectPointsToUser(user.id, points)
     await tryToAssignRegularMemberRole(guildMember, true)
 
-    interaction.reply({ content: 'Done!', ephemeral: true })
+    await interaction.editReply({ content: 'Done!' })
   },
 }
