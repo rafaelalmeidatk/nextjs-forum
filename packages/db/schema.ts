@@ -38,11 +38,12 @@ export interface Posts {
   title: string
   isLocked: number
   createdAt: Date
-  lastActiveAt: Date
   editedAt: Date | null
   userId: string | null
   channelId: string | null
   answerId: string | null
+  lastActiveAt: Generated<Date>
+  isIndexed: Generated<number>
 }
 
 export interface Users {
@@ -54,6 +55,7 @@ export interface Users {
   avatarUrl: string
   isModerator: Generated<number>
   answersCount: Generated<number>
+  points: Generated<number>
 }
 
 export interface DB {

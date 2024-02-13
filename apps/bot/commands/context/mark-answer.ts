@@ -16,6 +16,7 @@ import {
 } from '../../utils.js'
 import { markMessageAsSolution } from '../../db/actions/messages.js'
 import { env } from '../../env.js'
+import { tryToAssignRegularMemberRole } from '../../lib/points.js'
 
 export const command: ContextMenuCommand = {
   data: new ContextMenuCommandBuilder()
@@ -102,6 +103,13 @@ export const command: ContextMenuCommand = {
       interaction.targetMessage.id,
       interaction.channelId,
     )
+
+    const targetMember = await interaction.guild?.members.fetch(
+      interaction.targetMessage.author.id,
+    )
+    if (targetMember) {
+      await tryToAssignRegularMemberRole(interactionMember)
+    }
 
     const answeredTagId = mainChannel.availableTags.find((t) =>
       t.name.includes('Answered'),

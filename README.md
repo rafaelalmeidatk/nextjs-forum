@@ -38,6 +38,7 @@ If you are developing locally, you need to create `.env` files in both the `apps
 | `PUBLIC_PROFILE_ROLE_ID` | The ID of the role to make Discord profiles public in the database                                                      | ❌        |
 | `HELPER_ROLE_ID`         | The ID of the role that allows for selecting answer on behalf of owner                                                  | ❌        |
 | `MODERATOR_ROLE_ID`      | The ID of the role to set moderator status in the database (also can select answer)                                     | ❌        |
+| `REGULAR_MEMBER_ROLE_ID` | The ID of the role to add to users when they reach the points milestone                                                 | ❌        |
 | `INDEXABLE_CHANNEL_IDS`  | Comma-separated list of forum channels to index                                                                         | ✔️        |
 | `DATABASE_URL`           | The connection string to connect to the DB                                                                              | ✔️        |
 | `REVALIDATE_SECRET`      | The same secret from the `web` project                                                                                  | ✔️        |
@@ -70,6 +71,7 @@ You will need your own bot to run the project locally, it is also recommended to
 
 To invite the bot to your own server, go to the OAuth2 > URL Generator page, select the `bot` scope and add the following permissions:
 
+- Manage Roles
 - Send Messages
 - Send Messages in Threads
 - Manage Message

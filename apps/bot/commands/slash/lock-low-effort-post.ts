@@ -7,6 +7,7 @@ import {
 import { dedent } from 'ts-dedent'
 import { SlashCommand } from '../types.js'
 import { replyWithEmbedError } from '../../utils.js'
+import { unindexPost } from '../../db/actions/posts.js'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -53,5 +54,7 @@ export const command: SlashCommand = {
         },
       ],
     })
+
+    await unindexPost(interaction.channel)
   },
 }

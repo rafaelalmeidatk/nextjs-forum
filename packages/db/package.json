@@ -7,6 +7,7 @@
     "build": "tsc --build",
     "migrate": "NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
     "migrate:down": "MIGRATE_OP=down NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
+    "migrate:list": "MIGRATE_OP=list NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
     "db-codegen": "kysely-codegen --dialect mysql --out-file ./schema.ts",
     "lint": "eslint ."
   },
@@ -25,8 +26,10 @@
     "mysql2": "^3.5.2"
   },
   "devDependencies": {
+    "@nextjs-forum/tsconfig": "workspace:*",
     "dotenv": "^16.3.1",
+    "ts-node": "^10.9.1",
     "typescript": "^5.1.6",
-    "@nextjs-forum/tsconfig": "workspace:*"
+    "kysely-codegen": "^0.10.1"
   }
 }

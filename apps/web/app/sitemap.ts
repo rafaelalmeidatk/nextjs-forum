@@ -8,7 +8,8 @@ export const revalidate = 21600
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await db
     .selectFrom('posts')
-    .select(['posts.snowflakeId', 'posts.lastActiveAt'])
+    .select(['snowflakeId', 'lastActiveAt'])
+    .where('isIndexed', '=', 1)
     .limit(50_000) // we will probably need to chunk the sitemap in the future
     .execute()
 
@@ -25,8 +26,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.9,
         lastModified: p.lastActiveAt,
       } satisfies MetadataRoute.Sitemap[0]
-    })
-
+    }),
   ]
 }
-

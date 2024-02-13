@@ -5,7 +5,11 @@ import {
   SlashCommandBuilder,
 } from 'discord.js'
 import { SlashCommand } from '../types.js'
-import { isMessageInForumChannel, replyWithEmbed, replyWithEmbedError } from '../../utils.js'
+import {
+  isMessageInForumChannel,
+  replyWithEmbed,
+  replyWithEmbedError,
+} from '../../utils.js'
 import { env } from '../../env.js'
 import { markMessageAsSolution } from '../../db/actions/messages.js'
 
@@ -79,14 +83,15 @@ export const command: SlashCommand = {
     )?.id
 
     if (answeredTagId) {
-      const newTags = interaction.channel.appliedTags.filter(tag => tag !== answeredTagId)
+      const newTags = interaction.channel.appliedTags.filter(
+        (tag) => tag !== answeredTagId,
+      )
       interaction.channel.setAppliedTags(newTags)
     }
 
     await replyWithEmbed(interaction, {
       title: '✅ Success!',
-      description:
-        'This question\'s answer has been removed.',
+      description: "This question's answer has been removed.",
       color: Colors.Orange,
     })
 
@@ -109,5 +114,5 @@ export const command: SlashCommand = {
         console.error('Failed to update instructions message:', err)
       }
     }
-  }
+  },
 }

@@ -7,8 +7,8 @@
     "dev": "NODE_ENV=development NODE_OPTIONS='--loader ts-node/esm' nodemon index.ts",
     "build": "tsc --build",
     "start": "NODE_ENV=production node build/index.js",
-    "dev:register-commands": "NODE_ENV=development ts-node --esm ./register-commands.ts",
-    "register-commands": "ts-node --esm ./register-commands.ts"
+    "dev:register-commands": "NODE_ENV=development node --loader ts-node/esm ./register-commands.ts",
+    "register-commands": "node --loader ts-node/esm ./register-commands.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
@@ -28,10 +28,9 @@
     "@nextjs-forum/tsconfig": "workspace:*",
     "@types/debug": "^4.1.8",
     "@types/node": "^18.15.3",
-    "eslint": "^8.45.0",
-    "kysely-codegen": "^0.10.1",
-    "nodemon": "^3.0.1",
-    "ts-node": "^10.9.1",
+    "eslint": "^8.56.0",
+    "nodemon": "^3.0.3",
+    "ts-node": "^10.9.2",
     "typescript": "^5.1.6"
   }
 }

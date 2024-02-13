@@ -1,9 +1,10 @@
 import { GuildMember, User } from 'discord.js'
 import { baseLog } from '../../log.js'
-import { db } from '@nextjs-forum/db/node'
+import { KyselyDB, TransactionDB, db, sql } from '@nextjs-forum/db/node'
 import { AnimalModule, Faker, en } from '@faker-js/faker'
 import { type CacheUser, usersCache } from '../../lib/cache.js'
 import { env } from '../../env.js'
+import { POINTS_REWARDS } from '../../lib/points.js'
 
 const log = baseLog.extend('users')
 
@@ -71,7 +72,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     const faker = new Faker({ locale: en })
     faker.seed(user.id.split('').map(Number))
 
-    // Generate a hopefully cool animal name because I thought the person names were weird for a Discord app
+    // Generate a hopefully cool animal name because I thought the person names were looking too fake
     const animalType = faker.helpers.arrayElement(allowedAnimalTypes)
     const animalName = faker.animal[animalType]()
 
@@ -106,7 +107,39 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
 export const getUserById = async (id: string) => {
   return db
     .selectFrom('users')
-    .select('username')
+    .select(['username', 'points'])
     .where('snowflakeId', '=', id)
     .executeTakeFirst()
 }
+
+const updatePointsBySum = async (
+  userId: string,
+  value: number,
+  trx: TransactionDB | KyselyDB = db,
+) => {
+  await trx
+    .updateTable('users')
+    .where('snowflakeId', '=', userId)
+    .set((eb) => ({
+      points: sql`LEAST(999999, ${eb.ref('points')} + ${value})`,
+    }))
+    .execute()
+}
+
+export const addPointsToUser = async (
+  userId: string,
+  type: keyof typeof POINTS_REWARDS,
+  trx: TransactionDB | KyselyDB = db,
+) => updatePointsBySum(userId, POINTS_REWARDS[type], trx)
+
+export const addDirectPointsToUser = async (
+  userId: string,
+  value: number,
+  trx: TransactionDB | KyselyDB = db,
+) => updatePointsBySum(userId, value, trx)
+
+export const removePointsFromUser = async (
+  userId: string,
+  type: keyof typeof POINTS_REWARDS,
+  trx: TransactionDB | KyselyDB = db,
+) => updatePointsBySum(userId, -POINTS_REWARDS[type], trx)
