@@ -136,6 +136,7 @@ export const command: ContextMenuCommand = {
       ],
     })
     await interaction.targetMessage.react('✅')
+
     // edit instructions message to add the button for message url (get the first message sent by the bot)
     const instructionsMessage = (
       await interaction.channel.messages.fetch({
@@ -165,6 +166,20 @@ export const command: ContextMenuCommand = {
         })
       } catch (err) {
         console.error('Failed to update instructions message:', err)
+      }
+    }
+
+    // if the message author is the post creator, notify mods to ensure its a genuine solution
+    if (interaction.targetMessage.author.id === interaction.channel.ownerId) {
+      if (env.MOD_LOG_CHANNEL_ID) {
+        const modLogChannel = interaction.client.channels.cache.get(
+          env.MOD_LOG_CHANNEL_ID,
+        )
+        if (!modLogChannel?.isTextBased()) return
+
+        await modLogChannel.send({
+          content: `OP self marked their message: ${interaction.targetMessage.url}`,
+        })
       }
     }
   },
