@@ -20,6 +20,7 @@ export const env = createEnv({
     HELPER_ROLE_ID: z.string().optional(),
     REGULAR_MEMBER_ROLE_ID: z.string().optional(),
     INDEXABLE_CHANNEL_IDS: z.string().transform((str) => str.split(',')),
+    MOD_LOG_CHANNEL_ID: z.string().optional(),
 
     // Database
     DATABASE_URL: z.string(),

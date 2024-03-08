@@ -40,6 +40,7 @@ If you are developing locally, you need to create `.env` files in both the `apps
 | `MODERATOR_ROLE_ID`      | The ID of the role to set moderator status in the database (also can select answer)                                     | ❌        |
 | `REGULAR_MEMBER_ROLE_ID` | The ID of the role to add to users when they reach the points milestone                                                 | ❌        |
 | `INDEXABLE_CHANNEL_IDS`  | Comma-separated list of forum channels to index                                                                         | ✔️        |
+| `MOD_LOG_CHANNEL_ID`     | The ID of the channel to log things for mods                                                                            | ❌        |
 | `DATABASE_URL`           | The connection string to connect to the DB                                                                              | ✔️        |
 | `REVALIDATE_SECRET`      | The same secret from the `web` project                                                                                  | ✔️        |
 | `WEB_URL`                | The address of the web service, used to make the call to revalidate the cache                                           | ✔️        |
