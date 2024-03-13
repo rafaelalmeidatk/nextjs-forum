@@ -1,6 +1,12 @@
 import { GuildMember, User } from 'discord.js'
 import { baseLog } from '../../log.js'
-import { KyselyDB, TransactionDB, db, sql } from '@nextjs-forum/db/node'
+import {
+  KyselyDB,
+  TransactionDB,
+  db,
+  sql,
+  selectUuid,
+} from '@nextjs-forum/db/node'
 import { AnimalModule, Faker, en } from '@faker-js/faker'
 import { type CacheUser, usersCache } from '../../lib/cache.js'
 import { env } from '../../env.js'
@@ -143,3 +149,7 @@ export const removePointsFromUser = async (
   type: keyof typeof POINTS_REWARDS,
   trx: TransactionDB | KyselyDB = db,
 ) => updatePointsBySum(userId, -POINTS_REWARDS[type], trx)
+
+export async function getCorrectAnswersCount(userId: string) {
+  return db.selectFrom('users').select(['answersCount']).executeTakeFirst()
+}
