@@ -145,5 +145,9 @@ export const removePointsFromUser = async (
 ) => updatePointsBySum(userId, -POINTS_REWARDS[type], trx)
 
 export async function getCorrectAnswersCount(userId: string) {
-  return db.selectFrom('users').select(['answersCount']).executeTakeFirst()
+  return db
+    .selectFrom('users')
+    .where('snowflakeId', '=', userId)
+    .select(['answersCount'])
+    .executeTakeFirst()
 }
