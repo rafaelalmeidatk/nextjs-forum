@@ -4,7 +4,7 @@ import { getCorrectAnswersCount } from '../../db/actions/users.js'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()
-    .setName('answers')
+    .setName('get-answer-count')
     .setDescription('Get the count of your correct answers'),
 
   async execute(interaction) {
