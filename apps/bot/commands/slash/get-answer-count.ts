@@ -1,10 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { SlashCommand } from '../types.js'
-import {
-  getCorrectAnswersCount,
-  isUserProfilePublic,
-} from '../../db/actions/users.js'
-
+import { getCorrectAnswersCount } from '../../db/actions/users.js'
+import { isUserProfilePublic } from '../../utils.js'
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()
     .setName('get-answer-count')
@@ -25,11 +22,17 @@ export const command: SlashCommand = {
     const userId = userOption?.id || interaction.user.id
     const userArgProvided = !!userOption
     const count = await getCorrectAnswersCount(userId)
+
+    // Also executes if count is 0
     if (!count) {
       await interaction.reply({
         content: `It looks like ${
           userArgProvided ? 'this user is' : 'you are'
-        } new to the forum! Start by answering some questions and you'll see your progress here.`,
+        } new to the forum!${
+          userArgProvided
+            ? ''
+            : " Start by answering some questions and you'll see your progress here."
+        }`,
         ephemeral: true,
       })
       return
@@ -39,7 +42,7 @@ export const command: SlashCommand = {
 
     if (!guildMember) {
       await interaction.reply({
-        content: `I couldn't find the guild member from this user`,
+        content: `The user is not in this server.`,
         ephemeral: true,
       })
       return
@@ -57,7 +60,9 @@ export const command: SlashCommand = {
     await interaction.reply({
       content: `${
         userArgProvided ? `${guildMember.user.username} has` : 'You have'
-      } ${count.answersCount} correct answers.`,
+      } ${count.answersCount} ${
+        count.answersCount === 1 ? 'answer' : 'answers'
+      } correct.`,
       ephemeral: !isProfilePublic,
     })
   },
