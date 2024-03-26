@@ -22,7 +22,7 @@ export const command: SlashCommand = {
     const userOption = interaction.options.getUser('user')
 
     // Use the ID of the user option if it's provided, otherwise use the ID of the interaction user
-    const userId = userOption ? userOption.id : interaction.user.id
+    const userId = userOption?.id || interaction.user.id
     const userArgProvided = !!userOption
     const count = await getCorrectAnswersCount(userId)
     if (!count) {
@@ -55,9 +55,9 @@ export const command: SlashCommand = {
     }
 
     await interaction.reply({
-      content: `${userArgProvided ? 'This user has' : 'You have'} ${
-        count.answersCount
-      } correct answers.`,
+      content: `${
+        userArgProvided ? `${guildMember.user.username} has` : 'You have'
+      } ${count.answersCount} correct answers.`,
       ephemeral: !isProfilePublic,
     })
   },
