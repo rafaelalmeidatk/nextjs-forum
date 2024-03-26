@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from 'discord.js'
 import { SlashCommand } from '../types.js'
 import { getCorrectAnswersCount } from '../../db/actions/users.js'
 import { isUserProfilePublic } from '../../utils.js'
+
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()
     .setName('get-answer-count')

@@ -6,9 +6,9 @@ import {
   Colors,
   InteractionReplyOptions,
   InteractionResponse,
+  GuildMember,
 } from 'discord.js'
 import { env } from './env.js'
-import { GuildMember } from 'discord.js'
 
 const START_INDEXING_AFTER = 1686438000000
 
