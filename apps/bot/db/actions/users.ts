@@ -143,3 +143,11 @@ export const removePointsFromUser = async (
   type: keyof typeof POINTS_REWARDS,
   trx: TransactionDB | KyselyDB = db,
 ) => updatePointsBySum(userId, -POINTS_REWARDS[type], trx)
+
+export const getCorrectAnswersCount = (userId: string) => {
+  return db
+    .selectFrom('users')
+    .where('snowflakeId', '=', userId)
+    .select(['answersCount'])
+    .executeTakeFirst()
+}
