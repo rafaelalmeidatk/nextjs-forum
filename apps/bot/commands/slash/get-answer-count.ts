@@ -41,7 +41,7 @@ export const command: SlashCommand = {
 
     if (!guildMember) {
       await interaction.reply({
-        content: `The user is not in 2this server.`,
+        content: `The user is not in this server.`,
         ephemeral: true,
       })
       return
