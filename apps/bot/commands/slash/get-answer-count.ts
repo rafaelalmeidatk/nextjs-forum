@@ -28,11 +28,9 @@ export const command: SlashCommand = {
     if (!count) {
       await interaction.reply({
         content: `It looks like ${
-          userArgProvided ? 'this user is' : 'you are'
-        } new to the forum!${
           userArgProvided
-            ? ''
-            : " Start by answering some questions and you'll see your progress here."
+            ? 'this user is new to the forum!'
+            : "you are new to the forum. Start by answering some questions and you'll see your progress here!"
         }`,
         ephemeral: true,
       })
@@ -43,7 +41,7 @@ export const command: SlashCommand = {
 
     if (!guildMember) {
       await interaction.reply({
-        content: `The user is not in this server.`,
+        content: `The user is not in 2this server.`,
         ephemeral: true,
       })
       return
