@@ -49,7 +49,7 @@ export const command: SlashCommand = {
       return
     }
 
-    const isProfilePublic = await isUserProfilePublic(guildMember)
+    const isProfilePublic = isUserProfilePublic(guildMember)
     if (!isProfilePublic && userArgProvided) {
       await interaction.reply({
         content: `This user's profile is private.`,
