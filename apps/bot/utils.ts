@@ -75,7 +75,7 @@ export const replyWithEmbedError = (
   })
 }
 
-export const isUserProfilePublic = async (user: GuildMember) => {
+export const isUserProfilePublic = (user: GuildMember) => {
   if (env.PUBLIC_PROFILE_ROLE_ID)
     return user.roles.cache.has(env.PUBLIC_PROFILE_ROLE_ID)
   else return false // If env doesn't exist, consider it as private
