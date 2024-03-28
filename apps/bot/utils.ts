@@ -6,7 +6,6 @@ import {
   Colors,
   InteractionReplyOptions,
   InteractionResponse,
-  GuildMember,
 } from 'discord.js'
 import { env } from './env.js'
 
