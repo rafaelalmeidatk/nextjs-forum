@@ -1,7 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { SlashCommand } from '../types.js'
 import { getCorrectAnswersCount } from '../../db/actions/users.js'
-import { isUserProfilePublic } from '../../utils.js'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -16,6 +15,7 @@ export const command: SlashCommand = {
     .setDMPermission(false),
 
   async execute(interaction) {
+    await interaction.deferReply({ ephemeral: true })
     // Get the user option
     const userOption = interaction.options.getUser('user')
 
@@ -26,13 +26,12 @@ export const command: SlashCommand = {
 
     // Also executes if count is 0
     if (!count) {
-      await interaction.reply({
+      await interaction.editReply({
         content: `It looks like ${
           userArgProvided
             ? 'this user is new to the forum!'
             : "you are new to the forum. Start by answering some questions and you'll see your progress here!"
         }`,
-        ephemeral: true,
       })
       return
     }
@@ -40,29 +39,18 @@ export const command: SlashCommand = {
     const guildMember = await interaction.guild?.members.fetch(userId)
 
     if (!guildMember) {
-      await interaction.reply({
+      await interaction.editReply({
         content: `The user is not in this server.`,
-        ephemeral: true,
       })
       return
     }
 
-    const isProfilePublic = isUserProfilePublic(guildMember)
-    if (!isProfilePublic && userArgProvided) {
-      await interaction.reply({
-        content: `This user's profile is private.`,
-        ephemeral: true,
-      })
-      return
-    }
-
-    await interaction.reply({
+    await interaction.editReply({
       content: `${
         userArgProvided ? `${guildMember.user.username} has` : 'You have'
-      } ${count.answersCount} ${
+      } ${count.answersCount} correct ${
         count.answersCount === 1 ? 'answer' : 'answers'
-      } correct.`,
-      ephemeral: !isProfilePublic,
+      }!`,
     })
   },
 }
