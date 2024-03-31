@@ -85,15 +85,15 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     .insertInto('users')
     .values({
       snowflakeId: user.id,
-      isPublic: isPublicProfile ? 1 : 0,
-      isModerator: isModerator ? 1 : 0,
+      isPublic: isPublicProfile,
+      isModerator,
       username,
       discriminator,
       avatarUrl,
     })
     .onDuplicateKeyUpdate({
-      isPublic: isPublicProfile ? 1 : 0,
-      isModerator: isModerator ? 1 : 0,
+      isPublic: isPublicProfile,
+      isModerator,
       username,
       discriminator,
       avatarUrl,
