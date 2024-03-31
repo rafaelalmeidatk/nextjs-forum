@@ -4,58 +4,60 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>
 
+export type Timestamp = ColumnType<Date, Date | string, Date | string>
+
 export interface Attachments {
-  id: Generated<Buffer>
+  contentType: string | null
+  id: Generated<string>
+  messageId: string
+  name: string
   snowflakeId: string
   url: string
-  name: string
-  contentType: string | null
-  messageId: string
 }
 
 export interface Channels {
-  id: Generated<Buffer>
-  snowflakeId: string
+  id: Generated<string>
   name: string
-  type: number
+  snowflakeId: string
   topic: string
+  type: number
 }
 
 export interface Messages {
-  id: Generated<Buffer>
-  snowflakeId: string
   content: string
-  createdAt: Date
-  editedAt: Date | null
-  userId: string
+  createdAt: Timestamp
+  editedAt: Timestamp | null
+  id: Generated<string>
   postId: string
   replyToMessageId: string | null
+  snowflakeId: string
+  userId: string
 }
 
 export interface Posts {
-  id: Generated<Buffer>
+  answerId: string | null
+  channelId: string | null
+  createdAt: Timestamp
+  editedAt: Timestamp | null
+  id: Generated<string>
+  isIndexed: Generated<boolean>
+  isLocked: boolean
+  lastActiveAt: Generated<Timestamp>
   snowflakeId: string
   title: string
-  isLocked: number
-  createdAt: Date
-  editedAt: Date | null
   userId: string | null
-  channelId: string | null
-  answerId: string | null
-  lastActiveAt: Generated<Date>
-  isIndexed: Generated<number>
 }
 
 export interface Users {
-  id: Generated<Buffer>
-  snowflakeId: string
-  isPublic: Generated<number>
-  username: string
-  discriminator: string
-  avatarUrl: string
-  isModerator: Generated<number>
   answersCount: Generated<number>
+  avatarUrl: string
+  discriminator: string
+  id: Generated<string>
+  isModerator: Generated<boolean>
+  isPublic: Generated<boolean>
   points: Generated<number>
+  snowflakeId: string
+  username: string
 }
 
 export interface DB {

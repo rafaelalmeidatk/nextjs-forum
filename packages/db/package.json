@@ -8,7 +8,7 @@
     "migrate": "NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
     "migrate:down": "MIGRATE_OP=down NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
     "migrate:list": "MIGRATE_OP=list NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
-    "db-codegen": "kysely-codegen --dialect mysql --out-file ./schema.ts",
+    "db-codegen": "kysely-codegen --dialect postgres --out-file ./schema.ts",
     "lint": "eslint ."
   },
   "exports": {
