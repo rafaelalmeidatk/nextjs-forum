@@ -3,6 +3,7 @@ import * as refreshLastActive from './refresh-last-active.js'
 import * as lockLowEffortPost from './lock-low-effort-post.js'
 import * as removePostAnswer from './remove-post-answer.js'
 import * as givePoints from './give-points.js'
+import * as getAnswerCount from './get-answer-count.js'
 
 export const slashCommands = [
   refreshAnswerCount.command,
@@ -10,4 +11,5 @@ export const slashCommands = [
   lockLowEffortPost.command,
   removePostAnswer.command,
   givePoints.command,
+  getAnswerCount.command,
 ]
