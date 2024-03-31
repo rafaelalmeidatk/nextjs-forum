@@ -15,7 +15,6 @@ export const command: SlashCommand = {
     .setDMPermission(false),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true })
     // Get the user option
     const userOption = interaction.options.getUser('user')
 
@@ -24,33 +23,34 @@ export const command: SlashCommand = {
     const userArgProvided = !!userOption
     const count = await getCorrectAnswersCount(userId)
 
-    // Also executes if count is 0
     if (!count) {
-      await interaction.editReply({
+      await interaction.reply({
         content: `It looks like ${
           userArgProvided
             ? 'this user is new to the forum!'
             : "you are new to the forum. Start by answering some questions and you'll see your progress here!"
         }`,
+        ephemeral: true,
       })
       return
     }
 
     const guildMember = await interaction.guild?.members.fetch(userId)
-
     if (!guildMember) {
-      await interaction.editReply({
+      await interaction.reply({
         content: `The user is not in this server.`,
+        ephemeral: true,
       })
       return
     }
 
-    await interaction.editReply({
+    await interaction.reply({
       content: `${
         userArgProvided ? `${guildMember.user.username} has` : 'You have'
       } ${count.answersCount} correct ${
         count.answersCount === 1 ? 'answer' : 'answers'
       }!`,
+      ephemeral: true,
     })
   },
 }
