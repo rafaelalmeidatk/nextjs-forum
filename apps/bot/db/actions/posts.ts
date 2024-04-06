@@ -17,12 +17,14 @@ export const syncPost = async (thread: AnyThreadChannel) => {
       channelId: thread.parentId,
       lastActiveAt: now,
     })
-    .onDuplicateKeyUpdate({
-      title: thread.name,
-      editedAt: now,
-      isLocked: Boolean(thread.locked),
-      lastActiveAt: now,
-    })
+    .onConflict((oc) =>
+      oc.column('snowflakeId').doUpdateSet({
+        title: thread.name,
+        editedAt: now,
+        isLocked: Boolean(thread.locked),
+        lastActiveAt: now,
+      }),
+    )
     .executeTakeFirst()
 
   await revalidateHomePage()

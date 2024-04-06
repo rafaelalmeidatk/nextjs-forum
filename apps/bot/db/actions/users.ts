@@ -91,13 +91,15 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
       discriminator,
       avatarUrl,
     })
-    .onDuplicateKeyUpdate({
-      isPublic: isPublicProfile,
-      isModerator,
-      username,
-      discriminator,
-      avatarUrl,
-    })
+    .onConflict((oc) =>
+      oc.column('snowflakeId').doUpdateSet({
+        isPublic: isPublicProfile,
+        isModerator,
+        username,
+        discriminator,
+        avatarUrl,
+      }),
+    )
     .executeTakeFirst()
 
   log('Synced user (%s)', user.id)

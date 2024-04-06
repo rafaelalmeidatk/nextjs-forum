@@ -10,9 +10,9 @@ export async function up(db: Kysely<any>): Promise<void> {
       col.notNull().unique(),
     )
     .addColumn('isPublic', 'boolean', (col) => col.notNull().defaultTo(false))
-    .addColumn('username', 'varchar(32)', (col) => col.notNull())
+    .addColumn('username', 'text', (col) => col.notNull())
     .addColumn('discriminator', 'varchar(4)', (col) => col.notNull())
-    .addColumn('avatarUrl', 'varchar(2048)', (col) => col.notNull())
+    .addColumn('avatarUrl', 'text', (col) => col.notNull())
     .execute()
 
   await db.schema
@@ -28,7 +28,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('snowflakeId', SnowflakeDataType, (col) =>
       col.notNull().unique(),
     )
-    .addColumn('name', 'varchar(256)', (col) => col.notNull())
+    .addColumn('name', 'text', (col) => col.notNull())
     .addColumn('type', 'int2', (col) => col.notNull())
     .addColumn('topic', 'text', (col) => col.notNull())
     .execute()
@@ -108,9 +108,9 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('snowflakeId', SnowflakeDataType, (col) =>
       col.notNull().unique(),
     )
-    .addColumn('url', 'varchar(2048)', (col) => col.notNull())
-    .addColumn('name', 'varchar(256)', (col) => col.notNull())
-    .addColumn('contentType', 'varchar(50)')
+    .addColumn('url', 'text', (col) => col.notNull())
+    .addColumn('name', 'text', (col) => col.notNull())
+    .addColumn('contentType', 'text')
     .addColumn('messageId', SnowflakeDataType, (col) => col.notNull())
     .execute()
 

@@ -67,23 +67,19 @@ const getPostMessage = async (postId: string) => {
       'users.isPublic as userIsPublic',
       'users.isModerator as userIsModerator',
       sql<Attachment[]>`
-        if(
-          count(attachments.id) > 0,
-          json_arrayagg(
-            json_object(
-              'id', attachments.id,
-              'url', attachments.url,
-              'name', attachments.name,
-              'contentType', attachments.contentType
-            )
-          ),
-          json_array()
-        )
+        coalesce(json_agg(
+          json_build_object(
+            'id', attachments.id,
+            'url', attachments.url,
+            'name', attachments.name,
+            'contentType', attachments."contentType"
+          )
+        ) filter (where attachments.id is not null), '[]'::json)
       `.as('attachments'),
     ])
     .where('messages.postId', '=', postId)
     .where('messages.snowflakeId', '=', postId)
-    .groupBy('messages.id')
+    .groupBy(['messages.id', 'users.id'])
     .orderBy('messages.createdAt', 'asc')
     .executeTakeFirst()
 }
@@ -104,23 +100,19 @@ const getMessages = async (postId: string) => {
       'users.isPublic as userIsPublic',
       'users.isModerator as userIsModerator',
       sql<Attachment[]>`
-        if(
-          count(attachments.id) > 0,
-          json_arrayagg(
-            json_object(
-              'id', attachments.id,
-              'url', attachments.url,
-              'name', attachments.name,
-              'contentType', attachments.contentType
-            )
-          ),
-          json_array()
-        )
+        coalesce(json_agg(
+          json_build_object(
+            'id', attachments.id,
+            'url', attachments.url,
+            'name', attachments.name,
+            'contentType', attachments."contentType"
+          )
+        ) filter (where attachments.id is not null), '[]'::json)
       `.as('attachments'),
     ])
     .where('postId', '=', postId)
     .where('messages.snowflakeId', '!=', postId)
-    .groupBy('messages.id')
+    .groupBy(['messages.id', 'users.id'])
     .orderBy('messages.createdAt', 'asc')
     .execute()
 }
