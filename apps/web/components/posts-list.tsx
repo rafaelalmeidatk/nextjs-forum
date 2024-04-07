@@ -27,7 +27,7 @@ const getPostsByPage = async (pageNumber: number) => {
       (eb) =>
         eb
           .selectFrom('messages')
-          .select(eb.fn.countAll<number>().as('count'))
+          .select(eb.fn.countAll<string>().as('count'))
           .where('messages.postId', '=', eb.ref('posts.snowflakeId'))
           .where('messages.snowflakeId', '!=', eb.ref('posts.snowflakeId'))
           .as('messagesCount'),
@@ -74,7 +74,7 @@ export const PostsList = async ({ page }: PostsListProps) => {
             id={post.snowflakeId}
             title={post.title}
             createdAt={post.createdAt}
-            messagesCount={post.messagesCount ?? 0}
+            messagesCount={parseInt(post.messagesCount ?? '0', 10)}
             hasAnswer={post.hasAnswer}
             author={{ avatar: post.userAvatar, username: post.username }}
           />
