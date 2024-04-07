@@ -94,13 +94,29 @@ pnpm dev:register-commands
 
 Notice the `dev:` prefix in the command. Discord limits how many times you can register commands with their API, but by registering the command in a specific server you can do this as many times as you want. You need the `DEV_GUILD_ID` env var set to use this command
 
-## Creating the database (WIP)
+## Creating the database
 
-This project uses PostgreSQL for the database, set the `DATABASE_URL` env var with the connection string
+This project uses PostgreSQL for the database, the easiest way to get it up and running is by using Docker. Start the database with this command:
+
+```sh
+docker compose up
+```
+
+And use this for the environment variable:
+
+```sh
+DATABASE_URL='postgresql://nextjsuser:nextjspassword@localhost:5432/nextjsforum'
+```
+
+If for some reason you want to start the database from scratch you can use the following command (this will erase all the data!):
+
+```sh
+docker compose down -v
+```
 
 ### Running migrations
 
-Add the database connection string to the `packages/db/.env` file and run this command:
+Once the database is running, add the previous `DATABASE_URL` variable to the `packages/db/.env` file and run this command:
 
 ```sh
 pnpm migrate

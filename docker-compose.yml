@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: nextjsforum_postgres
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nextjsforum
+      POSTGRES_USER: nextjsuser
+      POSTGRES_PASSWORD: nextjspassword
+      PGDATA: /data/postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/data/postgres
+    restart: unless-stopped
+
+volumes:
+  postgres:
