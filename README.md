@@ -94,18 +94,13 @@ pnpm dev:register-commands
 
 Notice the `dev:` prefix in the command. Discord limits how many times you can register commands with their API, but by registering the command in a specific server you can do this as many times as you want. You need the `DEV_GUILD_ID` env var set to use this command
 
-## Creating the database
+## Creating the database (WIP)
 
-This project uses PlanetScale as the DB provider, you can create a free account at https://planetscale.com. To create the database, follow these steps:
-
-1. Create a new database in your dashboard
-2. Click on the "Get connection strings" button
-3. Add a name to this password and set the Role to `Read/write`
-4. Click on Create Password, the next screen should give you the `DATABASE_URL` env var to be copied to the `.env` file of both `web` and `bot` projects
+This project uses PostgreSQL for the database, set the `DATABASE_URL` env var with the connection string
 
 ### Running migrations
 
-To run migrations you need a password with the `Admin` role, follow the previous steps to create one. Add the generated database URL to the `packages/db/.env` file and run this command:
+Add the database connection string to the `packages/db/.env` file and run this command:
 
 ```sh
 pnpm migrate
