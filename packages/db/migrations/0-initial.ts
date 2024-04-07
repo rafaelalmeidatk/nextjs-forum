@@ -1,22 +1,18 @@
 import { Kysely } from 'kysely'
-import {
-  SnowflakeDataType,
-  UuidDataType,
-  uuidColumnBuilder,
-} from '../migrations-utils.js'
+import { SnowflakeDataType, uuidColumnBuilder } from '../migrations-utils.js'
 
 export async function up(db: Kysely<any>): Promise<void> {
   // --- Users
   await db.schema
     .createTable('users')
-    .addColumn('id', UuidDataType, uuidColumnBuilder)
+    .addColumn('id', 'uuid', uuidColumnBuilder)
     .addColumn('snowflakeId', SnowflakeDataType, (col) =>
       col.notNull().unique(),
     )
     .addColumn('isPublic', 'boolean', (col) => col.notNull().defaultTo(false))
-    .addColumn('username', 'varchar(32)', (col) => col.notNull())
+    .addColumn('username', 'text', (col) => col.notNull())
     .addColumn('discriminator', 'varchar(4)', (col) => col.notNull())
-    .addColumn('avatarUrl', 'varchar(2048)', (col) => col.notNull())
+    .addColumn('avatarUrl', 'text', (col) => col.notNull())
     .execute()
 
   await db.schema
@@ -28,11 +24,11 @@ export async function up(db: Kysely<any>): Promise<void> {
   // -- Channels
   await db.schema
     .createTable('channels')
-    .addColumn('id', UuidDataType, uuidColumnBuilder)
+    .addColumn('id', 'uuid', uuidColumnBuilder)
     .addColumn('snowflakeId', SnowflakeDataType, (col) =>
       col.notNull().unique(),
     )
-    .addColumn('name', 'varchar(256)', (col) => col.notNull())
+    .addColumn('name', 'text', (col) => col.notNull())
     .addColumn('type', 'int2', (col) => col.notNull())
     .addColumn('topic', 'text', (col) => col.notNull())
     .execute()
@@ -40,14 +36,14 @@ export async function up(db: Kysely<any>): Promise<void> {
   // -- Posts
   await db.schema
     .createTable('posts')
-    .addColumn('id', UuidDataType, uuidColumnBuilder)
+    .addColumn('id', 'uuid', uuidColumnBuilder)
     .addColumn('snowflakeId', SnowflakeDataType, (col) =>
       col.notNull().unique(),
     )
     .addColumn('title', 'text', (col) => col.notNull())
     .addColumn('isLocked', 'boolean', (col) => col.notNull())
-    .addColumn('createdAt', 'datetime', (col) => col.notNull())
-    .addColumn('editedAt', 'datetime')
+    .addColumn('createdAt', 'timestamptz', (col) => col.notNull())
+    .addColumn('editedAt', 'timestamptz')
     .addColumn('userId', SnowflakeDataType)
     .addColumn('channelId', SnowflakeDataType)
     .addColumn('answerId', SnowflakeDataType)
@@ -72,13 +68,13 @@ export async function up(db: Kysely<any>): Promise<void> {
   // -- Messages
   await db.schema
     .createTable('messages')
-    .addColumn('id', UuidDataType, uuidColumnBuilder)
+    .addColumn('id', 'uuid', uuidColumnBuilder)
     .addColumn('snowflakeId', SnowflakeDataType, (col) =>
       col.notNull().unique(),
     )
     .addColumn('content', 'text', (col) => col.notNull())
-    .addColumn('createdAt', 'datetime', (col) => col.notNull())
-    .addColumn('editedAt', 'datetime')
+    .addColumn('createdAt', 'timestamptz', (col) => col.notNull())
+    .addColumn('editedAt', 'timestamptz')
     .addColumn('userId', SnowflakeDataType, (col) => col.notNull())
     .addColumn('postId', SnowflakeDataType, (col) => col.notNull())
     .addColumn('replyToMessageId', SnowflakeDataType)
@@ -108,13 +104,13 @@ export async function up(db: Kysely<any>): Promise<void> {
   // -- Attachments
   await db.schema
     .createTable('attachments')
-    .addColumn('id', UuidDataType, uuidColumnBuilder)
+    .addColumn('id', 'uuid', uuidColumnBuilder)
     .addColumn('snowflakeId', SnowflakeDataType, (col) =>
       col.notNull().unique(),
     )
-    .addColumn('url', 'varchar(2048)', (col) => col.notNull())
-    .addColumn('name', 'varchar(256)', (col) => col.notNull())
-    .addColumn('contentType', 'varchar(50)')
+    .addColumn('url', 'text', (col) => col.notNull())
+    .addColumn('name', 'text', (col) => col.notNull())
+    .addColumn('contentType', 'text')
     .addColumn('messageId', SnowflakeDataType, (col) => col.notNull())
     .execute()
 

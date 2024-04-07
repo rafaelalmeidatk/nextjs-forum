@@ -12,17 +12,19 @@ export const syncPost = async (thread: AnyThreadChannel) => {
       title: thread.name,
       createdAt: thread.createdAt ?? now,
       editedAt: thread.createdAt ?? now,
-      isLocked: thread.locked ? 1 : 0,
+      isLocked: Boolean(thread.locked),
       userId: thread.ownerId,
       channelId: thread.parentId,
       lastActiveAt: now,
     })
-    .onDuplicateKeyUpdate({
-      title: thread.name,
-      editedAt: now,
-      isLocked: thread.locked ? 1 : 0,
-      lastActiveAt: now,
-    })
+    .onConflict((oc) =>
+      oc.column('snowflakeId').doUpdateSet({
+        title: thread.name,
+        editedAt: now,
+        isLocked: Boolean(thread.locked),
+        lastActiveAt: now,
+      }),
+    )
     .executeTakeFirst()
 
   await revalidateHomePage()
@@ -54,7 +56,7 @@ export const unindexPost = async (channel: AnyThreadChannel<boolean>) => {
   await db
     .updateTable('posts')
     .where('snowflakeId', '=', channel.id)
-    .set({ isIndexed: 0 })
+    .set({ isIndexed: false })
     .execute()
 
   if (channel.ownerId) {

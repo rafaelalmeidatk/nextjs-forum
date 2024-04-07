@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await db
     .selectFrom('posts')
     .select(['snowflakeId', 'lastActiveAt'])
-    .where('isIndexed', '=', 1)
+    .where('isIndexed', '=', true)
     .limit(50_000) // we will probably need to chunk the sitemap in the future
     .execute()
 

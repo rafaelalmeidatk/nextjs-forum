@@ -3,7 +3,7 @@ import '../../discord-markdown.css'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import plur from 'plur'
-import { db, selectUuid, sql } from '@nextjs-forum/db/node'
+import { db, sql } from '@nextjs-forum/db/node'
 import { Message } from '@/components/message'
 import { LayoutWithSidebar } from '@/components/layout-with-sidebar'
 import { groupMessagesByUser } from '@/utils/group-messages'
@@ -32,7 +32,7 @@ const getPost = async (snowflakeId: string) => {
     .innerJoin('users', 'users.snowflakeId', 'posts.userId')
     .innerJoin('channels', 'channels.snowflakeId', 'posts.channelId')
     .select([
-      selectUuid('posts.id').as('id'),
+      'posts.id',
       'posts.snowflakeId',
       'posts.title',
       'posts.createdAt',
@@ -58,32 +58,28 @@ const getPostMessage = async (postId: string) => {
     .leftJoin('attachments', 'attachments.messageId', 'messages.snowflakeId')
     .innerJoin('users', 'users.snowflakeId', 'messages.userId')
     .select([
-      selectUuid('messages.id').as('id'),
+      'messages.id',
       'messages.content',
       'messages.createdAt',
-      selectUuid('users.id').as('authorId'),
+      'users.id as authorId',
       'users.avatarUrl as authorAvatarUrl',
       'users.username as authorUsername',
       'users.isPublic as userIsPublic',
       'users.isModerator as userIsModerator',
       sql<Attachment[]>`
-        if(
-          count(attachments.id) > 0,
-          json_arrayagg(
-            json_object(
-              'id', ${selectUuid('attachments.id')},
-              'url', attachments.url,
-              'name', attachments.name,
-              'contentType', attachments.contentType
-            )
-          ),
-          json_array()
-        )
+        coalesce(json_agg(
+          json_build_object(
+            'id', attachments.id,
+            'url', attachments.url,
+            'name', attachments.name,
+            'contentType', attachments."contentType"
+          )
+        ) filter (where attachments.id is not null), '[]'::json)
       `.as('attachments'),
     ])
     .where('messages.postId', '=', postId)
     .where('messages.snowflakeId', '=', postId)
-    .groupBy('messages.id')
+    .groupBy(['messages.id', 'users.id'])
     .orderBy('messages.createdAt', 'asc')
     .executeTakeFirst()
 }
@@ -94,33 +90,29 @@ const getMessages = async (postId: string) => {
     .leftJoin('attachments', 'attachments.messageId', 'messages.snowflakeId')
     .innerJoin('users', 'users.snowflakeId', 'messages.userId')
     .select([
-      selectUuid('messages.id').as('id'),
+      'messages.id',
       'messages.snowflakeId',
       'messages.content',
       'messages.createdAt',
-      selectUuid('users.id').as('authorId'),
+      'users.id as authorId',
       'users.avatarUrl as authorAvatarUrl',
       'users.username as authorUsername',
       'users.isPublic as userIsPublic',
       'users.isModerator as userIsModerator',
       sql<Attachment[]>`
-        if(
-          count(attachments.id) > 0,
-          json_arrayagg(
-            json_object(
-              'id', ${selectUuid('attachments.id')},
-              'url', attachments.url,
-              'name', attachments.name,
-              'contentType', attachments.contentType
-            )
-          ),
-          json_array()
-        )
+        coalesce(json_agg(
+          json_build_object(
+            'id', attachments.id,
+            'url', attachments.url,
+            'name', attachments.name,
+            'contentType', attachments."contentType"
+          )
+        ) filter (where attachments.id is not null), '[]'::json)
       `.as('attachments'),
     ])
     .where('postId', '=', postId)
     .where('messages.snowflakeId', '!=', postId)
-    .groupBy('messages.id')
+    .groupBy(['messages.id', 'users.id'])
     .orderBy('messages.createdAt', 'asc')
     .execute()
 }
@@ -286,9 +278,9 @@ const Post = async ({ params }: PostProps) => {
                 author={{
                   username: postMessage.authorUsername,
                   avatarUrl: postMessage.authorAvatarUrl,
-                  isPublic: postMessage.userIsPublic == 1,
+                  isPublic: postMessage.userIsPublic,
                   isOP: true,
-                  isModerator: postMessage.userIsModerator == 1,
+                  isModerator: postMessage.userIsModerator,
                 }}
                 attachments={postMessage.attachments}
                 isFirstRow
@@ -359,11 +351,11 @@ const Post = async ({ params }: PostProps) => {
                   author={{
                     username: message.authorUsername,
                     avatarUrl: message.authorAvatarUrl,
-                    isPublic: message.userIsPublic == 1,
+                    isPublic: message.userIsPublic,
                     isOP: postMessage
                       ? message.authorId === postMessage.authorId
                       : false,
-                    isModerator: message.userIsModerator == 1,
+                    isModerator: message.userIsModerator,
                   }}
                   attachments={message.attachments}
                 />

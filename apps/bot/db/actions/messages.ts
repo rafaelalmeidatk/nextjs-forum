@@ -31,10 +31,12 @@ export const syncMessage = async (message: Message) => {
         postId: message.channelId,
         replyToMessageId: message.reference?.messageId,
       })
-      .onDuplicateKeyUpdate({
-        content: message.content,
-        editedAt: message.editedAt,
-      })
+      .onConflict((oc) =>
+        oc.column('snowflakeId').doUpdateSet({
+          content: message.content,
+          editedAt: message.editedAt,
+        }),
+      )
       .executeTakeFirst()
 
     await addPointsToUser(message.author.id, 'message', trx)

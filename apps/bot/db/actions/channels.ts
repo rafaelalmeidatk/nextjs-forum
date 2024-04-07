@@ -37,10 +37,12 @@ export const syncChannel = async (channel: Channel) => {
       type: channel.type,
       topic: topic ?? '',
     })
-    .onDuplicateKeyUpdate({
-      name: channel.name,
-      topic: topic ?? '',
-    })
+    .onConflict((oc) =>
+      oc.column('snowflakeId').doUpdateSet({
+        name: channel.name,
+        topic: topic ?? '',
+      }),
+    )
     .executeTakeFirst()
 
   log('Synced channel (#%s)', channel.name)

@@ -1,15 +1,10 @@
-import { db, selectUuid } from '@nextjs-forum/db/node'
+import { db } from '@nextjs-forum/db/node'
 import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
 
 const getMostHelpfulUsers = async () => {
   return db
     .selectFrom('users')
-    .select([
-      selectUuid('id').as('id'),
-      'username',
-      'avatarUrl',
-      'answersCount',
-    ])
+    .select(['id', 'username', 'avatarUrl', 'answersCount'])
     .orderBy('answersCount', 'desc')
     .orderBy('id', 'desc')
     .limit(15)

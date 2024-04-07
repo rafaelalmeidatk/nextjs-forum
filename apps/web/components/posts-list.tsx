@@ -1,4 +1,4 @@
-import { db, selectUuid, sql } from '@nextjs-forum/db/node'
+import { db, sql } from '@nextjs-forum/db/node'
 import { ArrowLeftIcon } from '@/components/icons/arrow-left'
 import { ArrowRightIcon } from '@/components/icons/arrow-right'
 import { PaginationLink } from '@/components/pagination-link'
@@ -17,13 +17,13 @@ const getPostsByPage = async (pageNumber: number) => {
     .innerJoin('users', 'users.snowflakeId', 'posts.userId')
     .leftJoin('messages', 'messages.snowflakeId', 'posts.answerId')
     .select([
-      selectUuid('posts.id').as('id'),
+      'posts.id',
       'posts.snowflakeId',
       'posts.title',
       'posts.createdAt',
       'users.username',
       'users.avatarUrl as userAvatar',
-      sql<number>`if (messages.id is null, 0, 1)`.as('hasAnswer'),
+      sql<boolean>`messages.id is not null`.as('hasAnswer'),
       (eb) =>
         eb
           .selectFrom('messages')
@@ -32,7 +32,7 @@ const getPostsByPage = async (pageNumber: number) => {
           .where('messages.snowflakeId', '!=', eb.ref('posts.snowflakeId'))
           .as('messagesCount'),
     ])
-    .where('isIndexed', '=', 1)
+    .where('isIndexed', '=', true)
     .orderBy('createdAt', 'desc')
     // Add one more result so we can know if there's a next page, not the
     // prettiest solution but it works great
@@ -75,7 +75,7 @@ export const PostsList = async ({ page }: PostsListProps) => {
             title={post.title}
             createdAt={post.createdAt}
             messagesCount={post.messagesCount ?? 0}
-            hasAnswer={post.hasAnswer === 1}
+            hasAnswer={post.hasAnswer}
             author={{ avatar: post.userAvatar, username: post.username }}
           />
         ))}
