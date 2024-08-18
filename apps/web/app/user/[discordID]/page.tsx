@@ -1,4 +1,45 @@
 import { Post } from '@/components/post'
+import { getCanonicalUserUrl } from '@/utils/urls'
+import { Metadata } from 'next'
+
+const userData = {
+  id: 'cb3c89d5-8039-4da7-9fd6-70d5acb1a692',
+  snowflakeId: '1274730311514722431',
+  username: 'Arinjii',
+  userAvatar: 'https://cdn.arinji.com/u/qTJndN.png',
+  leaderBoardPosition: 5,
+  joinedAt: '2023-03-01',
+  totalAnswerCount: 150,
+}
+export const generateMetadata = async ({
+  params,
+}: UserProps): Promise<Metadata> => {
+  // const userData = await getUserData(params.discordID)
+
+  const title = userData?.username
+  const description = `${userData?.username}'s profile on the Next.js Discord Forum`
+  const url = getCanonicalUserUrl(params.discordID)
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: 'website',
+      siteName: 'Next.js Discord Forum',
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+    },
+  }
+}
 
 type UserProps = {
   params: { discordID: string }
@@ -12,15 +53,6 @@ const UserInfo = async ({ params }: UserProps) => {
   const isPublic = true
 
   // const userData = await getUserData(params.discordID)
-  const userData = {
-    id: 'cb3c89d5-8039-4da7-9fd6-70d5acb1a692',
-    snowflakeId: '1274730311514722431',
-    username: 'Arinjii',
-    userAvatar: 'https://cdn.arinji.com/u/qTJndN.png',
-    leaderBoardPosition: 5,
-    joinedAt: '2023-03-01',
-    totalAnswerCount: 150,
-  }
 
   //const recentPosts = await getUserPosts(params.discordID)
 
