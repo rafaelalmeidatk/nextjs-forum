@@ -1,3 +1,6 @@
+import { CalendarPlusIcon } from '@/components/icons/calender-plus'
+import { HeartIcon } from '@/components/icons/heart'
+import { MedalIcon } from '@/components/icons/medal'
 import { Post } from '@/components/post'
 import { getCanonicalUserUrl } from '@/utils/urls'
 import { Metadata } from 'next'
@@ -111,7 +114,7 @@ const UserInfo = async ({ params }: UserProps) => {
 
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
-      <section className="w-full h-full flex flex-col xl:flex-row items-start justify-center max-w-7xl px-4 py-12 xl:py-16 gap-6 xl:gap-10">
+      <section className="w-full h-full flex flex-col xl:flex-row items-stretch justify-center max-w-7xl px-4 py-12 xl:py-16 gap-6 xl:gap-10">
         <div className="w-fit min-w-[20%] flex flex-row items-stretch justify-start gap-4 shrink-0">
           <img
             className="size-16 rounded-full"
@@ -122,22 +125,35 @@ const UserInfo = async ({ params }: UserProps) => {
             <h1 className="text-2xl font-semibold text-white">
               {userData.username}
             </h1>
-            <p className="text-base opacity-80">
-              Leaderboard Position:{' '}
-              <span className="opacity-60">{userData.leaderBoardPosition}</span>
-            </p>
-            <p className="text-base opacity-80">
-              Joined: <span className="opacity-60">{userData.joinedAt}</span>
-            </p>
-            <p className="text-base opacity-80">
-              Total Answers:{' '}
-              <span className="text-green-500">
-                {userData.totalAnswerCount}
-              </span>
-            </p>
+            <div className=" flex flex-row items-center justify-center gap-1 w-fit h-fit opacity-80 pt-1 ">
+              <MedalIcon size={4} className="mb-[1px]" />{' '}
+              <p className="text-sm h-fit">
+                Leaderboard Position:{' '}
+                <span className="opacity-60">
+                  {userData.leaderBoardPosition}
+                </span>
+              </p>
+            </div>
+
+            <div className=" flex flex-row items-center justify-center gap-1 w-fit h-fit opacity-80 ">
+              <CalendarPlusIcon size={4} className="mb-[1px]" />{' '}
+              <p className="text-sm h-fit">
+                Joined: <span className="opacity-60">{userData.joinedAt}</span>
+              </p>
+            </div>
+            <div className=" flex flex-row items-center justify-center gap-1 w-fit h-fit opacity-80 ">
+              <HeartIcon size={4} className="mb-[1px]" />{' '}
+              <p className="text-sm h-fit">
+                Total Answers:{' '}
+                <span className="text-green-500">
+                  {userData.totalAnswerCount}
+                </span>
+              </p>
+            </div>
           </div>
         </div>
-        <div className="w-full h-fit flex flex-col items-stretch justify-start gap-4 border-t xl:border-l xl:border-t-0 border-white/10 py-6 xl:py-0 xl:px-14">
+        <div className="w-[1px] bg-white/10 h-auto"></div>
+        <div className="w-full h-fit flex flex-col items-stretch justify-start gap-4  py-6 xl:py-0">
           {recentPosts.map((post) => (
             <Post
               key={post.id}
