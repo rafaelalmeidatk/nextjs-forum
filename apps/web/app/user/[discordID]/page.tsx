@@ -118,18 +118,18 @@ const UserInfo = async ({ params }: UserProps) => {
             src={userData.userAvatar}
             alt={`User Avatar of ${userData.username}`}
           />
-          <div className="w-fit h-auto flex flex-col items-start justify-start gap-2 ">
-            <h1 className="text-2xl h-[33px] font-semibold text-white">
+          <div className="w-fit h-auto flex flex-col items-start justify-start gap-1 ">
+            <h1 className="text-2xl font-semibold text-white">
               {userData.username}
             </h1>
-            <p className="text-base opacity-80 h-[33px]">
+            <p className="text-base opacity-80">
               Leaderboard Position:{' '}
               <span className="opacity-60">{userData.leaderBoardPosition}</span>
             </p>
-            <p className="text-base opacity-80 h-[33px]">
+            <p className="text-base opacity-80">
               Joined: <span className="opacity-60">{userData.joinedAt}</span>
             </p>
-            <p className="text-base opacity-80 h-[33px]">
+            <p className="text-base opacity-80">
               Total Answers:{' '}
               <span className="text-green-500">
                 {userData.totalAnswerCount}
