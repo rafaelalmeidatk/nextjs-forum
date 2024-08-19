@@ -114,7 +114,7 @@ const UserInfo = async ({ params }: UserProps) => {
 
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
-      <section className="w-full h-full flex flex-col xl:flex-row items-stretch justify-center max-w-7xl px-4 py-12 xl:py-16 gap-6 xl:gap-10">
+      <section className="w-full h-full flex flex-col xl:flex-row items-stretch justify-center max-w-7xl px-4 py-12 xl:py-16 gap-4 xl:gap-10">
         <div className="w-fit min-w-[20%] flex flex-row items-stretch justify-start gap-4 shrink-0">
           <img
             className="size-16 rounded-full"
@@ -152,8 +152,8 @@ const UserInfo = async ({ params }: UserProps) => {
             </div>
           </div>
         </div>
-        <div className="w-[1px] bg-white/10 h-auto"></div>
-        <div className="w-full h-fit flex flex-col items-stretch justify-start gap-4  py-6 xl:py-0">
+        <div className="w-full h-[1px] xl:w-[1px] bg-white/10 xl:h-auto mt-3 xl:mt-0"></div>
+        <div className="w-full h-fit flex flex-col items-stretch justify-start gap-4  xl:py-0">
           {recentPosts.map((post) => (
             <Post
               key={post.id}
