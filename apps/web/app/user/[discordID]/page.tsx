@@ -111,25 +111,25 @@ const UserInfo = async ({ params }: UserProps) => {
 
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
-      <section className="w-full h-full flex flex-col xl:flex-row items-start justify-center max-w-7xl px-4 py-8 gap-10">
+      <section className="w-full h-full flex flex-col xl:flex-row items-start justify-center max-w-7xl px-4 py-12 xl:py-16 gap-6 xl:gap-10">
         <div className="w-fit min-w-[20%] flex flex-row items-stretch justify-start gap-4 shrink-0">
           <img
             className="size-16 rounded-full"
             src={userData.userAvatar}
             alt={`User Avatar of ${userData.username}`}
           />
-          <div className="w-fit h-auto flex flex-col items-start justify-start gap-3 ">
-            <h1 className="text-2xl font-semibold text-white">
+          <div className="w-fit h-auto flex flex-col items-start justify-start gap-2 ">
+            <h1 className="text-2xl h-[33px] font-semibold text-white">
               {userData.username}
             </h1>
-            <p className="text-base opacity-80">
+            <p className="text-base opacity-80 h-[33px]">
               Leaderboard Position:{' '}
               <span className="opacity-60">{userData.leaderBoardPosition}</span>
             </p>
-            <p className="text-base opacity-80">
+            <p className="text-base opacity-80 h-[33px]">
               Joined: <span className="opacity-60">{userData.joinedAt}</span>
             </p>
-            <p className="text-base opacity-80">
+            <p className="text-base opacity-80 h-[33px]">
               Total Answers:{' '}
               <span className="text-green-500">
                 {userData.totalAnswerCount}
@@ -137,7 +137,7 @@ const UserInfo = async ({ params }: UserProps) => {
             </p>
           </div>
         </div>
-        <div className="w-full h-fit flex flex-col items-stretch justify-start gap-4 border-t xl:border-l xl:border-t-0 border-white/10 py-6 xl:py-0 xl:px-8">
+        <div className="w-full h-fit flex flex-col items-stretch justify-start gap-4 border-t xl:border-l xl:border-t-0 border-white/10 py-6 xl:py-0 xl:px-14">
           {recentPosts.map((post) => (
             <Post
               key={post.id}
