@@ -8,7 +8,7 @@ import { Metadata } from 'next'
 const userData = {
   id: 'cb3c89d5-8039-4da7-9fd6-70d5acb1a692',
   snowflakeId: '1274730311514722431',
-  username: 'Arinjii',
+  username: 'Arinji',
   userAvatar: 'https://cdn.arinji.com/u/qTJndN.png',
   leaderBoardPosition: 5,
   joinedAt: '2023-03-01',
@@ -115,14 +115,14 @@ const UserInfo = async ({ params }: UserProps) => {
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
       <section className="w-full h-full flex flex-col xl:flex-row items-stretch justify-center max-w-7xl px-4 py-12 xl:py-16 gap-4 xl:gap-10">
-        <div className="w-fit min-w-[20%] flex flex-row items-stretch justify-start gap-4 shrink-0">
+        <div className="w-fit min-w-[20%] md:max-w-[50%] xl:max-w-[30%] flex flex-row items-stretch justify-start gap-4 shrink-0">
           <img
             className="size-16 rounded-full"
             src={userData.userAvatar}
             alt={`User Avatar of ${userData.username}`}
           />
-          <div className="w-fit h-auto flex flex-col items-start justify-start gap-1 ">
-            <h1 className="text-2xl font-semibold text-white">
+          <div className="w-fit   h-auto flex flex-col items-start justify-start gap-1 ">
+            <h1 className="text-xl md:text-2xl font-semibold text-white line-clamp-1">
               {userData.username}
             </h1>
             <div className=" flex flex-row items-center justify-center gap-1 w-fit h-fit opacity-80 pt-1 ">
