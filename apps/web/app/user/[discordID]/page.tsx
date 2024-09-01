@@ -6,20 +6,24 @@ import { getCanonicalUserUrl } from '@/utils/urls'
 import { Metadata } from 'next'
 import { db, sql } from '@nextjs-forum/db/node'
 import { notFound } from 'next/navigation'
-
 const getLeaderboardPosition = async (discordID: string) => {
   const result = await db
-    .selectFrom('users')
-    .select([
-      'snowflakeId',
-      sql<number>`RANK() OVER (ORDER BY COALESCE("answersCount", 0) DESC, "snowflakeId" DESC)`.as(
-        'position',
-      ),
-    ])
+    .with('rankedUsers', (db) =>
+      db
+        .selectFrom('users')
+        .select([
+          'snowflakeId',
+          sql<number>`RANK() OVER (ORDER BY COALESCE("answersCount", 0) DESC, "snowflakeId" DESC)`.as(
+            'position',
+          ),
+        ]),
+    )
+    .selectFrom('rankedUsers')
+    .select(['snowflakeId', 'position'])
+    .where('snowflakeId', '=', discordID)
     .execute()
 
-  const user = result.find((user) => user.snowflakeId === discordID)
-  return user ? user.position : null
+  return result.length > 0 ? result[0].position : null
 }
 
 const getUserData = async (discordID: string) => {
