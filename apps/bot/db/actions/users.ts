@@ -70,9 +70,11 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   if (!userChangedCheck(user.id, userCheck)) return
 
   if (!isPublicProfile) {
+    // The docs says its unlikely I need to create a new instance but I am afraid of using a single
+    // instance while changing the seed and ending up with a race condition with another request
     const faker = new Faker({ locale: en })
     faker.seed(user.id.split('').map(Number))
-
+    // Generate a hopefully cool animal name because I thought the person names were looking too fake
     const animalType = faker.helpers.arrayElement(allowedAnimalTypes)
     const animalName = faker.animal[animalType]()
 
