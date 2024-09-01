@@ -58,6 +58,7 @@ export interface Users {
   points: Generated<number>
   snowflakeId: string
   username: string
+  joinedAt: Date | undefined
 }
 
 export interface DB {

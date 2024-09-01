@@ -4,23 +4,98 @@ import { MedalIcon } from '@/components/icons/medal'
 import { Post } from '@/components/post'
 import { getCanonicalUserUrl } from '@/utils/urls'
 import { Metadata } from 'next'
+import { db, sql } from '@nextjs-forum/db/node'
+import { notFound } from 'next/navigation'
 
-const userData = {
-  id: 'cb3c89d5-8039-4da7-9fd6-70d5acb1a692',
-  snowflakeId: '1274730311514722431',
-  username: 'Arinji',
-  userAvatar: 'https://cdn.arinji.com/u/qTJndN.png',
-  leaderBoardPosition: 5,
-  joinedAt: '2023-03-01',
-  totalAnswerCount: 150,
+const getLeaderboardPosition = async (discordID: string) => {
+  const result = await db
+    .selectFrom('users')
+    .select([
+      'snowflakeId',
+      sql<number>`RANK() OVER (ORDER BY COALESCE("answersCount", 0) DESC, "snowflakeId" DESC)`.as(
+        'position',
+      ),
+    ])
+    .execute()
+
+  const user = result.find((user) => user.snowflakeId === discordID)
+  return user ? user.position : null
 }
+
+const getUserData = async (discordID: string) => {
+  const userData = await db
+    .selectFrom('users')
+    .select([
+      'snowflakeId',
+      'username',
+      'avatarUrl',
+      'answersCount',
+      'isPublic',
+      'joinedAt',
+    ])
+    .where('snowflakeId', '=', discordID)
+    .executeTakeFirst()
+
+  if (userData) {
+    const position = await getLeaderboardPosition(discordID)
+    return { ...userData, leaderBoardPosition: position }
+  }
+
+  return null
+}
+
+const getUserPosts = async (discordID: string) => {
+  // First query to get posts
+  const posts = await db
+    .selectFrom('posts')
+    .innerJoin('messages', 'posts.answerId', 'messages.snowflakeId')
+    .select(['posts.id']) // Select more as needed
+    .where('messages.userId', '=', discordID)
+    .limit(5)
+    .execute()
+
+  // Extract post IDs from the first query results
+  const postIds = posts.map((post) => post.id)
+  if (postIds.length === 0) {
+    return []
+  }
+  // Second query to get additional details for the posts
+  const detailedPosts = await db
+    .selectFrom('posts')
+    .where('posts.id', 'in', postIds)
+    .innerJoin('users', 'users.snowflakeId', 'posts.userId')
+    .leftJoin('messages', 'messages.snowflakeId', 'posts.answerId')
+    .select([
+      'posts.id',
+      'posts.snowflakeId',
+      'posts.title',
+      'posts.createdAt',
+      'users.username',
+      'users.avatarUrl as userAvatar',
+      sql<boolean>`messages.id is not null`.as('hasAnswer'),
+      (eb) =>
+        eb
+          .selectFrom('messages')
+          .select(eb.fn.countAll<string>().as('count'))
+          .where('messages.postId', '=', eb.ref('posts.snowflakeId'))
+          .where('messages.snowflakeId', '!=', eb.ref('posts.snowflakeId'))
+          .as('messagesCount') as any, // Ensure the return type matches AliasedSelectQueryBuilder
+    ])
+    .execute()
+
+  return detailedPosts
+}
+
 export const generateMetadata = async ({
   params,
 }: UserProps): Promise<Metadata> => {
   // const userData = await getUserData(params.discordID)
-
-  const title = userData?.username
-  const description = `${userData?.username}'s profile on the Next.js Discord Forum`
+  const userData = await getUserData(params.discordID)
+  if (!userData || !userData.isPublic) {
+    return notFound()
+  }
+  const title = userData.username
+  const description = `${userData.username}'s profile on the Next.js Discord Forum`
   const url = getCanonicalUserUrl(params.discordID)
 
   return {
@@ -47,70 +122,13 @@ export const generateMetadata = async ({
 type UserProps = {
   params: { discordID: string }
 }
+
 const UserInfo = async ({ params }: UserProps) => {
-  //   const isPublic = await getIsPublic(params.discordID)
-  //   if (!isPublic) {
-  //     notFound()
-  //   }
-
-  const isPublic = true
-
-  // const userData = await getUserData(params.discordID)
-
-  //const recentPosts = await getUserPosts(params.discordID)
-
-  const recentPosts = [
-    {
-      id: 'cb3c89d5-8039-4da7-9fd6-70d5acb1a692',
-      snowflakeId: '1274730311514722431',
-      title: 'This is the first post made by me',
-      createdAt: new Date(),
-      username: 'Arinjii',
-      userAvatar: 'https://cdn.arinji.com/u/qTJndN.png',
-      hasAnswer: true,
-      messagesCount: '3',
-    },
-    {
-      id: 'cb3c89d5-8039-4da7-9fd6-70d5acb1a6',
-      snowflakeId: '1274730311514722434',
-      title: 'This is the second post made by me',
-      createdAt: new Date(),
-      username: 'Arinjii',
-      userAvatar: 'https://cdn.arinji.com/u/qTJndN.png',
-      hasAnswer: true,
-      messagesCount: '3',
-    },
-    {
-      id: 'cb3c89d5-8039-4da7-9fd6-70d5acb1a692',
-      snowflakeId: '1274730311514722431',
-      title: 'This is the third post made by me',
-      createdAt: new Date(),
-      username: 'Arinjii',
-      userAvatar: 'https://cdn.arinji.com/u/qTJndN.png',
-      hasAnswer: true,
-      messagesCount: '3',
-    },
-    {
-      id: 'cb3c89d5-8039-4da7-9fd6-70d5acb1a6',
-      snowflakeId: '1274730311514722434',
-      title: 'This is the fourth post made by me',
-      createdAt: new Date(),
-      username: 'Arinjii',
-      userAvatar: 'https://cdn.arinji.com/u/qTJndN.png',
-      hasAnswer: true,
-      messagesCount: '3',
-    },
-    {
-      id: 'cb3c89d5-8039-4da7-9fd6-70d5acb1a692',
-      snowflakeId: '1274730311514722431',
-      title: 'This is the fifth post made by me',
-      createdAt: new Date(),
-      username: 'Arinjii',
-      userAvatar: 'https://cdn.arinji.com/u/qTJndN.png',
-      hasAnswer: true,
-      messagesCount: '3',
-    },
-  ]
+  const userData = await getUserData(params.discordID)
+  if (!userData || !userData.isPublic) {
+    return notFound()
+  }
+  const recentPosts = await getUserPosts(params.discordID)
 
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
@@ -118,7 +136,7 @@ const UserInfo = async ({ params }: UserProps) => {
         <div className="w-fit min-w-[20%] md:max-w-[50%] xl:max-w-[30%] flex flex-row items-stretch justify-start gap-4 shrink-0">
           <img
             className="size-16 rounded-full"
-            src={userData.userAvatar}
+            src={userData.avatarUrl}
             alt={`User Avatar of ${userData.username}`}
           />
           <div className="w-fit   h-auto flex flex-col items-start justify-start gap-1 ">
@@ -134,37 +152,46 @@ const UserInfo = async ({ params }: UserProps) => {
                 </span>
               </p>
             </div>
-
-            <div className=" flex flex-row items-center justify-center gap-1 w-fit h-fit opacity-80 ">
-              <CalendarPlusIcon size={4} className="mb-[1px]" />{' '}
-              <p className="text-sm h-fit">
-                Joined: <span className="opacity-60">{userData.joinedAt}</span>
-              </p>
-            </div>
+            {/* joinedAt can be nulled, as it could be in discord.js */}
+            {userData.joinedAt && (
+              <div className=" flex flex-row items-center justify-center gap-1 w-fit h-fit opacity-80 ">
+                <CalendarPlusIcon size={4} className="mb-[1px]" />{' '}
+                <p className="text-sm h-fit">
+                  Joined:{' '}
+                  <span className="opacity-60">
+                    {userData.joinedAt?.toLocaleDateString()}
+                  </span>
+                </p>
+              </div>
+            )}
             <div className=" flex flex-row items-center justify-center gap-1 w-fit h-fit opacity-80 ">
               <HeartIcon size={4} className="mb-[1px]" />{' '}
               <p className="text-sm h-fit">
                 Total Answers:{' '}
-                <span className="text-green-500">
-                  {userData.totalAnswerCount}
-                </span>
+                <span className="text-green-500">{userData.answersCount}</span>
               </p>
             </div>
           </div>
         </div>
         <div className="w-full h-[1px] xl:w-[1px] bg-white/10 xl:h-auto mt-3 xl:mt-0"></div>
         <div className="w-full h-fit flex flex-col items-stretch justify-start gap-4  xl:py-0">
-          {recentPosts.map((post) => (
-            <Post
-              key={post.id}
-              id={post.snowflakeId}
-              title={post.title}
-              createdAt={post.createdAt}
-              messagesCount={parseInt(post.messagesCount ?? '0', 10)}
-              hasAnswer={post.hasAnswer}
-              author={{ avatar: post.userAvatar, username: post.username }}
-            />
-          ))}
+          {recentPosts.length > 0 ? (
+            recentPosts.map((post) => (
+              <Post
+                key={post.id}
+                id={post.snowflakeId}
+                title={post.title}
+                createdAt={post.createdAt}
+                messagesCount={parseInt(post.messagesCount ?? '0', 10)}
+                hasAnswer={post.hasAnswer}
+                author={{ avatar: post.userAvatar, username: post.username }}
+              />
+            ))
+          ) : (
+            <p className="text-center text-lg">
+              The user has no marked answers yet
+            </p>
+          )}
         </div>
       </section>
     </main>

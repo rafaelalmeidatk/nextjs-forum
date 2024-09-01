@@ -1,6 +1,5 @@
 import { Kysely } from 'kysely'
 import { SnowflakeDataType, uuidColumnBuilder } from '../migrations-utils.js'
-
 export async function up(db: Kysely<any>): Promise<void> {
   // --- Users
   await db.schema
@@ -13,14 +12,13 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('username', 'text', (col) => col.notNull())
     .addColumn('discriminator', 'varchar(4)', (col) => col.notNull())
     .addColumn('avatarUrl', 'text', (col) => col.notNull())
+    .addColumn('joinedAt', 'timestamptz')
     .execute()
-
   await db.schema
     .createIndex('users_snowflakeId_idx')
     .on('users')
     .column('snowflakeId')
     .execute()
-
   // -- Channels
   await db.schema
     .createTable('channels')
@@ -32,7 +30,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('type', 'int2', (col) => col.notNull())
     .addColumn('topic', 'text', (col) => col.notNull())
     .execute()
-
   // -- Posts
   await db.schema
     .createTable('posts')
@@ -48,7 +45,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('channelId', SnowflakeDataType)
     .addColumn('answerId', SnowflakeDataType)
     .execute()
-
   await db.schema
     .createIndex('posts_snowflakeId_idx')
     .on('posts')
@@ -64,7 +60,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .on('posts')
     .column('channelId')
     .execute()
-
   // -- Messages
   await db.schema
     .createTable('messages')
@@ -79,7 +74,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('postId', SnowflakeDataType, (col) => col.notNull())
     .addColumn('replyToMessageId', SnowflakeDataType)
     .execute()
-
   await db.schema
     .createIndex('messages_snowflakeId_idx')
     .on('messages')
@@ -100,7 +94,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .on('messages')
     .column('replyToMessageId')
     .execute()
-
   // -- Attachments
   await db.schema
     .createTable('attachments')
@@ -113,16 +106,10 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('contentType', 'text')
     .addColumn('messageId', SnowflakeDataType, (col) => col.notNull())
     .execute()
-
   await db.schema
     .createIndex('attachments_snowflakeId_idx')
     .on('attachments')
     .column('snowflakeId')
-    .execute()
-  await db.schema
-    .createIndex('attachments_messageId_idx')
-    .on('attachments')
-    .column('messageId')
     .execute()
 }
 

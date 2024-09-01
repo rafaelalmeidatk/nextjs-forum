@@ -35,10 +35,10 @@ const userChangedCheck = (userId: string, user: CacheUser) => {
   }
   return false
 }
-
 export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   let isPublicProfile = false
   let isModerator = false
+  let joinedAt: Date | undefined = undefined
 
   if (asGuildMember) {
     if (env.PUBLIC_PROFILE_ROLE_ID) {
@@ -48,6 +48,9 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     }
     if (env.MODERATOR_ROLE_ID) {
       isModerator = asGuildMember.roles.cache.has(env.MODERATOR_ROLE_ID)
+    }
+    if (asGuildMember.joinedAt) {
+      joinedAt = asGuildMember.joinedAt
     }
   }
 
@@ -67,12 +70,9 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   if (!userChangedCheck(user.id, userCheck)) return
 
   if (!isPublicProfile) {
-    // The docs says its unlikely I need to create a new instance but I am afraid of using a single
-    // instance while changing the seed and ending up with a race condition with another request
     const faker = new Faker({ locale: en })
     faker.seed(user.id.split('').map(Number))
 
-    // Generate a hopefully cool animal name because I thought the person names were looking too fake
     const animalType = faker.helpers.arrayElement(allowedAnimalTypes)
     const animalName = faker.animal[animalType]()
 
@@ -90,6 +90,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
       username,
       discriminator,
       avatarUrl,
+      joinedAt,
     })
     .onConflict((oc) =>
       oc.column('snowflakeId').doUpdateSet({
@@ -98,6 +99,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
         username,
         discriminator,
         avatarUrl,
+        joinedAt,
       }),
     )
     .executeTakeFirst()
@@ -105,8 +107,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   log('Synced user (%s)', user.id)
   usersCache.set(user.id, userCheck)
 }
-
-export const getUserById = async (id: string) => {
+export const getUserById = (id: string) => {
   return db
     .selectFrom('users')
     .select(['username', 'points'])
