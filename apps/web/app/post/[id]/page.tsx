@@ -1,10 +1,8 @@
 import '../../discord-markdown.css'
 
-import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import plur from 'plur'
-import { db, sql } from '@nextjs-forum/db/node'
-import { Message } from '@/components/message'
+import { db, sql } from '@/../../packages/db/node'
+import { ArrowDownIcon } from '@/components/icons/arrow-down'
+import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
 import { LayoutWithSidebar } from '@/components/layout-with-sidebar'
 import { groupMessagesByUser } from '@/utils/group-messages'
 import { MessageGroup } from '@/components/message-group'
@@ -41,6 +39,7 @@ const getPost = async (snowflakeId: string) => {
       'users.isPublic as userIsPublic',
       'users.avatarUrl as userAvatar',
       'channels.name as channelName',
+      'users.snowflakeId as userID',
       (eb) =>
         eb
           .selectFrom('messages')
@@ -66,6 +65,7 @@ const getPostMessage = async (postId: string) => {
       'users.username as authorUsername',
       'users.isPublic as userIsPublic',
       'users.isModerator as userIsModerator',
+      'users.snowflakeId as userID',
       sql<Attachment[]>`
         coalesce(json_agg(
           json_build_object(
@@ -99,6 +99,7 @@ const getMessages = async (postId: string) => {
       'users.username as authorUsername',
       'users.isPublic as userIsPublic',
       'users.isModerator as userIsModerator',
+      'users.snowflakeId as userID',
       sql<Attachment[]>`
         coalesce(json_agg(
           json_build_object(
@@ -178,6 +179,7 @@ const Post = async ({ params }: PostProps) => {
   const groupedMessages = groupMessagesByUser(messages, post.answerId)
   const hasAnswer =
     post.answerId && messages.some((m) => m.snowflakeId === post.answerId)
+  const truncatedName = truncate(post.username, 32)
 
   const jsonLd: WithContext<QAPage> = {
     '@context': 'https://schema.org',
@@ -250,7 +252,14 @@ const Post = async ({ params }: PostProps) => {
                 </div>
               )}
               <div className="opacity-90">
-                {truncate(post.username, 32)} posted this in{' '}
+                {post.userIsPublic ? (
+                  <Link className="underline" href={`/user/${post.userID}`}>
+                    {truncatedName}
+                  </Link>
+                ) : (
+                  truncatedName
+                )}{' '}
+                posted this in{' '}
                 <span className="opacity-80 font-semibold">
                   #{post.channelName}
                 </span>
@@ -281,6 +290,7 @@ const Post = async ({ params }: PostProps) => {
                   isPublic: postMessage.userIsPublic,
                   isOP: true,
                   isModerator: postMessage.userIsModerator,
+                  userID: postMessage.userID,
                 }}
                 attachments={postMessage.attachments}
                 isFirstRow
@@ -356,6 +366,7 @@ const Post = async ({ params }: PostProps) => {
                       ? message.authorId === postMessage.authorId
                       : false,
                     isModerator: message.userIsModerator,
+                    userID: message.userID,
                   }}
                   attachments={message.attachments}
                 />
