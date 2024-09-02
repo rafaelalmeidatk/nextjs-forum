@@ -1,10 +1,18 @@
 import { db } from '@nextjs-forum/db/node'
 import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
+import Link from 'next/link'
 
 const getMostHelpfulUsers = async () => {
   return db
     .selectFrom('users')
-    .select(['id', 'username', 'avatarUrl', 'answersCount'])
+    .select([
+      'id',
+      'username',
+      'avatarUrl',
+      'answersCount',
+      'isPublic',
+      'snowflakeId as userID',
+    ])
     .orderBy('answersCount', 'desc')
     .orderBy('id', 'desc')
     .limit(15)
@@ -29,7 +37,13 @@ export const MostHelpful = async () => {
                 alt="Avatar"
                 className="w-4 h-4 rounded-full"
               />
-              <div className="opacity-90">{user.username}</div>
+              {user.isPublic ? (
+                <Link className="" href={`/user/${user.userID}`}>
+                  {user.username}
+                </Link>
+              ) : (
+                <div className="opacity-90">{user.username}</div>
+              )}
             </div>
             <div className="flex items-center space-x-1 opacity-90">
               <CheckCircleSolidIcon size={5} />

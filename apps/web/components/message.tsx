@@ -4,6 +4,7 @@ import 'highlight.js/styles/github-dark-dimmed.css'
 import { Attachment, MessageContent } from './message-content'
 import { IncognitoIcon } from './icons/incognito'
 import { ShieldCheckIcon } from './icons/shield-check'
+import Link from 'next/link'
 
 type MessageProps = {
   snowflakeId: string
@@ -15,6 +16,7 @@ type MessageProps = {
     isPublic: boolean
     isOP: boolean
     isModerator: boolean
+    userID: string
   }
   createdAt: Date
   attachments: Attachment[]
@@ -55,7 +57,12 @@ export const Message = ({
           {isFirstRow && (
             <div className="flex items-center space-x-2">
               <div className="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
-                {author.username}
+                {author.isPublic ? (
+                  <Link href={`/user/${author.userID}`}>{author.username}</Link>
+                ) : (
+                  <span>{author.username}</span>
+                )}
+
                 {!author.isPublic && (
                   <i title="User's profile isn't public">
                     <IncognitoIcon className="pl-2" />
