@@ -39,13 +39,13 @@ export const MostHelpful = async () => {
               />
               {user.isPublic ? (
                 <Link
-                  className="opacity-90 text-white"
+                  className="opacity-90 text-white underline underline-offset-2"
                   href={`/user/${user.userID}`}
                 >
                   {user.username}
                 </Link>
               ) : (
-                <div className="opacity-40">{user.username}</div>
+                <div className="opacity-90">{user.username}</div>
               )}
             </div>
             <div className="flex items-center space-x-1 opacity-90">

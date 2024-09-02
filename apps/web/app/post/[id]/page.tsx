@@ -256,7 +256,10 @@ const Post = async ({ params }: PostProps) => {
               )}
               <div className="opacity-90">
                 {post.userIsPublic ? (
-                  <Link className="underline" href={`/user/${post.userID}`}>
+                  <Link
+                    className="underline text-white underline-offset-2"
+                    href={`/user/${post.userID}`}
+                  >
                     {truncatedName}
                   </Link>
                 ) : (

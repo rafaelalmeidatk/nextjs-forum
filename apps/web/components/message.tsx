@@ -58,7 +58,12 @@ export const Message = ({
             <div className="flex items-center space-x-2">
               <div className="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
                 {author.isPublic ? (
-                  <Link href={`/user/${author.userID}`}>{author.username}</Link>
+                  <Link
+                    className="underline text-white underline-offset-2"
+                    href={`/user/${author.userID}`}
+                  >
+                    {author.username}
+                  </Link>
                 ) : (
                   <span>{author.username}</span>
                 )}
