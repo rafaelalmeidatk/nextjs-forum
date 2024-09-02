@@ -1,8 +1,10 @@
 import '../../discord-markdown.css'
 
-import { db, sql } from '@/../../packages/db/node'
-import { ArrowDownIcon } from '@/components/icons/arrow-down'
-import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
+import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import plur from 'plur'
+import { db, sql } from '@nextjs-forum/db/node'
+import { Message } from '@/components/message'
 import { LayoutWithSidebar } from '@/components/layout-with-sidebar'
 import { groupMessagesByUser } from '@/utils/group-messages'
 import { MessageGroup } from '@/components/message-group'
@@ -13,6 +15,7 @@ import { Attachment, MessageContent } from '@/components/message-content'
 import { ArrowDownIcon } from '@/components/icons/arrow-down'
 import type { QAPage, WithContext } from 'schema-dts'
 import { parseDiscordMessage } from '@/utils/discord-markdown'
+import Link from 'next/link'
 
 const isPostIndexed = async (snowflakeId: string) => {
   const post = await db
