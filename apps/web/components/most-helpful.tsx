@@ -38,11 +38,14 @@ export const MostHelpful = async () => {
                 className="w-4 h-4 rounded-full"
               />
               {user.isPublic ? (
-                <Link className="" href={`/user/${user.userID}`}>
+                <Link
+                  className="opacity-90 text-white"
+                  href={`/user/${user.userID}`}
+                >
                   {user.username}
                 </Link>
               ) : (
-                <div className="opacity-90">{user.username}</div>
+                <div className="opacity-40">{user.username}</div>
               )}
             </div>
             <div className="flex items-center space-x-1 opacity-90">
