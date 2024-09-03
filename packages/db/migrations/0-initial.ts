@@ -12,7 +12,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('username', 'text', (col) => col.notNull())
     .addColumn('discriminator', 'varchar(4)', (col) => col.notNull())
     .addColumn('avatarUrl', 'text', (col) => col.notNull())
-    .addColumn('joinedAt', 'timestamptz')
     .execute()
   await db.schema
     .createIndex('users_snowflakeId_idx')

@@ -9,7 +9,7 @@ export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createIndex('users_answersCount_idx')
     .on('users')
-    .columns(['answersCount desc', 'snowflakeId desc'])
+    .column('answersCount')
     .execute()
 }
 
