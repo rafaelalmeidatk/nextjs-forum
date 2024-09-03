@@ -38,7 +38,7 @@ const userChangedCheck = (userId: string, user: CacheUser) => {
 export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   let isPublicProfile = false
   let isModerator = false
-  let joinedAt: Date | undefined = undefined
+  let joinedAt = asGuildMember?.joinedAt
 
   if (asGuildMember) {
     if (env.PUBLIC_PROFILE_ROLE_ID) {
@@ -48,9 +48,6 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     }
     if (env.MODERATOR_ROLE_ID) {
       isModerator = asGuildMember.roles.cache.has(env.MODERATOR_ROLE_ID)
-    }
-    if (asGuildMember.joinedAt) {
-      joinedAt = asGuildMember.joinedAt
     }
   }
 
@@ -92,7 +89,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
       username,
       discriminator,
       avatarUrl,
-      joinedAt,
+      joinedAt: joinedAt ?? undefined,
     })
     .onConflict((oc) =>
       oc.column('snowflakeId').doUpdateSet({
@@ -101,7 +98,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
         username,
         discriminator,
         avatarUrl,
-        joinedAt,
+        joinedAt: joinedAt ?? undefined,
       }),
     )
     .executeTakeFirst()

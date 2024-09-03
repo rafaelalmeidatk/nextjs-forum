@@ -110,6 +110,11 @@ export async function up(db: Kysely<any>): Promise<void> {
     .on('attachments')
     .column('snowflakeId')
     .execute()
+  await db.schema
+    .createIndex('attachments_messageId_idx')
+    .on('attachments')
+    .column('messageId')
+    .execute()
 }
 
 export async function down(db: Kysely<any>): Promise<void> {

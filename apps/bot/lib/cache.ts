@@ -9,4 +9,5 @@ export interface CacheUser {
   avatarUrl: string
   isPublic?: boolean
   isModerator?: boolean
+  joinedAt?: Date
 }

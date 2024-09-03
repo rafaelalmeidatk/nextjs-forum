@@ -6,11 +6,8 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('joinedAt', 'timestamptz')
     .execute()
 
-  // Drop the existing index if it exists
-  await db.schema.dropIndex('users_answersCount_idx').ifExists().execute()
-
   await db.schema
-    .createIndex('users_answersCount_idx')
+    .createIndex('users_answersCount_desc_snowflakeId_desc_idx')
     .on('users')
     .columns(['answersCount desc', 'snowflakeId desc'])
     .execute()
