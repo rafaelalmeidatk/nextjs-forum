@@ -13,11 +13,13 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('discriminator', 'varchar(4)', (col) => col.notNull())
     .addColumn('avatarUrl', 'text', (col) => col.notNull())
     .execute()
+
   await db.schema
     .createIndex('users_snowflakeId_idx')
     .on('users')
     .column('snowflakeId')
     .execute()
+
   // -- Channels
   await db.schema
     .createTable('channels')
@@ -29,6 +31,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('type', 'int2', (col) => col.notNull())
     .addColumn('topic', 'text', (col) => col.notNull())
     .execute()
+
   // -- Posts
   await db.schema
     .createTable('posts')
@@ -44,21 +47,25 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('channelId', SnowflakeDataType)
     .addColumn('answerId', SnowflakeDataType)
     .execute()
+
   await db.schema
     .createIndex('posts_snowflakeId_idx')
     .on('posts')
     .column('snowflakeId')
     .execute()
+
   await db.schema
     .createIndex('posts_userId_idx')
     .on('posts')
     .column('userId')
     .execute()
+
   await db.schema
     .createIndex('posts_channelId_idx')
     .on('posts')
     .column('channelId')
     .execute()
+
   // -- Messages
   await db.schema
     .createTable('messages')
@@ -73,26 +80,31 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('postId', SnowflakeDataType, (col) => col.notNull())
     .addColumn('replyToMessageId', SnowflakeDataType)
     .execute()
+
   await db.schema
     .createIndex('messages_snowflakeId_idx')
     .on('messages')
     .column('snowflakeId')
     .execute()
+
   await db.schema
     .createIndex('messages_userId_idx')
     .on('messages')
     .column('userId')
     .execute()
+
   await db.schema
     .createIndex('messages_postId_idx')
     .on('messages')
     .column('postId')
     .execute()
+
   await db.schema
     .createIndex('messages_replyToMessageId_idx')
     .on('messages')
     .column('replyToMessageId')
     .execute()
+
   // -- Attachments
   await db.schema
     .createTable('attachments')
@@ -105,11 +117,13 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('contentType', 'text')
     .addColumn('messageId', SnowflakeDataType, (col) => col.notNull())
     .execute()
+
   await db.schema
     .createIndex('attachments_snowflakeId_idx')
     .on('attachments')
     .column('snowflakeId')
     .execute()
+
   await db.schema
     .createIndex('attachments_messageId_idx')
     .on('attachments')
