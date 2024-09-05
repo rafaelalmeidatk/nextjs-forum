@@ -254,10 +254,10 @@ const Post = async ({ params }: PostProps) => {
                   Unanswered
                 </div>
               )}
-              <div className="opacity-90">
+              <div>
                 {post.userIsPublic ? (
                   <Link
-                    className="underline text-white underline-offset-2"
+                    className=" text-white opacity-90"
                     href={`/user/${post.userID}`}
                   >
                     {truncatedName}
@@ -265,9 +265,9 @@ const Post = async ({ params }: PostProps) => {
                 ) : (
                   truncatedName
                 )}{' '}
-                posted this in{' '}
-                <span className="opacity-80 font-semibold">
-                  #{post.channelName}
+                <span className="opacity-50">
+                  posted this in{' '}
+                  <span className=" font-semibold">#{post.channelName}</span>
                 </span>
               </div>
             </div>

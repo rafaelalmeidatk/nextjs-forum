@@ -59,13 +59,13 @@ export const Message = ({
               <div className="font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
                 {author.isPublic ? (
                   <Link
-                    className="underline text-white underline-offset-2"
+                    className=" text-white opacity-90"
                     href={`/user/${author.userID}`}
                   >
                     {author.username}
                   </Link>
                 ) : (
-                  <span>{author.username}</span>
+                  <span className="opacity-50">{author.username}</span>
                 )}
 
                 {!author.isPublic && (
