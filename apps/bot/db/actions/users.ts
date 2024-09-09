@@ -35,6 +35,7 @@ const userChangedCheck = (userId: string, user: CacheUser) => {
   }
   return false
 }
+
 export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   let isPublicProfile = false
   let isModerator = false

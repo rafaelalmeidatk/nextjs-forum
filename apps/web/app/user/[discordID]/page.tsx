@@ -8,22 +8,21 @@ import { db, sql } from '@nextjs-forum/db/node'
 import { notFound } from 'next/navigation'
 const getLeaderboardPosition = async (discordID: string) => {
   const result = await db
-    .with('rankedUsers', (db) =>
-      db
+    .with('userAnswers', (eb) =>
+      eb
         .selectFrom('users')
-        .select([
-          'snowflakeId',
-          sql<number>`RANK() OVER (ORDER BY COALESCE("answersCount", 0) DESC, "snowflakeId" DESC)`.as(
-            'position',
-          ),
-        ]),
+        .select('answersCount')
+        .where('snowflakeId', '=', discordID),
     )
-    .selectFrom('rankedUsers')
-    .select(['snowflakeId', 'position'])
-    .where('snowflakeId', '=', discordID)
-    .execute()
+    .selectFrom('users')
+    .select(
+      sql<string>`1 + (SELECT COUNT(*) FROM users WHERE "answersCount" > (SELECT "answersCount" FROM "userAnswers"))`.as(
+        'rank',
+      ),
+    )
+    .executeTakeFirst()
 
-  return result.length > 0 ? result[0].position : null
+  return result?.rank
 }
 
 const getUserData = async (discordID: string) => {
@@ -40,12 +39,13 @@ const getUserData = async (discordID: string) => {
     .where('snowflakeId', '=', discordID)
     .executeTakeFirst()
 
-  if (userData) {
-    const position = await getLeaderboardPosition(discordID)
-    return { ...userData, leaderBoardPosition: position }
+  if (!userData) {
+    return null
   }
 
-  return null
+  const position = await getLeaderboardPosition(discordID)
+
+  return { ...userData, leaderBoardPosition: position ?? null }
 }
 
 const getUserPosts = async (discordID: string) => {
@@ -93,7 +93,6 @@ const getUserPosts = async (discordID: string) => {
 export const generateMetadata = async ({
   params,
 }: UserProps): Promise<Metadata> => {
-  // const userData = await getUserData(params.discordID)
   const userData = await getUserData(params.discordID)
   if (!userData || !userData.isPublic) {
     return notFound()
@@ -147,15 +146,17 @@ const UserInfo = async ({ params }: UserProps) => {
             <h1 className="text-xl md:text-2xl font-semibold text-white line-clamp-1">
               {userData.username}
             </h1>
-            <div className=" flex flex-row items-center justify-center gap-1 w-fit h-fit opacity-80 pt-1 ">
-              <MedalIcon size={4} className="mb-[1px]" />{' '}
-              <p className="text-sm h-fit">
-                Leaderboard Position:{' '}
-                <span className="opacity-60">
-                  {userData.leaderBoardPosition}
-                </span>
-              </p>
-            </div>
+            {userData.leaderBoardPosition && (
+              <div className="flex flex-row items-center justify-center gap-1 w-fit h-fit opacity-80 pt-1 ">
+                <MedalIcon size={4} className="mb-[1px]" />{' '}
+                <p className="text-sm h-fit">
+                  Leaderboard Position:{' '}
+                  <span className="opacity-60">
+                    {userData.leaderBoardPosition}
+                  </span>
+                </p>
+              </div>
+            )}
             {/* joinedAt can be nulled, as it could be in discord.js */}
             {userData.joinedAt && (
               <div className=" flex flex-row items-center justify-center gap-1 w-fit h-fit opacity-80 ">

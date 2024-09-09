@@ -16,5 +16,7 @@ export async function up(db: Kysely<any>): Promise<void> {
 export async function down(db: Kysely<any>): Promise<void> {
   await db.schema.alterTable('users').dropColumn('joinedAt').execute()
 
-  await db.schema.dropIndex('users_answersCount_idx').execute()
+  await db.schema
+    .dropIndex('users_answersCount_desc_snowflakeId_desc_idx')
+    .execute()
 }
