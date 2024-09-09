@@ -107,6 +107,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   log('Synced user (%s)', user.id)
   usersCache.set(user.id, userCheck)
 }
+
 export const getUserById = (id: string) => {
   return db
     .selectFrom('users')
