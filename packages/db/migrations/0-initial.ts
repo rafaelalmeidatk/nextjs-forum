@@ -1,6 +1,5 @@
 import { Kysely } from 'kysely'
 import { SnowflakeDataType, uuidColumnBuilder } from '../migrations-utils.js'
-
 export async function up(db: Kysely<any>): Promise<void> {
   // --- Users
   await db.schema
@@ -54,11 +53,13 @@ export async function up(db: Kysely<any>): Promise<void> {
     .on('posts')
     .column('snowflakeId')
     .execute()
+
   await db.schema
     .createIndex('posts_userId_idx')
     .on('posts')
     .column('userId')
     .execute()
+
   await db.schema
     .createIndex('posts_channelId_idx')
     .on('posts')
@@ -85,16 +86,19 @@ export async function up(db: Kysely<any>): Promise<void> {
     .on('messages')
     .column('snowflakeId')
     .execute()
+
   await db.schema
     .createIndex('messages_userId_idx')
     .on('messages')
     .column('userId')
     .execute()
+
   await db.schema
     .createIndex('messages_postId_idx')
     .on('messages')
     .column('postId')
     .execute()
+
   await db.schema
     .createIndex('messages_replyToMessageId_idx')
     .on('messages')
@@ -119,6 +123,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .on('attachments')
     .column('snowflakeId')
     .execute()
+
   await db.schema
     .createIndex('attachments_messageId_idx')
     .on('attachments')

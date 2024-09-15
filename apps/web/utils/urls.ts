@@ -5,3 +5,7 @@ export const getBaseUrl = () => {
 export const getCanonicalPostUrl = (postId: string) => {
   return `${getBaseUrl()}/post/${postId}`
 }
+
+export const getCanonicalUserUrl = (discordId: string) => {
+  return `${getBaseUrl()}/user/${discordId}`
+}

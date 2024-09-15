@@ -15,6 +15,7 @@ import { Attachment, MessageContent } from '@/components/message-content'
 import { ArrowDownIcon } from '@/components/icons/arrow-down'
 import type { QAPage, WithContext } from 'schema-dts'
 import { parseDiscordMessage } from '@/utils/discord-markdown'
+import Link from 'next/link'
 
 const isPostIndexed = async (snowflakeId: string) => {
   const post = await db
@@ -41,6 +42,7 @@ const getPost = async (snowflakeId: string) => {
       'users.isPublic as userIsPublic',
       'users.avatarUrl as userAvatar',
       'channels.name as channelName',
+      'users.snowflakeId as userID',
       (eb) =>
         eb
           .selectFrom('messages')
@@ -66,6 +68,7 @@ const getPostMessage = async (postId: string) => {
       'users.username as authorUsername',
       'users.isPublic as userIsPublic',
       'users.isModerator as userIsModerator',
+      'users.snowflakeId as userID',
       sql<Attachment[]>`
         coalesce(json_agg(
           json_build_object(
@@ -99,6 +102,7 @@ const getMessages = async (postId: string) => {
       'users.username as authorUsername',
       'users.isPublic as userIsPublic',
       'users.isModerator as userIsModerator',
+      'users.snowflakeId as userID',
       sql<Attachment[]>`
         coalesce(json_agg(
           json_build_object(
@@ -178,6 +182,7 @@ const Post = async ({ params }: PostProps) => {
   const groupedMessages = groupMessagesByUser(messages, post.answerId)
   const hasAnswer =
     post.answerId && messages.some((m) => m.snowflakeId === post.answerId)
+  const truncatedName = truncate(post.username, 32)
 
   const jsonLd: WithContext<QAPage> = {
     '@context': 'https://schema.org',
@@ -249,10 +254,20 @@ const Post = async ({ params }: PostProps) => {
                   Unanswered
                 </div>
               )}
-              <div className="opacity-90">
-                {truncate(post.username, 32)} posted this in{' '}
-                <span className="opacity-80 font-semibold">
-                  #{post.channelName}
+              <div>
+                {post.userIsPublic ? (
+                  <Link
+                    className=" text-white opacity-90"
+                    href={`/user/${post.userID}`}
+                  >
+                    {truncatedName}
+                  </Link>
+                ) : (
+                  truncatedName
+                )}{' '}
+                <span className="opacity-50">
+                  posted this in{' '}
+                  <span className=" font-semibold">#{post.channelName}</span>
                 </span>
               </div>
             </div>
@@ -281,6 +296,7 @@ const Post = async ({ params }: PostProps) => {
                   isPublic: postMessage.userIsPublic,
                   isOP: true,
                   isModerator: postMessage.userIsModerator,
+                  userID: postMessage.userID,
                 }}
                 attachments={postMessage.attachments}
                 isFirstRow
@@ -356,6 +372,7 @@ const Post = async ({ params }: PostProps) => {
                       ? message.authorId === postMessage.authorId
                       : false,
                     isModerator: message.userIsModerator,
+                    userID: message.userID,
                   }}
                   attachments={message.attachments}
                 />

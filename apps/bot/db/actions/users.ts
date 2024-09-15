@@ -39,6 +39,7 @@ const userChangedCheck = (userId: string, user: CacheUser) => {
 export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   let isPublicProfile = false
   let isModerator = false
+  let joinedAt = asGuildMember?.joinedAt
 
   if (asGuildMember) {
     if (env.PUBLIC_PROFILE_ROLE_ID) {
@@ -71,7 +72,6 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     // instance while changing the seed and ending up with a race condition with another request
     const faker = new Faker({ locale: en })
     faker.seed(user.id.split('').map(Number))
-
     // Generate a hopefully cool animal name because I thought the person names were looking too fake
     const animalType = faker.helpers.arrayElement(allowedAnimalTypes)
     const animalName = faker.animal[animalType]()
@@ -90,6 +90,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
       username,
       discriminator,
       avatarUrl,
+      joinedAt: joinedAt ?? undefined,
     })
     .onConflict((oc) =>
       oc.column('snowflakeId').doUpdateSet({
@@ -98,6 +99,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
         username,
         discriminator,
         avatarUrl,
+        joinedAt: joinedAt ?? undefined,
       }),
     )
     .executeTakeFirst()
@@ -106,7 +108,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   usersCache.set(user.id, userCheck)
 }
 
-export const getUserById = async (id: string) => {
+export const getUserById = (id: string) => {
   return db
     .selectFrom('users')
     .select(['username', 'points'])
