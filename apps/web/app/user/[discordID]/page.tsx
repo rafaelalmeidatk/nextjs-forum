@@ -8,21 +8,22 @@ import { db, sql } from '@nextjs-forum/db/node'
 import { notFound } from 'next/navigation'
 const getLeaderboardPosition = async (discordID: string) => {
   const result = await db
-    .with('userAnswers', (eb) =>
-      eb
+    .with('rankedUsers', (db) =>
+      db
         .selectFrom('users')
-        .select('answersCount')
-        .where('snowflakeId', '=', discordID),
+        .select([
+          'snowflakeId',
+          sql<number>`RANK() OVER (ORDER BY COALESCE("answersCount", 0) DESC, "snowflakeId" DESC)`.as(
+            'position',
+          ),
+        ]),
     )
-    .selectFrom('users')
-    .select(
-      sql<string>`1 + (SELECT COUNT(*) FROM users WHERE "answersCount" > (SELECT "answersCount" FROM "userAnswers"))`.as(
-        'rank',
-      ),
-    )
-    .executeTakeFirst()
+    .selectFrom('rankedUsers')
+    .select(['snowflakeId', 'position'])
+    .where('snowflakeId', '=', discordID)
+    .execute()
 
-  return result?.rank
+  return result.length > 0 ? result[0].position : null
 }
 
 const getUserData = async (discordID: string) => {
