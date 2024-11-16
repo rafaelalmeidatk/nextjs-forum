@@ -1,30 +1,23 @@
 import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 import { SlashCommand } from '../types.js'
-import { addDirectPointsToUser, syncUser } from '../../db/actions/users.js'
-import { tryToAssignRegularMemberRole } from '../../lib/points.js'
+import { removeFullPointsFromUser, syncUser } from '../../db/actions/users.js'
+import { tryToSetRegularMemberRole } from '../../lib/points.js'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()
-    .setName('give-points')
-    .setDescription('Gives a specific amount of points to the target user')
+    .setName('revoke-regular-member-role')
+    .setDescription('Remove the Regular Member role from the target user')
     .setDMPermission(false)
     .addUserOption((option) =>
       option
         .setName('user')
-        .setDescription('The user to receive the points')
-        .setRequired(true),
-    )
-    .addIntegerOption((option) =>
-      option
-        .setName('points')
-        .setDescription('The amount of point to give')
+        .setDescription('The user to be stripped of the role')
         .setRequired(true),
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
 
   async execute(interaction) {
     const user = interaction.options.getUser('user', true)
-    const points = interaction.options.getInteger('points', true)
 
     const guildMember = await interaction.guild?.members.fetch(user.id)
 
@@ -39,8 +32,8 @@ export const command: SlashCommand = {
     await interaction.deferReply({ ephemeral: true })
 
     await syncUser(user, guildMember)
-    await addDirectPointsToUser(user.id, points)
-    await tryToAssignRegularMemberRole(guildMember, true)
+    await removeFullPointsFromUser(user.id)
+    await tryToSetRegularMemberRole(guildMember, true)
 
     await interaction.editReply({ content: 'Done!' })
   },

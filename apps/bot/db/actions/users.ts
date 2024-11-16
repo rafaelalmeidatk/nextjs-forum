@@ -4,7 +4,7 @@ import { KyselyDB, TransactionDB, db, sql } from '@nextjs-forum/db/node'
 import { AnimalModule, Faker, en } from '@faker-js/faker'
 import { type CacheUser, usersCache } from '../../lib/cache.js'
 import { env } from '../../env.js'
-import { POINTS_REWARDS } from '../../lib/points.js'
+import { POINTS_REWARDS, REQUIRED_POINTS_FOR_ROLE } from '../../lib/points.js'
 
 const log = baseLog.extend('users')
 
@@ -130,23 +130,39 @@ const updatePointsBySum = async (
     .execute()
 }
 
+const updatePointsBySet = async (
+  userId: string,
+  value: number,
+  trx: TransactionDB | KyselyDB = db,
+) => {
+  await trx
+    .updateTable('users')
+    .where('snowflakeId', '=', userId)
+    .set({ points: sql`LEAST(999999, ${value})` })
+    .execute()
+}
+
 export const addPointsToUser = async (
   userId: string,
   type: keyof typeof POINTS_REWARDS,
   trx: TransactionDB | KyselyDB = db,
 ) => updatePointsBySum(userId, POINTS_REWARDS[type], trx)
 
-export const addDirectPointsToUser = async (
+export const addFullPointsToUser = async (
   userId: string,
-  value: number,
   trx: TransactionDB | KyselyDB = db,
-) => updatePointsBySum(userId, value, trx)
+) => updatePointsBySet(userId, REQUIRED_POINTS_FOR_ROLE, trx)
 
 export const removePointsFromUser = async (
   userId: string,
   type: keyof typeof POINTS_REWARDS,
   trx: TransactionDB | KyselyDB = db,
 ) => updatePointsBySum(userId, -POINTS_REWARDS[type], trx)
+
+export const removeFullPointsFromUser = async (
+  userId: string,
+  trx: TransactionDB | KyselyDB = db,
+) => updatePointsBySet(userId, 0, trx)
 
 export const getCorrectAnswersCount = (userId: string) => {
   return db

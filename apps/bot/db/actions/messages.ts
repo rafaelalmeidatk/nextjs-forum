@@ -3,7 +3,7 @@ import { db, sql } from '@nextjs-forum/db/node'
 import { addPointsToUser, removePointsFromUser, syncUser } from './users.js'
 import { syncChannel, syncMessageChannel } from './channels.js'
 import { updatePostLastActive } from './posts.js'
-import { tryToAssignRegularMemberRole } from '../../lib/points.js'
+import { tryToSetRegularMemberRole } from '../../lib/points.js'
 
 export const syncMessage = async (message: Message) => {
   const authorAsGuildMember = await message.guild?.members.fetch(
@@ -66,7 +66,7 @@ export const syncMessage = async (message: Message) => {
   })
 
   if (authorAsGuildMember) {
-    await tryToAssignRegularMemberRole(authorAsGuildMember)
+    await tryToSetRegularMemberRole(authorAsGuildMember)
   }
 }
 

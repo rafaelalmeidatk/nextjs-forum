@@ -8,13 +8,13 @@ export const POINTS_REWARDS = {
   question: 20,
   answer: 50,
 } as const
+export const REQUIRED_POINTS_FOR_ROLE = 1000
 
-const REQUIRED_POINTS_FOR_ROLE = 1000
 const USER_ROLE_SYNC_INTERVAL = 1000 * 60 * 60 // 1 hour
 
 const lastUserSync = new LRUCache<string, number>({ max: 100 })
 
-export const tryToAssignRegularMemberRole = async (
+export const tryToSetRegularMemberRole = async (
   member: GuildMember,
   skipCache: boolean = false,
 ) => {
@@ -30,11 +30,23 @@ export const tryToAssignRegularMemberRole = async (
   }
 
   lastUserSync.set(member.id, Date.now())
-  if (member.roles.cache.has(env.REGULAR_MEMBER_ROLE_ID)) return
 
   const user = await getUserById(member.id)
-  if (!user || user.points < REQUIRED_POINTS_FOR_ROLE) return
+  if (!user) return
 
+  const userPointsSatisfyRole = user.points >= REQUIRED_POINTS_FOR_ROLE
+  const memberHasRole = member.roles.cache.has(env.REGULAR_MEMBER_ROLE_ID)
+
+  if (memberHasRole && userPointsSatisfyRole) return
+  if (!memberHasRole && !userPointsSatisfyRole) return
+
+  if (memberHasRole && !userPointsSatisfyRole) {
+    await member.roles.remove(env.REGULAR_MEMBER_ROLE_ID)
+    // We don't need to alert the user about this.
+    return
+  }
+
+  // Now, it is !memberHasRole && userPointsSatisfyRole
   await member.roles.add(env.REGULAR_MEMBER_ROLE_ID)
   await member.send({
     embeds: [
