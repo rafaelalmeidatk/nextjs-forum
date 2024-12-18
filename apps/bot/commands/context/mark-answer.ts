@@ -170,7 +170,10 @@ export const command: ContextMenuCommand = {
     }
 
     // if the message author is the post creator, notify mods to ensure its a genuine solution
-    if (interaction.targetMessage.author.id === interaction.channel.ownerId) {
+    if (
+      interaction.targetMessage.author.id === interaction.channel.ownerId &&
+      interaction.user.id === interaction.channel.ownerId
+    ) {
       if (env.MOD_LOG_CHANNEL_ID) {
         const modLogChannel = interaction.client.channels.cache.get(
           env.MOD_LOG_CHANNEL_ID,
