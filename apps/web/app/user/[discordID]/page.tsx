@@ -58,7 +58,7 @@ const getUserPosts = async (discordID: string) => {
   const posts = await db
     .selectFrom('posts')
     .innerJoin('messages', 'posts.answerId', 'messages.snowflakeId')
-    .select(['posts.id', 'posts.createdAt'])
+    .select(['posts.id'])
     .where('messages.userId', '=', discordID)
     .orderBy('posts.createdAt', 'desc')
     .limit(5)
