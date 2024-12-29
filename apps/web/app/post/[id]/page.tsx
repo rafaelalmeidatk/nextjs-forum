@@ -97,6 +97,7 @@ const getMessages = async (postId: string) => {
       'messages.snowflakeId',
       'messages.content',
       'messages.createdAt',
+      'messages.replyToMessageId',
       'users.id as authorId',
       'users.avatarUrl as authorAvatarUrl',
       'users.username as authorUsername',
@@ -357,26 +358,50 @@ const Post = async ({ params }: PostProps) => {
                 (m) => m.snowflakeId === post.answerId,
               )}
             >
-              {group.messages.map((message, i) => (
-                <Message
-                  key={message.id.toString()}
-                  snowflakeId={message.snowflakeId}
-                  createdAt={message.createdAt}
-                  content={message.content}
-                  isFirstRow={i === 0}
-                  author={{
-                    username: message.authorUsername,
-                    avatarUrl: message.authorAvatarUrl,
-                    isPublic: message.userIsPublic,
-                    isOP: postMessage
-                      ? message.authorId === postMessage.authorId
-                      : false,
-                    isModerator: message.userIsModerator,
-                    userID: message.userID,
-                  }}
-                  attachments={message.attachments}
-                />
-              ))}
+              {group.messages.map((message, i) => {
+                const hasReply = message.replyToMessageId !== null
+                const replyData = hasReply
+                  ? messages.find(
+                      (m) => m.snowflakeId === message.replyToMessageId,
+                    )
+                  : undefined
+                return (
+                  <Message
+                    key={message.id.toString()}
+                    snowflakeId={message.snowflakeId}
+                    createdAt={message.createdAt}
+                    content={message.content}
+                    reply={
+                      hasReply
+                        ? {
+                            author: {
+                              username: replyData!.authorUsername,
+                              avatarUrl: replyData!.authorAvatarUrl,
+                              isOp: postMessage
+                                ? replyData?.authorId === postMessage.authorId
+                                : false,
+                              isPublic: replyData!.userIsPublic,
+                              userID: replyData!.userID,
+                            },
+                            content: replyData!.content,
+                          }
+                        : undefined
+                    }
+                    isFirstRow={i === 0}
+                    author={{
+                      username: message.authorUsername,
+                      avatarUrl: message.authorAvatarUrl,
+                      isPublic: message.userIsPublic,
+                      isOP: postMessage
+                        ? message.authorId === postMessage.authorId
+                        : false,
+                      isModerator: message.userIsModerator,
+                      userID: message.userID,
+                    }}
+                    attachments={message.attachments}
+                  />
+                )
+              })}
             </MessageGroup>
           ))}
         </div>
