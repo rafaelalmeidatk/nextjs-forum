@@ -377,17 +377,14 @@ const Post = async ({ params }: PostProps) => {
                             author: {
                               username: replyData!.authorUsername,
                               avatarUrl: replyData!.authorAvatarUrl,
-                              isOp: postMessage
-                                ? replyData?.authorId === postMessage.authorId
-                                : false,
-                              isPublic: replyData!.userIsPublic,
-                              userID: replyData!.userID,
                             },
+                            messageID: replyData!.snowflakeId,
                             content: replyData!.content,
+                            attachments: replyData!.attachments,
                           }
                         : undefined
                     }
-                    isFirstRow={i === 0}
+                    isFirstRow={i === 0 || hasReply}
                     author={{
                       username: message.authorUsername,
                       avatarUrl: message.authorAvatarUrl,
