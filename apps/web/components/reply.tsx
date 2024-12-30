@@ -1,3 +1,4 @@
+'use client'
 import { ImageIcon } from '@/components/icons/image'
 import { ReplySplineIcon } from '@/components/icons/reply-spline'
 import { Attachment } from '@/components/message-content'
@@ -12,8 +13,21 @@ export type Reply = {
 }
 export const MessageReply = ({ reply }: { reply: Reply }) => {
   return (
-    <a
-      href={`#message-${reply.messageID}`}
+    <button
+      aria-label={`Scroll to reply from @${reply.author.username}`}
+      onClick={() => {
+        const element = document.getElementById(`message-${reply.messageID}`)
+        if (element) {
+          const elementRect = element.getBoundingClientRect()
+          const absoluteElementTop = elementRect.top + window.scrollY
+          const offset = window.innerHeight / 2 - elementRect.height / 2
+          window.scrollTo({
+            top: absoluteElementTop - offset,
+            behavior: 'smooth',
+          })
+          history.pushState(null, '', `?replyID=${reply.messageID}`)
+        }
+      }}
       className="flex flex-row scroll-smooth text-white"
     >
       <div className="relative flex w-[50px] flex-col items-end justify-end sm:w-[60px]">
@@ -48,6 +62,6 @@ export const MessageReply = ({ reply }: { reply: Reply }) => {
           )}
         </p>
       </div>
-    </a>
+    </button>
   )
 }
