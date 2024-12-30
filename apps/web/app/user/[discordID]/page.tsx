@@ -6,6 +6,10 @@ import { getCanonicalUserUrl } from '@/utils/urls'
 import { Metadata } from 'next'
 import { db, sql } from '@nextjs-forum/db/node'
 import { notFound } from 'next/navigation'
+
+export const revalidate = 60
+export const dynamic = 'error'
+
 const getLeaderboardPosition = async (discordID: string) => {
   const result = await db
     .with('rankedUsers', (db) =>
@@ -54,8 +58,9 @@ const getUserPosts = async (discordID: string) => {
   const posts = await db
     .selectFrom('posts')
     .innerJoin('messages', 'posts.answerId', 'messages.snowflakeId')
-    .select(['posts.id']) // Select more as needed
+    .select(['posts.id'])
     .where('messages.userId', '=', discordID)
+    .orderBy('posts.createdAt', 'desc')
     .limit(5)
     .execute()
 
@@ -86,6 +91,7 @@ const getUserPosts = async (discordID: string) => {
           .where('messages.snowflakeId', '!=', eb.ref('posts.snowflakeId'))
           .as('messagesCount') as any, // Ensure the return type matches AliasedSelectQueryBuilder
     ])
+    .orderBy('posts.createdAt', 'desc')
     .execute()
 
   return detailedPosts
