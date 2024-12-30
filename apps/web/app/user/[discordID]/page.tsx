@@ -143,8 +143,8 @@ const UserInfo = async ({ params }: UserProps) => {
             src={userData.avatarUrl}
             alt={`User Avatar of ${userData.username}`}
           />
-          <div className="w-fit   h-auto flex flex-col items-start justify-start gap-1 ">
-            <h1 className="text-xl md:text-2xl font-semibold text-white line-clamp-1">
+          <div className="w-fit h-auto flex flex-col items-start justify-start gap-1 max-w-[200px]">
+            <h1 className="w-full text-xl md:text-2xl font-semibold text-white line-clamp-1">
               {userData.username}
             </h1>
             {userData.leaderBoardPosition && (
