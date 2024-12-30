@@ -33,7 +33,7 @@ export const MessageWrapper = ({
   return (
     <div
       id={`message-${snowflakeId}`}
-      className="rounded group transition-colors ease-in-out duration-300"
+      className="group rounded transition-colors duration-300 ease-in-out"
       style={
         {
           backgroundColor: isHighlighted
