@@ -14,7 +14,7 @@ export const MessageReply = ({ reply }: { reply: Reply }) => {
   return (
     <a
       href={`#message-${reply.messageID}`}
-      className="flex scroll-mt-[calc(50vh-50%)] flex-row scroll-smooth"
+      className="flex flex-row scroll-smooth text-white"
     >
       <div className="relative flex w-[50px] flex-col items-end justify-end sm:w-[60px]">
         <ReplySplineIcon className="size-10 pt-2" />
