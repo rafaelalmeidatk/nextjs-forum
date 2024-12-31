@@ -45,7 +45,7 @@ export const MessageReply = ({ reply }: { reply: Reply }) => {
             @{reply.author.username}
           </span>
           {'  '}
-          <span className="  opacity-70">
+          <span className="opacity-70">
             {reply.content.length == 0 && reply.attachments.length > 0 ? (
               <span className="italic">Click to see attachment</span>
             ) : reply.content.includes('```') ? (

@@ -61,6 +61,7 @@ const getPostMessage = async (postId: string) => {
     .innerJoin('users', 'users.snowflakeId', 'messages.userId')
     .select([
       'messages.id',
+      'messages.snowflakeId',
       'messages.content',
       'messages.createdAt',
       'users.id as authorId',
@@ -180,6 +181,10 @@ const Post = async ({ params }: PostProps) => {
   const messages = await getMessages(params.id)
   const postMessage = await getPostMessage(params.id)
   const answerMessage = messages.find((m) => m.snowflakeId === post.answerId)
+  // For replies. in `messages`, the post message is not included.
+  // Incase The user has replied to the post message, we are creating this to search through allMessages
+  const allMessages = [...messages, ...(postMessage ? [postMessage] : [])]
+  // If a user has sent multiple messages in a row, group them
   const groupedMessages = groupMessagesByUser(messages, post.answerId)
   const hasAnswer =
     post.answerId && messages.some((m) => m.snowflakeId === post.answerId)
@@ -361,7 +366,7 @@ const Post = async ({ params }: PostProps) => {
               {group.messages.map((message, i) => {
                 const hasReply = message.replyToMessageId !== null
                 const replyData = hasReply
-                  ? messages.find(
+                  ? allMessages.find(
                       (m) => m.snowflakeId === message.replyToMessageId,
                     )
                   : undefined
@@ -372,15 +377,15 @@ const Post = async ({ params }: PostProps) => {
                     createdAt={message.createdAt}
                     content={message.content}
                     reply={
-                      hasReply
+                      hasReply && replyData
                         ? {
                             author: {
-                              username: replyData!.authorUsername,
-                              avatarUrl: replyData!.authorAvatarUrl,
+                              username: replyData.authorUsername,
+                              avatarUrl: replyData.authorAvatarUrl,
                             },
-                            messageID: replyData!.snowflakeId,
-                            content: replyData!.content,
-                            attachments: replyData!.attachments,
+                            messageID: replyData.snowflakeId,
+                            content: replyData.content,
+                            attachments: replyData.attachments,
                           }
                         : undefined
                     }
