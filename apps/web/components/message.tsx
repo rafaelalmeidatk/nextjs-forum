@@ -5,13 +5,13 @@ import { IncognitoIcon } from './icons/incognito'
 import { ShieldCheckIcon } from './icons/shield-check'
 import { DisplayLocalTime } from './local-time'
 import { Attachment, MessageContent } from './message-content'
-import { MessageReply, Reply } from '@/components/reply'
+import { DeletedReply, MessageReply, Reply } from '@/components/reply'
 import { MessageWrapper } from '@/components/message-wrapper'
 type MessageProps = {
   snowflakeId: string
   content: string
   isFirstRow: boolean
-  reply?: Reply
+  reply?: Reply | 'deleted'
   author: {
     username: string
     avatarUrl: string
@@ -39,7 +39,12 @@ export const Message = ({
     <MessageWrapper snowflakeId={snowflakeId}>
       <div id={`message-${snowflakeId}`} className="group">
         <div className="pointer-events-none flex w-full grow-0 flex-col items-stretch justify-start  p-2 [&>*]:pointer-events-auto">
-          {reply && <MessageReply reply={reply} />}
+          {reply &&
+            (typeof reply === 'string' ? (
+              <DeletedReply />
+            ) : (
+              <MessageReply reply={reply} />
+            ))}
           <div className="flex flex-row">
             <div className="flex w-[50px] shrink-0 items-start justify-start sm:w-[60px]">
               {isFirstRow ? (

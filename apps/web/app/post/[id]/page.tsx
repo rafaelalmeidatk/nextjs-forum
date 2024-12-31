@@ -387,7 +387,9 @@ const Post = async ({ params }: PostProps) => {
                             content: replyData.content,
                             attachments: replyData.attachments,
                           }
-                        : undefined
+                        : hasReply && !replyData
+                          ? 'deleted'
+                          : undefined
                     }
                     isFirstRow={i === 0 || hasReply}
                     author={{
