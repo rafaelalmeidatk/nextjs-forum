@@ -39,7 +39,7 @@ export const MostHelpful = async () => {
               />
               {user.isPublic ? (
                 <Link
-                  className="opacity-90 text-white"
+                  className="opacity-90 text-white line-clamp-1 max-w-[200px]"
                   href={`/user/${user.userID}`}
                 >
                   {user.username}
