@@ -38,7 +38,7 @@ export const Message = ({
   return (
     <MessageWrapper snowflakeId={snowflakeId}>
       <div id={`message-${snowflakeId}`} className="group">
-        <div className="pointer-events-none flex w-full grow-0 flex-col items-stretch justify-start gap-1 p-2 [&>*]:pointer-events-auto">
+        <div className="pointer-events-none flex w-full grow-0 flex-col items-stretch justify-start gap-1 md:gap-0 p-2 [&>*]:pointer-events-auto">
           {reply &&
             (typeof reply === 'string' ? (
               <DeletedReply />
