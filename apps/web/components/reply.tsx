@@ -29,9 +29,9 @@ export const MessageReply = ({ reply }: { reply: Reply }) => {
           history.pushState(null, '', `?replyID=${reply.messageID}`)
         }
       }}
-      className="items-center justify-start flex flex-row scroll-smooth text-white"
+      className="flex flex-row items-center justify-start scroll-smooth text-white"
     >
-      <div className="relative flex w-[50px] flex-col items-end justify-end sm:w-[60px] h-[30px]">
+      <div className="relative flex h-[30px] w-[50px] flex-col items-end justify-end sm:w-[60px]">
         <ReplySplineIcon className="size-10 pt-2" />
       </div>
       <div className="flex w-0 flex-1 flex-row flex-nowrap items-center justify-start gap-2 text-xs md:text-base">
@@ -41,7 +41,7 @@ export const MessageReply = ({ reply }: { reply: Reply }) => {
           className="size-5 shrink-0 rounded-full"
         />
 
-        <div className="md:line-clamp-1 w-0 text-sm flex-1  line-clamp-2 text-left ">
+        <div className="line-clamp-2 w-0 flex-1 text-left text-sm md:line-clamp-1">
           <span className="opacity-50 md:max-w-full">
             @{reply.author.username}
           </span>
@@ -54,7 +54,7 @@ export const MessageReply = ({ reply }: { reply: Reply }) => {
                 {reply.content.replaceAll('```', '')}
               </span>
             ) : reply.content.includes('``') ? (
-              <span className="d-code-inline !whitespace-normal ">
+              <span className="d-code-inline !whitespace-normal">
                 {reply.content.replaceAll('``', '')}
               </span>
             ) : (
@@ -72,16 +72,16 @@ export const MessageReply = ({ reply }: { reply: Reply }) => {
 
 export const DeletedReply = () => {
   return (
-    <div className="items-center justify-start flex flex-row scroll-smooth text-white">
-      <div className="relative flex w-[50px] flex-col items-end justify-end sm:w-[60px] h-[30px]">
+    <div className="flex flex-row items-center justify-start scroll-smooth text-white">
+      <div className="relative flex h-[30px] w-[50px] flex-col items-end justify-end sm:w-[60px]">
         <ReplySplineIcon className="size-10 pt-2" />
       </div>
       <div className="flex w-0 flex-1 flex-row flex-nowrap items-center justify-center gap-1 text-xs md:text-base">
-        <div className="p-1 w-fit h-fit rounded-full bg-slate-700 flex items-center justify-center">
+        <div className="flex h-fit w-fit items-center justify-center rounded-full bg-slate-700 p-1">
           <BadReplyIcon className="size-3" />
         </div>
-        <div className="md:line-clamp-1 w-0 text-sm flex-1  line-clamp-2 text-left ">
-          <span className="opacity-70 italic">
+        <div className="line-clamp-2 w-0 flex-1 text-left text-sm md:line-clamp-1">
+          <span className="italic opacity-70">
             Original message was deleted
           </span>
         </div>
