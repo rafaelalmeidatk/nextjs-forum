@@ -1,6 +1,6 @@
 'use client'
 
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useHashFocus } from '@/utils/hooks/useHashFocus'
 import React, { useEffect, useState } from 'react'
 
 type MessageWrapperProps = {
@@ -11,25 +11,20 @@ export const MessageWrapper = ({
   children,
   snowflakeId,
 }: MessageWrapperProps) => {
-  const searchParams = useSearchParams()
+  const { isHashFocused } = useHashFocus(`#message-${snowflakeId}`)
   const [isHighlighted, setIsHighlighted] = useState(false)
-  const pathname = usePathname()
 
   useEffect(() => {
-    if (!searchParams || searchParams.has(snowflakeId)) return
-    const searchID = searchParams.get('replyID')
+    if (!isHashFocused) return
+    setIsHighlighted(true)
     let timeout: NodeJS.Timeout
-    if (searchID && searchID === snowflakeId) {
-      setIsHighlighted(true)
-      timeout = setTimeout(() => {
-        setIsHighlighted(false)
-        window.history.replaceState(null, '', pathname)
-      }, 1000)
-    }
+    timeout = setTimeout(() => {
+      setIsHighlighted(false)
+    }, 1000)
     return () => {
       if (timeout) clearTimeout(timeout)
     }
-  }, [searchParams, snowflakeId])
+  }, [isHashFocused])
   return (
     <div
       id={`message-${snowflakeId}`}
