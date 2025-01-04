@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from '@/utils/cn'
 import { useHashFocus } from '@/utils/hooks/useHashFocus'
 import React, { useEffect, useState } from 'react'
 
@@ -28,14 +29,12 @@ export const MessageWrapper = ({
   return (
     <div
       id={`message-${snowflakeId}`}
-      className="group rounded transition-colors duration-300 ease-in-out"
-      style={
+      className={cn(
+        'group rounded transition-colors duration-300 ease-in-out',
         {
-          backgroundColor: isHighlighted
-            ? 'rgba(255, 255, 255, 0.1)'
-            : undefined,
-        } as React.CSSProperties
-      }
+          'bg-white/10': isHighlighted,
+        },
+      )}
     >
       {children}
     </div>

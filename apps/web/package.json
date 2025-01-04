@@ -12,6 +12,7 @@
     "@nextjs-forum/db": "workspace:*",
     "@vercel/analytics": "^1.2.2",
     "cheerio": "^1.0.0-rc.12",
+    "clsx": "^2.1.1",
     "discord-markdown": "^2.5.1",
     "highlight.js": "^11.8.0",
     "luxon": "^3.3.0",
