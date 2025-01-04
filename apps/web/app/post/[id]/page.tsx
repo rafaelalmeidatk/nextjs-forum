@@ -365,11 +365,11 @@ const Post = async ({ params }: PostProps) => {
             >
               {group.messages.map((message, i) => {
                 const hasReply = message.replyToMessageId !== null
-                const replyData = hasReply
+                const replyMessage = hasReply
                   ? allMessages.find(
                       (m) => m.snowflakeId === message.replyToMessageId,
                     )
-                  : undefined
+                  : 'deleted'
                 return (
                   <Message
                     key={message.id.toString()}
@@ -377,17 +377,19 @@ const Post = async ({ params }: PostProps) => {
                     createdAt={message.createdAt}
                     content={message.content}
                     reply={
-                      hasReply && replyData
+                      hasReply &&
+                      replyMessage &&
+                      typeof replyMessage !== 'string'
                         ? {
                             author: {
-                              username: replyData.authorUsername,
-                              avatarUrl: replyData.authorAvatarUrl,
+                              username: replyMessage.authorUsername,
+                              avatarUrl: replyMessage.authorAvatarUrl,
                             },
-                            messageID: replyData.snowflakeId,
-                            content: replyData.content,
-                            attachments: replyData.attachments,
+                            messageID: replyMessage.snowflakeId,
+                            content: replyMessage.content,
+                            attachments: replyMessage.attachments,
                           }
-                        : hasReply && !replyData
+                        : hasReply && !replyMessage
                           ? 'deleted'
                           : undefined
                     }
