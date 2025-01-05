@@ -12,20 +12,6 @@ export function useHashFocus(targetHash: string): {
     const currentHash = window.location.hash
     const isFocused = currentHash === targetHash
     setIsHashFocused(isFocused)
-
-    if (isFocused) {
-      const element = document.getElementById(targetHash.slice(1))
-      if (element) {
-        const elementRect = element.getBoundingClientRect()
-        const absoluteElementTop = elementRect.top + window.scrollY
-        const middle =
-          absoluteElementTop - window.innerHeight / 2 + elementRect.height / 2
-        window.scrollTo({
-          top: middle,
-          behavior: 'smooth',
-        })
-      }
-    }
   }, [targetHash])
 
   useEffect(() => {
