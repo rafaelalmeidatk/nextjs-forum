@@ -5,6 +5,7 @@ type RequiredMessageFields = {
   snowflakeId: string
   authorId: string
   createdAt: Date
+  replyToMessageId: string | null
 }
 
 type GroupedMessages<T> = Array<{
@@ -39,6 +40,10 @@ export const groupMessagesByUser = <T extends RequiredMessageFields>(
 
     // Break the group if the previous message have a considerable difference of time
     if (secondsFromLastMessage > 60 * 5) {
+      return addToNewGroup()
+    }
+
+    if (message.replyToMessageId) {
       return addToNewGroup()
     }
 
