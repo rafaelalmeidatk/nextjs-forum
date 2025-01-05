@@ -1,18 +1,18 @@
 import { Colors, Events, GatewayIntentBits, Partials, Client } from 'discord.js'
 import { dedent } from 'ts-dedent'
-import { env } from './env.js'
-import { deleteMessage, syncMessage } from './db/actions/messages.js'
-import { deletePost, syncPost } from './db/actions/posts.js'
-import { baseLog } from './log.js'
+import { env } from './env.ts'
+import { deleteMessage, syncMessage } from './db/actions/messages.ts'
+import { deletePost, syncPost } from './db/actions/posts.ts'
+import { baseLog } from './log.ts'
 import {
   isMessageInForumChannel,
   isMessageSupported,
   isThreadInForumChannel,
   isThreadSupported,
-} from './utils.js'
-import { contextMenuCommands } from './commands/context/index.js'
-import { slashCommands } from './commands/slash/index.js'
-import { addPointsToUser, syncUser } from './db/actions/users.js'
+} from './utils.ts'
+import { contextMenuCommands } from './commands/context/index.ts'
+import { slashCommands } from './commands/slash/index.ts'
+import { addPointsToUser, syncUser } from './db/actions/users.ts'
 
 const client = new Client({
   intents: [

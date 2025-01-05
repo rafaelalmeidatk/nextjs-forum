@@ -7,16 +7,16 @@ import {
   ContextMenuCommandBuilder,
   PermissionFlagsBits,
 } from 'discord.js'
-import { ContextMenuCommand } from '../types.js'
+import { ContextMenuCommand } from '../types.ts'
 import {
   isMessageInForumChannel,
   isMessageSupported,
   replyWithEmbed,
   replyWithEmbedError,
-} from '../../utils.js'
-import { markMessageAsSolution } from '../../db/actions/messages.js'
-import { env } from '../../env.js'
-import { tryToSetRegularMemberRole } from '../../lib/points.js'
+} from '../../utils.ts'
+import { markMessageAsSolution } from '../../db/actions/messages.ts'
+import { env } from '../../env.ts'
+import { tryToSetRegularMemberRole } from '../../lib/points.ts'
 
 export const command: ContextMenuCommand = {
   data: new ContextMenuCommandBuilder()

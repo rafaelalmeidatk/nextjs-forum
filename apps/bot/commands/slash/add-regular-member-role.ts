@@ -1,7 +1,7 @@
 import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
-import { SlashCommand } from '../types.js'
-import { addFullPointsToUser, syncUser } from '../../db/actions/users.js'
-import { tryToSetRegularMemberRole } from '../../lib/points.js'
+import { SlashCommand } from '../types.ts'
+import { addFullPointsToUser, syncUser } from '../../db/actions/users.ts'
+import { tryToSetRegularMemberRole } from '../../lib/points.ts'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()

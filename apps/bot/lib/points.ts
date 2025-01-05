@@ -1,7 +1,7 @@
 import { LRUCache } from 'lru-cache'
-import { env } from '../env.js'
+import { env } from '../env.ts'
 import { Colors, GuildMember } from 'discord.js'
-import { getUserById } from '../db/actions/users.js'
+import { getUserById } from '../db/actions/users.ts'
 
 export const POINTS_REWARDS = {
   message: 2,

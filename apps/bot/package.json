@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development NODE_OPTIONS='--loader ts-node/esm' nodemon index.ts",
-    "build": "tsc --build",
-    "start": "NODE_ENV=production node build/index.js",
-    "dev:register-commands": "NODE_ENV=development node --loader ts-node/esm ./register-commands.ts",
-    "register-commands": "node --loader ts-node/esm ./register-commands.ts"
+    "dev": "bun --watch index.ts --env NODE_ENV=development",
+    "build": "bun build",
+    "start": "bun index.ts --env NODE_ENV=production",
+    "dev:register-commands": "bun register-commands.ts --env NODE_ENV=development",
+    "register-commands": "bun register-commands.ts --env NODE_ENV=production"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
@@ -26,9 +26,8 @@
     "@nextjs-forum/tsconfig": "workspace:*",
     "@types/debug": "^4.1.8",
     "@types/node": "^20.12.2",
+    "bun": "^1.1.42",
     "eslint": "^8.57.0",
-    "nodemon": "^3.1.0",
-    "ts-node": "^10.9.2",
     "typescript": "^5.4.3"
   }
 }
