@@ -1,10 +1,10 @@
 import { GuildMember, User } from 'discord.js'
-import { baseLog } from '../../log.js'
+import { baseLog } from '../../log.ts'
 import { KyselyDB, TransactionDB, db, sql } from '@nextjs-forum/db/node'
 import { AnimalModule, Faker, en } from '@faker-js/faker'
-import { type CacheUser, usersCache } from '../../lib/cache.js'
-import { env } from '../../env.js'
-import { POINTS_REWARDS, REQUIRED_POINTS_FOR_ROLE } from '../../lib/points.js'
+import { type CacheUser, usersCache } from '../../lib/cache.ts'
+import { env } from '../../env.ts'
+import { POINTS_REWARDS, REQUIRED_POINTS_FOR_ROLE } from '../../lib/points.ts'
 
 const log = baseLog.extend('users')
 

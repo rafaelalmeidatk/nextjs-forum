@@ -7,7 +7,7 @@ import {
   InteractionReplyOptions,
   InteractionResponse,
 } from 'discord.js'
-import { env } from './env.js'
+import { env } from './env.ts'
 
 const START_INDEXING_AFTER = 1686438000000
 

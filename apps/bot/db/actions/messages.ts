@@ -1,9 +1,9 @@
 import { Message, PartialMessage } from 'discord.js'
 import { db, sql } from '@nextjs-forum/db/node'
-import { addPointsToUser, removePointsFromUser, syncUser } from './users.js'
-import { syncChannel, syncMessageChannel } from './channels.js'
-import { updatePostLastActive } from './posts.js'
-import { tryToSetRegularMemberRole } from '../../lib/points.js'
+import { addPointsToUser, removePointsFromUser, syncUser } from './users.ts'
+import { syncChannel, syncMessageChannel } from './channels.ts'
+import { updatePostLastActive } from './posts.ts'
+import { tryToSetRegularMemberRole } from '../../lib/points.ts'
 
 export const syncMessage = async (message: Message) => {
   const authorAsGuildMember = await message.guild?.members.fetch(

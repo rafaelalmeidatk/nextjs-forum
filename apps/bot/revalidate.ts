@@ -1,4 +1,4 @@
-import { env } from './env.js'
+import { env } from './env.ts'
 
 const post = (endpoint: string, body?: Record<string, unknown>) => {
   return fetch(`${env.WEB_URL}${endpoint}`, {
