@@ -4,11 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun --watch index.ts --env NODE_ENV=development",
-    "build": "bun build",
-    "start": "bun index.ts --env NODE_ENV=production",
-    "dev:register-commands": "bun register-commands.ts --env NODE_ENV=development",
-    "register-commands": "bun register-commands.ts --env NODE_ENV=production"
+    "dev": "NODE_ENV=development bun --watch index.ts",
+    "start": "NODE_ENV=production bun index.ts ",
+    "dev:register-commands": "NODE_ENV=development bun register-commands.ts",
+    "register-commands": "NODE_ENV=production bun register-commands.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
@@ -16,7 +15,6 @@
     "@t3-oss/env-core": "^0.9.2",
     "debug": "^4.3.4",
     "discord.js": "^14.12.1",
-    "dotenv": "^16.4.5",
     "lru-cache": "^10.2.0",
     "ts-dedent": "^2.2.0",
     "zod": "^3.21.4"
@@ -26,7 +24,6 @@
     "@nextjs-forum/tsconfig": "workspace:*",
     "@types/debug": "^4.1.8",
     "@types/node": "^20.12.2",
-    "bun": "^1.1.42",
     "eslint": "^8.57.0",
     "typescript": "^5.4.3"
   }
