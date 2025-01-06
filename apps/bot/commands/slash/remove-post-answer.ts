@@ -70,7 +70,7 @@ export const command: SlashCommand = {
     ) {
       await replyWithEmbedError(interaction, {
         description:
-          'Only the post author, helpers or moderators can remove an answer from apost',
+          'Only the post author, helpers or moderators can remove an answer from a post',
       })
 
       return
