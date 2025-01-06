@@ -21,6 +21,11 @@ export const env = createEnv({
     REGULAR_MEMBER_ROLE_ID: z.string().optional(),
     INDEXABLE_CHANNEL_IDS: z.string().transform((str) => str.split(',')),
     MOD_LOG_CHANNEL_ID: z.string().optional(),
+    GUIDELINES_MESSAGE: z
+      .string()
+      .default(
+        'https://discord.com/channels/752553802359505017/1138338531983491154',
+      ),
 
     // Database
     DATABASE_URL: z.string(),

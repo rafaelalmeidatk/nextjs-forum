@@ -7,6 +7,7 @@ import { DisplayLocalTime } from './local-time'
 import { Attachment, MessageContent } from './message-content'
 import { DeletedReply, MessageReply, Reply } from '@/components/reply'
 import { MessageWrapper } from '@/components/message-wrapper'
+
 type MessageProps = {
   snowflakeId: string
   content: string

@@ -1,4 +1,5 @@
 import { IconProps, IconSvg } from './base'
+
 export const CalendarPlusIcon = (props: IconProps) => (
   <IconSvg
     viewBox="0 0 24 24"
