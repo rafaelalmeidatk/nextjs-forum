@@ -8,6 +8,7 @@ import {
   InteractionReplyOptions,
   InteractionResponse,
   Message,
+  MessageContextMenuCommandInteraction,
 } from 'discord.js'
 import { env } from './env.js'
 import {
@@ -150,4 +151,51 @@ export const modifyRegularMemberRoles = async (
   await tryToSetRegularMemberRole(guildMember, true)
 
   await interaction.editReply({ content: 'Done!' })
+}
+
+export const checkInvalidAnswer = async (
+  interaction:
+    | ChatInputCommandInteraction
+    | MessageContextMenuCommandInteraction,
+) => {
+  if (!interaction.channel || !isMessageInForumChannel(interaction.channel)) {
+    await replyWithEmbedError(interaction, {
+      description: 'This command can only be used in a supported forum channel',
+    })
+
+    return
+  }
+  const mainChannel = interaction.channel.parent
+
+  if (!mainChannel) {
+    await replyWithEmbedError(interaction, {
+      description:
+        'Could not find the parent channel, please try again later. If this issue persists, contact a staff member',
+    })
+
+    return
+  }
+
+  if (mainChannel.type !== ChannelType.GuildForum) {
+    await interaction.reply({
+      ephemeral: true,
+      content: 'The parent channel is not a forum channel',
+    })
+
+    return
+  }
+
+  const interactionMember = await interaction.guild?.members.fetch(
+    interaction.user,
+  )
+  if (!interactionMember) {
+    await replyWithEmbedError(interaction, {
+      description:
+        'Could not find your info in the server, please try again later. If this issue persists, contact a staff member',
+    })
+
+    return
+  }
+  const channel = interaction.channel as AnyThreadChannel<true>
+  return { channel, interactionMember, mainChannel }
 }

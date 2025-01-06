@@ -9,7 +9,7 @@ import {
 } from 'discord.js'
 import { ContextMenuCommand } from '../types.js'
 import {
-  isMessageInForumChannel,
+  checkInvalidAnswer,
   isMessageSupported,
   replyWithEmbed,
   replyWithEmbedError,
@@ -26,15 +26,6 @@ export const command: ContextMenuCommand = {
     .setType(ApplicationCommandType.Message),
 
   async execute(interaction) {
-    if (!interaction.channel || !isMessageInForumChannel(interaction.channel)) {
-      await replyWithEmbedError(interaction, {
-        description:
-          'This command can only be used in a supported forum channel',
-      })
-
-      return
-    }
-
     if (!isMessageSupported(interaction.targetMessage)) {
       await replyWithEmbedError(interaction, {
         description:
@@ -44,39 +35,12 @@ export const command: ContextMenuCommand = {
       return
     }
 
-    const mainChannel = interaction.channel.parent
-    if (!mainChannel) {
-      await replyWithEmbedError(interaction, {
-        description:
-          'Could not find the parent channel, please try again later. If this issue persists, contact a staff member',
-      })
-
-      return
-    }
-
-    if (mainChannel.type !== ChannelType.GuildForum) {
-      await interaction.reply({
-        ephemeral: true,
-        content: 'The parent channel is not a forum channel',
-      })
-
-      return
-    }
-
-    const interactionMember = await interaction.guild?.members.fetch(
-      interaction.user,
-    )
-    if (!interactionMember) {
-      await replyWithEmbedError(interaction, {
-        description:
-          'Could not find your info in the server, please try again later. If this issue persists, contact a staff member',
-      })
-
-      return
-    }
+    const isValidAnswer = await checkInvalidAnswer(interaction)
+    if (!isValidAnswer) return
+    const { channel, interactionMember, mainChannel } = isValidAnswer
 
     if (
-      interaction.channel.ownerId !== interaction.user.id &&
+      channel.ownerId !== interaction.user.id &&
       !interactionMember.permissions.has(PermissionFlagsBits.ManageMessages) &&
       (env.HELPER_ROLE_ID
         ? !interactionMember.roles.cache.has(env.HELPER_ROLE_ID)
@@ -117,9 +81,9 @@ export const command: ContextMenuCommand = {
 
     if (answeredTagId) {
       const newTags = Array.from(
-        new Set([...interaction.channel.appliedTags, answeredTagId]),
+        new Set([...channel.appliedTags, answeredTagId]),
       )
-      interaction.channel.setAppliedTags(newTags)
+      await channel.setAppliedTags(newTags)
     }
 
     await replyWithEmbed(interaction, {
@@ -139,9 +103,9 @@ export const command: ContextMenuCommand = {
 
     // edit instructions message to add the button for message url (get the first message sent by the bot)
     const instructionsMessage = (
-      await interaction.channel.messages.fetch({
+      await channel.messages.fetch({
         cache: true,
-        after: interaction.channel.id,
+        after: channel.id,
       })
     )
       .filter((m) => m.author.id === interaction.client.user?.id)
@@ -171,8 +135,8 @@ export const command: ContextMenuCommand = {
 
     // if the message author is the post creator, notify mods to ensure its a genuine solution
     if (
-      interaction.targetMessage.author.id === interaction.channel.ownerId &&
-      interaction.user.id === interaction.channel.ownerId
+      interaction.targetMessage.author.id === channel.ownerId &&
+      interaction.user.id === channel.ownerId
     ) {
       if (env.MOD_LOG_CHANNEL_ID) {
         const modLogChannel = interaction.client.channels.cache.get(
