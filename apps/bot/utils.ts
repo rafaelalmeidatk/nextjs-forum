@@ -6,8 +6,11 @@ import {
   Colors,
   InteractionReplyOptions,
   InteractionResponse,
+  ChatInputCommandInteraction,
+  ChannelType,
 } from 'discord.js'
 import { env } from './env.js'
+import { unindexPost } from './db/actions/posts.js'
 
 const START_INDEXING_AFTER = 1686438000000
 
@@ -72,4 +75,44 @@ export const replyWithEmbedError = (
       },
     ],
   })
+}
+
+export const LockPostWithReason = async (
+  interaction: ChatInputCommandInteraction,
+  reason: string,
+) => {
+  if (!interaction.channel?.isThread()) {
+    await replyWithEmbedError(interaction, {
+      description: 'This command can only be used in a thread/forum post',
+    })
+    return
+  }
+
+  const mainChannel = interaction.channel.parent
+  if (mainChannel && mainChannel.type === ChannelType.GuildForum) {
+    const lockedTagId = mainChannel.availableTags.find((t) =>
+      t.name.includes('Locked'),
+    )?.id
+
+    if (lockedTagId) {
+      const newTags = Array.from(
+        new Set([...interaction.channel.appliedTags, lockedTagId]),
+      )
+      interaction.channel.setAppliedTags(newTags)
+    }
+  }
+
+  await interaction.reply({ content: 'Ok!', ephemeral: true })
+
+  await interaction.channel.setLocked(true)
+  await interaction.channel.send({
+    embeds: [
+      {
+        color: Colors.Blue,
+        title: '🔒 Post Locked',
+        description: reason,
+      },
+    ],
+  })
+  await unindexPost(interaction.channel)
 }

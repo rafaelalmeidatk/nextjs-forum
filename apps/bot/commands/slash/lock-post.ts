@@ -1,12 +1,6 @@
-import {
-  ChannelType,
-  Colors,
-  PermissionFlagsBits,
-  SlashCommandBuilder,
-} from 'discord.js'
+import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 import { SlashCommand } from '../types.js'
-import { replyWithEmbedError } from '../../utils.js'
-import { unindexPost } from '../../db/actions/posts.js'
+import { LockPostWithReason } from '../../utils.js'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -16,41 +10,9 @@ export const command: SlashCommand = {
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageThreads),
 
   async execute(interaction) {
-    if (!interaction.channel?.isThread()) {
-      await replyWithEmbedError(interaction, {
-        description: 'This command can only be used in a thread/forum post',
-      })
-      return
-    }
-
-    const mainChannel = interaction.channel.parent
-    if (mainChannel && mainChannel.type === ChannelType.GuildForum) {
-      const lockedTagId = mainChannel.availableTags.find((t) =>
-        t.name.includes('Locked'),
-      )?.id
-
-      if (lockedTagId) {
-        const newTags = Array.from(
-          new Set([...interaction.channel.appliedTags, lockedTagId]),
-        )
-        interaction.channel.setAppliedTags(newTags)
-      }
-    }
-
-    interaction.reply({ content: 'Ok!', ephemeral: true })
-
-    await interaction.channel.setLocked(true)
-    await interaction.channel.send({
-      embeds: [
-        {
-          color: Colors.Blue,
-          title: '🔒 Post Locked',
-          description:
-            'This post has been locked by a moderator. If you have any questions, feel free to reach out to the moderation team.',
-        },
-      ],
-    })
-
-    await unindexPost(interaction.channel)
+    await LockPostWithReason(
+      interaction,
+      'This post has been locked by a moderator. If you have any questions, feel free to reach out to the moderation team.',
+    )
   },
 }

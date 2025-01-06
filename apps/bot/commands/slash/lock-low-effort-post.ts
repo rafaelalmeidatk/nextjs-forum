@@ -1,13 +1,8 @@
-import {
-  ChannelType,
-  Colors,
-  PermissionFlagsBits,
-  SlashCommandBuilder,
-} from 'discord.js'
+import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 import { dedent } from 'ts-dedent'
 import { SlashCommand } from '../types.js'
-import { replyWithEmbedError } from '../../utils.js'
-import { unindexPost } from '../../db/actions/posts.js'
+import { LockPostWithReason } from '../../utils.js'
+import { env } from '../../env.js'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -17,44 +12,13 @@ export const command: SlashCommand = {
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageThreads),
 
   async execute(interaction) {
-    if (!interaction.channel?.isThread()) {
-      await replyWithEmbedError(interaction, {
-        description: 'This command can only be used in a thread/forum post',
-      })
-      return
-    }
-
-    const mainChannel = interaction.channel.parent
-    if (mainChannel && mainChannel.type === ChannelType.GuildForum) {
-      const lockedTagId = mainChannel.availableTags.find((t) =>
-        t.name.includes('Locked'),
-      )?.id
-
-      if (lockedTagId) {
-        const newTags = Array.from(
-          new Set([...interaction.channel.appliedTags, lockedTagId]),
-        )
-        interaction.channel.setAppliedTags(newTags)
-      }
-    }
-
-    interaction.reply({ content: 'Ok!', ephemeral: true })
-
-    await interaction.channel.setLocked(true)
-    await interaction.channel.send({
-      embeds: [
-        {
-          color: Colors.Blue,
-          title: '🔒 Post Locked',
-          description: dedent`
-            This post has been locked because it was considered low-effort by the moderation team. We encourage you to create a new post, keeping in mind the guidelines described here: https://discord.com/channels/752553802359505017/1138338531983491154
+    await LockPostWithReason(
+      interaction,
+      dedent`
+            This post has been locked because it was considered low-effort by the moderation team. We encourage you to create a new post, keeping in mind the guidelines described here: ${env.GUIDELINES_MESSAGE}
 
             Try to add as much information possible in your question, describing your objective and what you have tried doing to solve it. This helps our members to understand better the question and give a better and faster answer. If you have any questions, feel free to reach out to the moderation team.
           `,
-        },
-      ],
-    })
-
-    await unindexPost(interaction.channel)
+    )
   },
 }
