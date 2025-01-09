@@ -45,7 +45,7 @@ type RootLayoutProps = { children: ReactNode }
 
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
-    <html lang="en" className={`${inter.className} dark`}>
+    <html lang="en" className={`scroll-pt-60 ${inter.className} dark`}>
       <body className="bg-neutral-50 dark:bg-neutral-900 text-slate-900 dark:text-white">
         <header className="border-b border-neutral-700">
           <div className="container max-w-7xl flex mx-auto px-4 py-6 justify-between items-center">
