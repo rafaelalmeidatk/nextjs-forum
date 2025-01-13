@@ -84,7 +84,7 @@ export const replyWithEmbedError = (
   })
 }
 
-export const LockPostWithReason = async (
+export const lockPostWithReason = async (
   interaction: ChatInputCommandInteraction,
   reason: string,
 ) => {

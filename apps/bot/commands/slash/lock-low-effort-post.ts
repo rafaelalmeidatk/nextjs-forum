@@ -1,7 +1,7 @@
 import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 import { dedent } from 'ts-dedent'
 import { SlashCommand } from '../types.js'
-import { LockPostWithReason } from '../../utils.js'
+import { lockPostWithReason } from '../../utils.js'
 import { env } from '../../env.js'
 
 export const command: SlashCommand = {
@@ -12,7 +12,7 @@ export const command: SlashCommand = {
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageThreads),
 
   async execute(interaction) {
-    await LockPostWithReason(
+    await lockPostWithReason(
       interaction,
       dedent`
             This post has been locked because it was considered low-effort by the moderation team. We encourage you to create a new post, keeping in mind the guidelines described here: ${env.GUIDELINES_MESSAGE}

@@ -1,6 +1,6 @@
 import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 import { SlashCommand } from '../types.js'
-import { LockPostWithReason } from '../../utils.js'
+import { lockPostWithReason } from '../../utils.js'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -10,7 +10,7 @@ export const command: SlashCommand = {
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageThreads),
 
   async execute(interaction) {
-    await LockPostWithReason(
+    await lockPostWithReason(
       interaction,
       'This post has been locked by a moderator. If you have any questions, feel free to reach out to the moderation team.',
     )
