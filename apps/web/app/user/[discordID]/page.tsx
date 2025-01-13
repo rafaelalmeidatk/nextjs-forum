@@ -70,7 +70,7 @@ const getUserPosts = async (discordID: string) => {
     return []
   }
   // Second query to get additional details for the posts
-  const detailedPosts = await db
+  return await db
     .selectFrom('posts')
     .where('posts.id', 'in', postIds)
     .innerJoin('users', 'users.snowflakeId', 'posts.userId')
@@ -93,8 +93,6 @@ const getUserPosts = async (discordID: string) => {
     ])
     .orderBy('posts.createdAt', 'desc')
     .execute()
-
-  return detailedPosts
 }
 
 export const generateMetadata = async ({

@@ -26,7 +26,3 @@ export const buildPostTimeValues = (createdAt: Date) => {
 
   return { text, shortText, tooltip, iso }
 }
-
-export const largerDate = (...dates: Date[]) => {
-  return dates.reduce((a, b) => (a > b ? a : b))
-}

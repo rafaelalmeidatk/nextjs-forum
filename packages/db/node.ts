@@ -1,10 +1,4 @@
-import {
-  Kysely,
-  sql,
-  PostgresDialect,
-  SelectExpression,
-  Transaction,
-} from 'kysely'
+import { Kysely, PostgresDialect, Transaction } from 'kysely'
 import pg from 'pg'
 import { DB } from './schema.js'
 

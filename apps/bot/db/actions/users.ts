@@ -1,7 +1,7 @@
 import { GuildMember, User } from 'discord.js'
 import { baseLog } from '../../log.js'
-import { KyselyDB, TransactionDB, db, sql } from '@nextjs-forum/db/node'
-import { AnimalModule, Faker, en } from '@faker-js/faker'
+import { db, KyselyDB, sql, TransactionDB } from '@nextjs-forum/db/node'
+import { AnimalModule, en, Faker } from '@faker-js/faker'
 import { type CacheUser, usersCache } from '../../lib/cache.js'
 import { env } from '../../env.js'
 import { POINTS_REWARDS, REQUIRED_POINTS_FOR_ROLE } from '../../lib/points.js'
@@ -74,9 +74,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     faker.seed(user.id.split('').map(Number))
     // Generate a hopefully cool animal name because I thought the person names were looking too fake
     const animalType = faker.helpers.arrayElement(allowedAnimalTypes)
-    const animalName = faker.animal[animalType]()
-
-    username = animalName
+    username = faker.animal[animalType]()
     discriminator = faker.string.numeric(4)
     avatarUrl = getDefaultAvatarForNumber(faker.number.int({ min: 0, max: 5 }))
   }

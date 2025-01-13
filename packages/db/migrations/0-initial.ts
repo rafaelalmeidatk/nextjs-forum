@@ -1,5 +1,6 @@
 import { Kysely } from 'kysely'
 import { SnowflakeDataType, uuidColumnBuilder } from '../migrations-utils.js'
+
 export async function up(db: Kysely<any>): Promise<void> {
   // --- Users
   await db.schema

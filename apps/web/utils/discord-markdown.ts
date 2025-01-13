@@ -4,22 +4,6 @@ import { db } from '@nextjs-forum/db/node'
 import { getCanonicalPostUrl } from './urls'
 import { sanitizeText } from 'simple-markdown'
 import { cache } from 'react'
-import { unstable_cache } from 'next/cache'
-
-interface UserCache {
-  snowflakeId: string
-  username: string
-}
-
-interface ChannelCache {
-  snowflakeId: string
-  name: string
-}
-
-interface PostCache {
-  snowflakeId: string
-  title: string
-}
 
 const fetchUser = cache((userId: string) => {
   return db

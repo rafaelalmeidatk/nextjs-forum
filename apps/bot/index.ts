@@ -1,4 +1,4 @@
-import { Colors, Events, GatewayIntentBits, Partials, Client } from 'discord.js'
+import { Client, Colors, Events, GatewayIntentBits, Partials } from 'discord.js'
 import { dedent } from 'ts-dedent'
 import { env } from './env.js'
 import { deleteMessage, syncMessage } from './db/actions/messages.js'
@@ -148,4 +148,4 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 })
 
-client.login(env.DISCORD_BOT_TOKEN)
+void client.login(env.DISCORD_BOT_TOKEN)

@@ -3,11 +3,11 @@ import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 
 import './globals.css'
-import { GitHubIcon } from '../components/icons/github'
-import { NextIcon } from '../components/icons/next'
-import { DiscordIcon } from '../components/icons/discord'
+import { GitHubIcon } from '@/components/icons/github'
+import { NextIcon } from '@/components/icons/next'
+import { DiscordIcon } from '@/components/icons/discord'
 import { Metadata } from 'next'
-import { getBaseUrl } from '../utils/urls'
+import { getBaseUrl } from '@/utils/urls'
 
 const inter = Inter({
   subsets: ['latin'],

@@ -2,7 +2,7 @@ import './load-env.js'
 import path from 'path'
 import url from 'url'
 import fs from 'fs/promises'
-import { Migrator, FileMigrationProvider } from 'kysely'
+import { FileMigrationProvider, Migrator } from 'kysely'
 import { db } from './node.js'
 
 const op = process.env.MIGRATE_OP ?? 'latest'

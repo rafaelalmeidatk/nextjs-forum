@@ -1,12 +1,7 @@
-import {
-  ChannelType,
-  Colors,
-  PermissionFlagsBits,
-  SlashCommandBuilder,
-} from 'discord.js'
+import { Colors, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 import { SlashCommand } from '../types.js'
 import {
-  isMessageInForumChannel,
+  validateForumChannel,
   replyWithEmbed,
   replyWithEmbedError,
 } from '../../utils.js'
@@ -21,48 +16,12 @@ export const command: SlashCommand = {
     .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
 
   async execute(interaction) {
-    if (!interaction.channel || !isMessageInForumChannel(interaction.channel)) {
-      await replyWithEmbedError(interaction, {
-        description:
-          'This command can only be used in a supported forum channel',
-      })
-
-      return
-    }
-
-    const mainChannel = interaction.channel.parent
-    if (!mainChannel) {
-      await replyWithEmbedError(interaction, {
-        description:
-          'Could not find the parent channel, please try again later. If this issue persists, contact a staff member',
-      })
-
-      return
-    }
-
-    if (mainChannel.type !== ChannelType.GuildForum) {
-      await interaction.reply({
-        ephemeral: true,
-        content: 'The parent channel is not a forum channel',
-      })
-
-      return
-    }
-
-    const interactionMember = await interaction.guild?.members.fetch(
-      interaction.user,
-    )
-    if (!interactionMember) {
-      await replyWithEmbedError(interaction, {
-        description:
-          'Could not find your info in the server, please try again later. If this issue persists, contact a staff member',
-      })
-
-      return
-    }
+    const isValidAnswer = await validateForumChannel(interaction)
+    if (!isValidAnswer) return
+    const { channel, interactionMember, mainChannel } = isValidAnswer
 
     if (
-      interaction.channel.ownerId !== interaction.user.id &&
+      channel.ownerId !== interaction.user.id &&
       !interactionMember.permissions.has(PermissionFlagsBits.ManageMessages) &&
       (env.HELPER_ROLE_ID
         ? !interactionMember.roles.cache.has(env.HELPER_ROLE_ID)
@@ -70,7 +29,7 @@ export const command: SlashCommand = {
     ) {
       await replyWithEmbedError(interaction, {
         description:
-          'Only the post author, helpers or moderators can remove an answer from apost',
+          'Only the post author, helpers or moderators can remove an answer from a post',
       })
 
       return
@@ -83,10 +42,8 @@ export const command: SlashCommand = {
     )?.id
 
     if (answeredTagId) {
-      const newTags = interaction.channel.appliedTags.filter(
-        (tag) => tag !== answeredTagId,
-      )
-      interaction.channel.setAppliedTags(newTags)
+      const newTags = channel.appliedTags.filter((tag) => tag !== answeredTagId)
+      await channel.setAppliedTags(newTags)
     }
 
     await replyWithEmbed(interaction, {
@@ -97,9 +54,9 @@ export const command: SlashCommand = {
 
     // edit instructions message to remove the button for message url (get the first message sent by the bot)
     const instructionsMessage = (
-      await interaction.channel.messages.fetch({
+      await channel.messages.fetch({
         cache: true,
-        after: interaction.channel.id,
+        after: channel.id,
       })
     )
       .filter((m) => m.author.id === interaction.client.user?.id)

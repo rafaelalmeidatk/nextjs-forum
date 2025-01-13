@@ -27,6 +27,7 @@ If you are developing locally, you need to create `.env` files in both the `apps
 | `DATABASE_URL`         | The read-only connection string to connect to the DB, used to query the posts and messages               | ✔️        |
 | `REVALIDATE_SECRET`    | The secret that allows remote revalidations to the app cache. This var should also be set in the bot app | ✔️        |
 | `NEXT_PUBLIC_BASE_URL` | The URL where the app is hosted                                                                          | ❌        |
+| `GUIDELINES_MESSAGE`   | A link to the guidelines message that is posted on thread creation                                       | ✔️        |
 
 #### Project: `apps/bot`
 

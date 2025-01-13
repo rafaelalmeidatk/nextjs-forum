@@ -3,6 +3,7 @@ import { ImageIcon } from '@/components/icons/image'
 import { BadReplyIcon } from '@/components/icons/reply-bad'
 import { ReplySplineIcon } from '@/components/icons/reply-spline'
 import { Attachment } from '@/components/message-content'
+
 export type Reply = {
   author: {
     username: string
