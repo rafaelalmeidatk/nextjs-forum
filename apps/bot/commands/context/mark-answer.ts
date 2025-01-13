@@ -9,7 +9,7 @@ import {
 } from 'discord.js'
 import { ContextMenuCommand } from '../types.js'
 import {
-  checkInvalidAnswer,
+  validateForumChannel,
   isMessageSupported,
   replyWithEmbed,
   replyWithEmbedError,
@@ -35,7 +35,7 @@ export const command: ContextMenuCommand = {
       return
     }
 
-    const isValidAnswer = await checkInvalidAnswer(interaction)
+    const isValidAnswer = await validateForumChannel(interaction)
     if (!isValidAnswer) return
     const { channel, interactionMember, mainChannel } = isValidAnswer
 

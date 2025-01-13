@@ -1,7 +1,7 @@
 import { Colors, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 import { SlashCommand } from '../types.js'
 import {
-  checkInvalidAnswer,
+  validateForumChannel,
   replyWithEmbed,
   replyWithEmbedError,
 } from '../../utils.js'
@@ -16,7 +16,7 @@ export const command: SlashCommand = {
     .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
 
   async execute(interaction) {
-    const isValidAnswer = await checkInvalidAnswer(interaction)
+    const isValidAnswer = await validateForumChannel(interaction)
     if (!isValidAnswer) return
     const { channel, interactionMember, mainChannel } = isValidAnswer
 

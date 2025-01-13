@@ -153,7 +153,7 @@ export const modifyRegularMemberRoles = async (
   await interaction.editReply({ content: 'Done!' })
 }
 
-export const checkInvalidAnswer = async (
+export const validateForumChannel = async (
   interaction:
     | ChatInputCommandInteraction
     | MessageContextMenuCommandInteraction,
