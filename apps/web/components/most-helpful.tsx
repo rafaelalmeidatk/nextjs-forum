@@ -32,15 +32,15 @@ export const MostHelpful = async () => {
       <div className="mt-2 grid grid-cols-1 divide-y divide-neutral-800">
         {users.map((user) => (
           <div key={user.id} className="flex justify-between py-2">
-            <div className="flex space-x-2 items-center">
+            <div className="flex items-center space-x-2">
               <UserAvatar
-                className="w-4 h-4 rounded-full"
+                className="h-4 w-4 rounded-full"
                 src={user.avatarUrl}
                 alt="Avatar"
               />
               {user.isPublic ? (
                 <Link
-                  className="opacity-90 text-white line-clamp-1 max-w-[200px]"
+                  className="line-clamp-1 max-w-[200px] text-white opacity-90"
                   href={`/user/${user.userID}`}
                 >
                   {user.username}
@@ -51,7 +51,7 @@ export const MostHelpful = async () => {
             </div>
             <div className="flex items-center space-x-1 opacity-90">
               <CheckCircleSolidIcon size={5} />
-              <span className="text-sm ">{user.answersCount}</span>
+              <span className="text-sm">{user.answersCount}</span>
             </div>
           </div>
         ))}

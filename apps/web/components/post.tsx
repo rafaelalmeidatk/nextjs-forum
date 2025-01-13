@@ -29,19 +29,19 @@ export const Post = ({
   return (
     <Link href={`/post/${id}`} className="block text-white no-underline">
       <div
-        className={`px-4 py-3 border bg-neutral-800 ${borderColor} rounded hover:opacity-90`}
+        className={`border bg-neutral-800 px-4 py-3 ${borderColor} rounded hover:opacity-90`}
       >
-        <p className="text-white inline-block pr-2 text-lg font-semibold">
+        <p className="inline-block pr-2 text-lg font-semibold text-white">
           {title}
         </p>
 
         <div className="mt-2 flex items-center space-x-2">
           <UserAvatar
-            className="rounded-full w-5 h-5"
+            className="h-5 w-5 rounded-full"
             src={author.avatar}
             alt={`${author.username}'s avatar`}
           />
-          <div className="text-sm opacity-90 no-underline">
+          <div className="text-sm no-underline opacity-90">
             {author.username} asked on{' '}
             <time dateTime={createdAtTimes.iso} title={createdAtTimes.tooltip}>
               {createdAtTimes.text}
