@@ -1,6 +1,7 @@
 import { db } from '@nextjs-forum/db/node'
 import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
 import Link from 'next/link'
+import { UserAvatar } from '@/components/user-avatar.client'
 
 const getMostHelpfulUsers = async () => {
   return db
@@ -32,10 +33,10 @@ export const MostHelpful = async () => {
         {users.map((user) => (
           <div key={user.id} className="flex justify-between py-2">
             <div className="flex space-x-2 items-center">
-              <img
+              <UserAvatar
+                className="w-4 h-4 rounded-full"
                 src={user.avatarUrl}
                 alt="Avatar"
-                className="w-4 h-4 rounded-full"
               />
               {user.isPublic ? (
                 <Link
