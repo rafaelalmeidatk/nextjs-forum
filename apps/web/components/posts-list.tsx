@@ -1,4 +1,4 @@
-import { db, sql } from '@nextjs-forum/db/node'
+import { db, sql } from '@nextjs-forum/db'
 import { ArrowLeftIcon } from '@/components/icons/arrow-left'
 import { ArrowRightIcon } from '@/components/icons/arrow-right'
 import { PaginationLink } from '@/components/pagination-link'

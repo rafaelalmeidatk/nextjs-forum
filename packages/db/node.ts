@@ -2,11 +2,11 @@ import {
   Kysely,
   sql,
   PostgresDialect,
-  SelectExpression,
+  type SelectExpression,
   Transaction,
 } from 'kysely'
 import pg from 'pg'
-import { DB } from './schema.js'
+import type { DB } from './schema.ts'
 
 if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL is not defined')

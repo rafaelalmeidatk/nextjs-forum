@@ -1,8 +1,5 @@
 {
   "extends": "@nextjs-forum/tsconfig/node.json",
-  "compilerOptions": {
-    "composite": true,
-    "outDir": "build"
-  },
+  "compilerOptions": {},
   "exclude": ["build"]
 }

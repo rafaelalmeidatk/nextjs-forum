@@ -1,4 +1,4 @@
-import { db } from '@nextjs-forum/db/node'
+import { db } from '@nextjs-forum/db'
 import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
 import Link from 'next/link'
 
