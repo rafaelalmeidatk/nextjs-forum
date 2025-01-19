@@ -5,9 +5,9 @@ import {
   SlashCommandBuilder,
 } from 'discord.js'
 import { dedent } from 'ts-dedent'
-import { SlashCommand } from '../types.js'
-import { replyWithEmbedError } from '../../utils.js'
-import { unindexPost } from '../../db/actions/posts.js'
+import type { SlashCommand } from '../types.ts'
+import { replyWithEmbedError } from '../../utils.ts'
+import { unindexPost } from '../../db/actions/posts.ts'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()

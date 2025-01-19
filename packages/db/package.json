@@ -6,8 +6,8 @@
   "scripts": {
     "build": "tsc --build",
     "migrate": "NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
-    "migrate:down": "MIGRATE_OP=down NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
-    "migrate:list": "MIGRATE_OP=list NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
+    "migrate:down": "MIGRATE_OP=down node --experimental-strip-types ./migrate.ts",
+    "migrate:list": "MIGRATE_OP=list node --experimental-strip-types ./migrate.ts",
     "db-codegen": "kysely-codegen --dialect postgres --out-file ./schema.ts",
     "lint": "eslint ."
   },
@@ -30,6 +30,6 @@
     "dotenv": "^16.4.5",
     "kysely-codegen": "^0.14.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.7.3"
   }
 }

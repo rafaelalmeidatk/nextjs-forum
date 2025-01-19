@@ -1,8 +1,8 @@
 import { db } from '@nextjs-forum/db/node'
-import { channelsCache } from '../../lib/cache.js'
-import { Channel, ChannelType } from 'discord.js'
-import { baseLog } from '../../log.js'
-import { isMessageInForumChannel } from '../../utils.js'
+import { channelsCache } from '../../lib/cache.ts'
+import { type Channel, ChannelType } from 'discord.js'
+import { baseLog } from '../../log.ts'
+import { isMessageInForumChannel } from '../../utils.ts'
 
 const log = baseLog.extend('channels')
 

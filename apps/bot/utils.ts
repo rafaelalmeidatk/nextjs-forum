@@ -1,13 +1,13 @@
 import {
-  Channel,
-  AnyThreadChannel,
-  Message,
-  APIEmbed,
+  type Channel,
+  type AnyThreadChannel,
+  type Message,
+  type APIEmbed,
   Colors,
-  InteractionReplyOptions,
-  InteractionResponse,
+  type InteractionReplyOptions,
+  type InteractionResponse,
 } from 'discord.js'
-import { env } from './env.js'
+import { env } from './env.ts'
 
 const START_INDEXING_AFTER = 1686438000000
 

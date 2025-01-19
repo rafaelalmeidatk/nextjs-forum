@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js'
-import { SlashCommand } from '../types.js'
-import { getCorrectAnswersCount } from '../../db/actions/users.js'
+import type { SlashCommand } from '../types.ts'
+import { getCorrectAnswersCount } from '../../db/actions/users.ts'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()

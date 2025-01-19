@@ -4,6 +4,10 @@
     "lib": ["es2023"],
     "module": "node16",
     "target": "es2022",
-    "moduleResolution": "node16"
+    "moduleResolution": "node16",
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true
   }
 }

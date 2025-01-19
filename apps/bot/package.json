@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development NODE_OPTIONS='--loader ts-node/esm' nodemon index.ts",
+    "dev": "NODE_ENV=development node --experimental-strip-types --watch index.ts",
     "build": "tsc --build",
     "start": "NODE_ENV=production node build/index.js",
     "dev:register-commands": "NODE_ENV=development node --loader ts-node/esm ./register-commands.ts",
@@ -29,6 +29,6 @@
     "eslint": "^8.57.0",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.7.3"
   }
 }
