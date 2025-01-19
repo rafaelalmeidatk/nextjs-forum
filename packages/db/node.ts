@@ -8,9 +8,6 @@ import {
 import pg from 'pg'
 import type { DB } from './schema.ts'
 
-type f = DB['users']
-export type JoinedAtType = f['joinedAt']
-
 if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL is not defined')
 }

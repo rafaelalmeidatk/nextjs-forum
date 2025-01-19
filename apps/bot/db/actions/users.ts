@@ -82,12 +82,6 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   }
 
   await db
-    .selectFrom('users')
-    .select('joinedAt')
-    .where('snowflakeId', '=', user.id)
-    .executeTakeFirst()
-
-  await db
     .insertInto('users')
     .values({
       snowflakeId: user.id,
