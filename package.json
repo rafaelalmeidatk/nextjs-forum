@@ -23,8 +23,8 @@
     "turbo": "^1.11.2"
   },
   "engines": {
-    "node": ">=22.6.0",
-    "pnpm": ">=8.11.0"
+    "node": ">=22.9.0",
+    "pnpm": ">=9.15.0"
   },
   "lint-staged": {
     "*.{js,ts,tsx,md,json}": "prettier --write"
@@ -32,5 +32,5 @@
   "resolutions": {
     "@types/react": "18.2.15"
   },
-  "packageManager": "pnpm@9.10.0"
+  "packageManager": "pnpm@9.15.0"
 }

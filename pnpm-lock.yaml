@@ -44,9 +44,6 @@ importers:
       discord.js:
         specifier: ^14.12.1
         version: 14.14.1
-      dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
       lru-cache:
         specifier: ^10.2.0
         version: 10.2.0
@@ -173,9 +170,6 @@ importers:
       '@types/pg':
         specifier: ^8.11.4
         version: 8.11.4
-      dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
       kysely-codegen:
         specifier: ^0.14.2
         version: 0.14.2(kysely@0.27.3)(pg@8.11.4)

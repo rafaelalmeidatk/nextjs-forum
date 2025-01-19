@@ -6,9 +6,9 @@
   "main": "./node.ts",
   "scripts": {
     "build": "tsc --build",
-    "migrate": "NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
-    "migrate:down": "MIGRATE_OP=down node --experimental-strip-types ./migrate.ts",
-    "migrate:list": "MIGRATE_OP=list node --experimental-strip-types ./migrate.ts",
+    "migrate": "node --experimental-strip-types --env-file=.env ./migrate.ts",
+    "migrate:down": "MIGRATE_OP=down node --experimental-strip-types --env-file=.env ./migrate.ts",
+    "migrate:list": "MIGRATE_OP=list node --experimental-strip-types --env-file=.env ./migrate.ts",
     "db-codegen": "kysely-codegen --dialect postgres --out-file ./schema.ts",
     "lint": "eslint ."
   },
@@ -19,7 +19,6 @@
   "devDependencies": {
     "@nextjs-forum/tsconfig": "workspace:*",
     "@types/pg": "^8.11.4",
-    "dotenv": "^16.4.5",
     "kysely-codegen": "^0.14.2",
     "typescript": "^5.7.3"
   }
