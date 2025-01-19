@@ -1,7 +1,7 @@
 import { Colors, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 import type { SlashCommand } from '../types.ts'
 import { replyWithEmbed } from '../../utils.ts'
-import { db } from '@nextjs-forum/db/node'
+import { db } from '@nextjs-forum/db'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()

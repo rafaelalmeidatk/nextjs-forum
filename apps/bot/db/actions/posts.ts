@@ -1,5 +1,5 @@
 import { type AnyThreadChannel } from 'discord.js'
-import { db, type TransactionDB, type KyselyDB } from '@nextjs-forum/db/node'
+import { db, type TransactionDB, type KyselyDB } from '@nextjs-forum/db'
 import { revalidateHomePage, revalidatePost } from '../../revalidate.ts'
 import { removePointsFromUser } from './users.ts'
 

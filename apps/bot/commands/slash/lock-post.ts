@@ -4,7 +4,7 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js'
-import { SlashCommand } from '../types.ts'
+import type { SlashCommand } from '../types.ts'
 import { replyWithEmbedError } from '../../utils.ts'
 import { unindexPost } from '../../db/actions/posts.ts'
 

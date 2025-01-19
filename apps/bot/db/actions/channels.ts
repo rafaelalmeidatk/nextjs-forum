@@ -1,4 +1,4 @@
-import { db } from '@nextjs-forum/db/node'
+import { db } from '@nextjs-forum/db'
 import { channelsCache } from '../../lib/cache.ts'
 import { type Channel, ChannelType } from 'discord.js'
 import { baseLog } from '../../log.ts'

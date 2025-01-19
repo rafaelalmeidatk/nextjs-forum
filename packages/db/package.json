@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "main": "./node.ts",
   "scripts": {
     "build": "tsc --build",
     "migrate": "NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
@@ -10,14 +11,6 @@
     "migrate:list": "MIGRATE_OP=list node --experimental-strip-types ./migrate.ts",
     "db-codegen": "kysely-codegen --dialect postgres --out-file ./schema.ts",
     "lint": "eslint ."
-  },
-  "exports": {
-    "./node": {
-      "import": "./build/node.js"
-    },
-    "./nextjs": {
-      "import": "./build/nextjs.js"
-    }
   },
   "dependencies": {
     "kysely": "^0.27.3",

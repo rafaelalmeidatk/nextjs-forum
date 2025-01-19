@@ -55,10 +55,10 @@ export interface Users {
   id: Generated<string>
   isModerator: Generated<boolean>
   isPublic: Generated<boolean>
+  joinedAt: Timestamp | null
   points: Generated<number>
   snowflakeId: string
   username: string
-  joinedAt: Date | undefined
 }
 
 export interface DB {

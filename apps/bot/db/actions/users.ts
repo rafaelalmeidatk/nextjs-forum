@@ -1,11 +1,6 @@
 import { GuildMember, User } from 'discord.js'
 import { baseLog } from '../../log.ts'
-import {
-  type KyselyDB,
-  type TransactionDB,
-  db,
-  sql,
-} from '@nextjs-forum/db/node'
+import { type KyselyDB, type TransactionDB, db, sql } from '@nextjs-forum/db'
 import { type AnimalModule, Faker, en } from '@faker-js/faker'
 import { type CacheUser, usersCache } from '../../lib/cache.ts'
 import { env } from '../../env.ts'
@@ -85,6 +80,12 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     discriminator = faker.string.numeric(4)
     avatarUrl = getDefaultAvatarForNumber(faker.number.int({ min: 0, max: 5 }))
   }
+
+  await db
+    .selectFrom('users')
+    .select('joinedAt')
+    .where('snowflakeId', '=', user.id)
+    .executeTakeFirst()
 
   await db
     .insertInto('users')

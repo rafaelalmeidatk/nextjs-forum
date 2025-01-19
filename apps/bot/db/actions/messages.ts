@@ -1,5 +1,5 @@
 import { type Message, type PartialMessage } from 'discord.js'
-import { db, sql } from '@nextjs-forum/db/node'
+import { db, sql } from '@nextjs-forum/db'
 import { addPointsToUser, removePointsFromUser, syncUser } from './users.ts'
 import { syncChannel, syncMessageChannel } from './channels.ts'
 import { updatePostLastActive } from './posts.ts'
