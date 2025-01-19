@@ -8,7 +8,7 @@
     "start": "NODE_ENV=production node --experimental-strip-types --env-file-if-exists=.env index.ts",
     "type-check": "tsc",
     "dev:register-commands": "NODE_ENV=development node --experimental-strip-types --env-file=.env ./register-commands.ts",
-    "register-commands": "node --experimental-strip-types --env-file=.env ./register-commands.ts"
+    "register-commands": "node --experimental-strip-types --env-file-if-exists=.env ./register-commands.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
