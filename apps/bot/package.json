@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "NODE_ENV=development node --experimental-strip-types --watch index.ts",
-    "start": "NODE_ENV=production node build/index.js",
+    "start": "NODE_ENV=production node --experimental-strip-types index.ts",
     "type-check": "tsc",
-    "dev:register-commands": "NODE_ENV=development node --loader ts-node/esm ./register-commands.ts",
-    "register-commands": "node --loader ts-node/esm ./register-commands.ts"
+    "dev:register-commands": "NODE_ENV=development node --experimental-strip-types ./register-commands.ts",
+    "register-commands": "node --experimental-strip-types ./register-commands.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
