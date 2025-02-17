@@ -4,14 +4,14 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js'
-import { SlashCommand } from '../types.js'
+import type { SlashCommand } from '../types.ts'
 import {
   isMessageInForumChannel,
   replyWithEmbed,
   replyWithEmbedError,
-} from '../../utils.js'
-import { env } from '../../env.js'
-import { markMessageAsSolution } from '../../db/actions/messages.js'
+} from '../../utils.ts'
+import { env } from '../../env.ts'
+import { markMessageAsSolution } from '../../db/actions/messages.ts'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()

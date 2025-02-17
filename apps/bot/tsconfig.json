@@ -1,8 +1,5 @@
 {
   "extends": "@nextjs-forum/tsconfig/node.json",
-  "compilerOptions": {
-    "outDir": "build"
-  },
-  "exclude": ["build"],
-  "references": [{ "path": "../../packages/db" }]
+  "compilerOptions": {},
+  "exclude": ["build"]
 }

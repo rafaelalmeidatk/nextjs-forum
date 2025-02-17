@@ -1,7 +1,7 @@
 import { REST, Routes } from 'discord.js'
-import { env } from './env.js'
-import { contextMenuCommands } from './commands/context/index.js'
-import { slashCommands } from './commands/slash/index.js'
+import { env } from './env.ts'
+import { contextMenuCommands } from './commands/context/index.ts'
+import { slashCommands } from './commands/slash/index.ts'
 
 const isDevRegister = env.NODE_ENV === 'development'
 const guildId = env.DEV_GUILD_ID

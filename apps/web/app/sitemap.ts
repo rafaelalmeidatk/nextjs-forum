@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 import { getBaseUrl } from '@/utils/urls'
-import { db } from '@nextjs-forum/db/node'
+import { db } from '@nextjs-forum/db'
 
 // Update sitemap only once every 6 hours
 export const revalidate = 21600

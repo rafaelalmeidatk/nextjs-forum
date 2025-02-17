@@ -4,7 +4,7 @@ import { MedalIcon } from '@/components/icons/medal'
 import { Post } from '@/components/post'
 import { getCanonicalUserUrl } from '@/utils/urls'
 import { Metadata } from 'next'
-import { db, sql } from '@nextjs-forum/db/node'
+import { db, sql } from '@nextjs-forum/db'
 import { notFound } from 'next/navigation'
 
 export const revalidate = 60
