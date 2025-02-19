@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 import { getBaseUrl } from '@/utils/urls'
 import { db } from '@nextjs-forum/db'
-import { URL_PER_SITEMAP } from '../consts'
+import { URL_PER_SITEMAP } from '@/consts'
 
 // Update sitemap only once every 6 hours
 export const revalidate = 21600
@@ -12,12 +12,10 @@ export async function generateSitemaps() {
     .select(db.fn.count('id').as('postCount'))
     .where('isIndexed', '=', true)
     .executeTakeFirstOrThrow()
-  console.log(postCount)
   const sitemapCount = Math.ceil(Number(postCount) / URL_PER_SITEMAP)
   const sitemaps = Array.from({ length: sitemapCount }, (_, index) => ({
     id: index,
   }))
-  console.log(sitemaps)
   return sitemaps
 }
 
@@ -27,12 +25,11 @@ export default async function sitemap({
   id: number
 }): Promise<MetadataRoute.Sitemap> {
   const start = id * URL_PER_SITEMAP
-  console.log('sitemap req')
   const posts = await db
     .selectFrom('posts')
     .select(['snowflakeId', 'lastActiveAt'])
     .where('isIndexed', '=', true)
-    // .offset(start)
+    .offset(start)
     .limit(URL_PER_SITEMAP)
     .execute()
 
