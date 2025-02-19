@@ -12,10 +12,12 @@ export async function generateSitemaps() {
     .select(db.fn.count('id').as('postCount'))
     .where('isIndexed', '=', true)
     .executeTakeFirstOrThrow()
+
   const sitemapCount = Math.ceil(Number(postCount) / URL_PER_SITEMAP)
   const sitemaps = Array.from({ length: sitemapCount }, (_, index) => ({
     id: index,
   }))
+
   return sitemaps
 }
 
