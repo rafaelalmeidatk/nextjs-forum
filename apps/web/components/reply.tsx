@@ -3,6 +3,7 @@ import { ImageIcon } from '@/components/icons/image'
 import { BadReplyIcon } from '@/components/icons/reply-bad'
 import { ReplySplineIcon } from '@/components/icons/reply-spline'
 import { Attachment } from '@/components/message-content'
+import { Avatar } from './avatar'
 export type Reply = {
   author: {
     username: string
@@ -23,10 +24,10 @@ export const MessageReply = ({ reply }: { reply: Reply }) => {
         <ReplySplineIcon className="size-10 pt-2" />
       </div>
       <div className="flex w-0 flex-1 flex-row flex-nowrap items-center justify-start gap-2 text-xs md:text-base">
-        <img
+        <Avatar
           src={reply.author.avatarUrl}
-          alt="Avatar"
-          className="size-5 shrink-0 rounded-full"
+          size={5}
+          username={reply.author.username}
         />
 
         <div className="line-clamp-2 w-0 flex-1 text-left text-sm md:line-clamp-1">

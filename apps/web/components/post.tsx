@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import plur from 'plur'
 import { buildPostTimeValues } from '@/utils/datetime'
+import { Avatar } from './avatar'
 
 type PostProps = {
   id: string
@@ -35,11 +36,7 @@ export const Post = ({
         </p>
 
         <div className="mt-2 flex items-center space-x-2">
-          <img
-            src={author.avatar}
-            alt={`${author.username}'s avatar`}
-            className="rounded-full w-5 h-5"
-          />
+          <Avatar src={author.avatar} size={5} username={author.username} />
           <div className="text-sm opacity-90 no-underline">
             {author.username} asked on{' '}
             <time dateTime={createdAtTimes.iso} title={createdAtTimes.tooltip}>
