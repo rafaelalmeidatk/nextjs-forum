@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "build:bot": "turbo run build --filter=bot...",
+    "build:bot": "turbo run build --filter=@nextjs-forum/bot...",
     "start": "turbo run start",
-    "start:bot": "turbo run start --filter=bot",
+    "start:bot": "turbo run start --filter=@nextjs-forum/bot",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "migrate": "pnpm --filter=@nextjs-forum/db migrate",
