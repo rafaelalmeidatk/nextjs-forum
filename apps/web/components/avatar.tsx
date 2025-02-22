@@ -1,7 +1,8 @@
 'use client'
 
 import { cn } from '@/utils/cn'
-import { ComponentProps, useLayoutEffect, useRef, useState } from 'react'
+import { useImageLoadingStatus } from '@/utils/hooks/useImageLoadingStatus'
+import { ComponentProps } from 'react'
 
 const sizeToClassName = {
   4: 'w-4 h-4',
@@ -28,27 +29,10 @@ export const Avatar = ({
   username,
   ...props
 }: AvatarProps) => {
-  const [loadingStatus, setLoadingStatus] = useState<LoadingStatus>('loading')
-
-  useLayoutEffect(() => {
-    if (!src) {
-      setLoadingStatus('error')
-      return
-    }
-
-    const image = new window.Image()
-
-    image.onload = () => setLoadingStatus('loaded')
-    image.onerror = () => setLoadingStatus('error')
-
-    if (referrerPolicy) {
-      image.referrerPolicy = referrerPolicy
-    }
-    if (typeof crossOrigin === 'string') {
-      image.crossOrigin = crossOrigin
-    }
-    image.src = src
-  }, [src, referrerPolicy, crossOrigin])
+  const loadingStatus = useImageLoadingStatus(src, {
+    referrerPolicy,
+    crossOrigin,
+  })
 
   if (loadingStatus === 'loaded') {
     return (
@@ -75,6 +59,7 @@ export const Avatar = ({
   return (
     <span
       className={cn('rounded-full bg-neutral-800', sizeToClassName[size])}
+      aria-busy="true"
     />
   )
 }

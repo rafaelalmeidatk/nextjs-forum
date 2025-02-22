@@ -1,5 +1,6 @@
 import { parseDiscordMessage } from '@/utils/discord-markdown'
 import { isVideoLink } from '@/utils/video'
+import { MessageContentImage } from './message-content-media'
 
 export type Attachment = {
   id: string
@@ -39,7 +40,7 @@ export const MessageContent = async ({
                 controls
               ></video>
             ) : (
-              <img
+              <MessageContentImage
                 src={attachment.url}
                 alt="Image"
                 className="max-w-full h-auto object-cover"
