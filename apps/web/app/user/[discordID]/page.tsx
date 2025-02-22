@@ -6,6 +6,7 @@ import { getCanonicalUserUrl } from '@/utils/urls'
 import { Metadata } from 'next'
 import { db, sql } from '@nextjs-forum/db'
 import { notFound } from 'next/navigation'
+import { Avatar } from '@/components/avatar'
 
 export const revalidate = 60
 export const dynamic = 'error'
@@ -144,10 +145,10 @@ const UserInfo = async ({ params }: UserProps) => {
     <main className="w-full h-full flex flex-col items-center justify-center">
       <section className="w-full h-full flex flex-col xl:flex-row items-stretch justify-center max-w-7xl px-4 py-12 xl:py-16 gap-4 xl:gap-10">
         <div className="w-fit min-w-[20%] md:max-w-[50%] xl:max-w-[30%] flex flex-row items-stretch justify-start gap-4 shrink-0">
-          <img
-            className="size-16 rounded-full"
+          <Avatar
+            size={16}
             src={userData.avatarUrl}
-            alt={`User Avatar of ${userData.username}`}
+            username={userData.username}
           />
           <div className="w-fit h-auto flex flex-col items-start justify-start gap-1 max-w-[200px]">
             <h1 className="w-full text-xl md:text-2xl font-semibold text-white line-clamp-1">

@@ -55,8 +55,9 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
   let username = asGuildMember?.displayName || user.displayName
   let discriminator = user.discriminator
   let avatarUrl =
-    asGuildMember?.displayAvatarURL({ size: 256 }) ||
-    user.displayAvatarURL({ size: 256 })
+    'https://cdn.discordapp.com/guilds/752553802359505017/users/572329183334891520/avatars/2278389865d150a02af9d4a9bb9cabda.webp?size=256'
+  // asGuildMember?.displayAvatarURL({ size: 256 }) ||
+  // user.displayAvatarURL({ size: 256 })
 
   const userCheck: CacheUser = {
     username,

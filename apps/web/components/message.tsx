@@ -7,6 +7,7 @@ import { DisplayLocalTime } from './local-time'
 import { Attachment, MessageContent } from './message-content'
 import { DeletedReply, MessageReply, Reply } from '@/components/reply'
 import { MessageWrapper } from '@/components/message-wrapper'
+import { Avatar } from './avatar'
 type MessageProps = {
   snowflakeId: string
   content: string
@@ -48,10 +49,10 @@ export const Message = ({
           <div className="flex flex-row">
             <div className="flex w-[50px] shrink-0 items-start justify-start sm:w-[60px]">
               {isFirstRow ? (
-                <img
+                <Avatar
                   src={author.avatarUrl}
-                  alt="Avatar"
-                  className="h-10 w-10 rounded-full"
+                  size={10}
+                  username={author.username}
                 />
               ) : (
                 <time
