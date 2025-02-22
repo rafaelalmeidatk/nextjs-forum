@@ -41,6 +41,7 @@ export const MostHelpful = async () => {
                 <Link
                   className="opacity-90 text-white line-clamp-1 max-w-[200px]"
                   href={`/user/${user.userID}`}
+                  prefetch={false}
                 >
                   {user.username}
                 </Link>
