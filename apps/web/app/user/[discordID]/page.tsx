@@ -11,26 +11,6 @@ import { Avatar } from '@/components/avatar'
 export const revalidate = 60
 export const dynamic = 'error'
 
-const getLeaderboardPosition = async (discordID: string) => {
-  const result = await db
-    .with('rankedUsers', (db) =>
-      db
-        .selectFrom('users')
-        .select([
-          'snowflakeId',
-          sql<number>`RANK() OVER (ORDER BY COALESCE("answersCount", 0) DESC, "snowflakeId" DESC)`.as(
-            'position',
-          ),
-        ]),
-    )
-    .selectFrom('rankedUsers')
-    .select(['snowflakeId', 'position'])
-    .where('snowflakeId', '=', discordID)
-    .execute()
-
-  return result.length > 0 ? result[0].position : null
-}
-
 const getUserData = async (discordID: string) => {
   const userData = await db
     .selectFrom('users')
@@ -41,6 +21,7 @@ const getUserData = async (discordID: string) => {
       'answersCount',
       'isPublic',
       'joinedAt',
+      'rank',
     ])
     .where('snowflakeId', '=', discordID)
     .executeTakeFirst()
@@ -49,9 +30,8 @@ const getUserData = async (discordID: string) => {
     return null
   }
 
-  const position = await getLeaderboardPosition(discordID)
-
-  return { ...userData, leaderBoardPosition: position ?? null }
+  // For rank, a cron runs every 24 hours to refresh the rank
+  return { ...userData, leaderBoardPosition: userData.rank ?? null }
 }
 
 const getUserPosts = async (discordID: string) => {
