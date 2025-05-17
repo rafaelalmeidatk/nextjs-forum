@@ -65,6 +65,7 @@ export interface Users {
   points: Generated<number>
   snowflakeId: string
   username: string
+  rank: number
 }
 
 export interface DB {
