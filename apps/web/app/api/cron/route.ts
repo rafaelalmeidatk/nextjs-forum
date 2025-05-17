@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     UPDATE users
     SET rank = ranked.position
     FROM ranked
-    WHERE users."snowflakeId" = ranked."snowflakeId"`
+    WHERE users."snowflakeId" = ranked."snowflakeId"`.execute(db)
 
   return Response.json({ success: true })
 }

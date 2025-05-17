@@ -11,32 +11,6 @@ import { Avatar } from '@/components/avatar'
 export const revalidate = 60
 export const dynamic = 'error'
 
-const getLeaderboardPosition = async (discordID: string) => {
-  // Efficiently compute the user's rank up to 100 using a CTE and stop early
-  const result = await db
-    .with('top', (db) =>
-      db
-        .selectFrom('users')
-        .select([
-          'snowflakeId',
-          sql<number>`row_number() over (order by coalesce("answersCount", 0) desc, "snowflakeId" desc)`.as(
-            'position',
-          ),
-        ])
-        .limit(100),
-    )
-    .selectFrom('top')
-    .select('position')
-    .where('snowflakeId', '=', discordID)
-    .executeTakeFirst()
-
-  const position = result?.position
-  if (position) {
-    return position
-  }
-  return '100+'
-}
-
 const getUserData = async (discordID: string) => {
   const userData = await db
     .selectFrom('users')
@@ -47,6 +21,7 @@ const getUserData = async (discordID: string) => {
       'answersCount',
       'isPublic',
       'joinedAt',
+      'rank',
     ])
     .where('snowflakeId', '=', discordID)
     .executeTakeFirst()
@@ -55,9 +30,8 @@ const getUserData = async (discordID: string) => {
     return null
   }
 
-  const position = await getLeaderboardPosition(discordID)
-
-  return { ...userData, leaderBoardPosition: position ?? null }
+  // For rank, a cron runs every 24 hours to refresh the rank
+  return { ...userData, leaderBoardPosition: userData.rank ?? null }
 }
 
 const getUserPosts = async (discordID: string) => {
