@@ -22,11 +22,12 @@ If you are developing locally, you need to create `.env` files in both the `apps
 
 #### Project: `apps/web`
 
-| Name                   | Description                                                                                              | Required? |
-| ---------------------- | -------------------------------------------------------------------------------------------------------- | --------- |
-| `DATABASE_URL`         | The read-only connection string to connect to the DB, used to query the posts and messages               | ✔️        |
-| `REVALIDATE_SECRET`    | The secret that allows remote revalidations to the app cache. This var should also be set in the bot app | ✔️        |
-| `NEXT_PUBLIC_BASE_URL` | The URL where the app is hosted                                                                          | ❌        |
+| Name                   | Description                                                                                                          | Required? |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------- | --------- |
+| `DATABASE_URL`         | The read-only connection string to connect to the DB, used to query the posts and messages                           | ✔️        |
+| `REVALIDATE_SECRET`    | The secret that allows remote revalidations to the app cache. This var should also be set in the bot app             | ✔️        |
+| `NEXT_PUBLIC_BASE_URL` | The URL where the app is hosted                                                                                      | ❌        |
+| `CRON_SECRET`          | The secret used to authorize scheduled cron jobs (automatically set by Vercel in production), used for ranking users | ❌        |
 
 #### Project: `apps/bot`
 

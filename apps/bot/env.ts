@@ -25,6 +25,7 @@ export const env = createEnv({
     // Web
     REVALIDATE_SECRET: z.string(),
     WEB_URL: z.string(),
+    CRON_SECRET: z.string().optional(),
 
     // Migrations (set by the CLI)
     MIGRATE_OP: z.union([z.literal('latest'), z.literal('down')]).optional(),
