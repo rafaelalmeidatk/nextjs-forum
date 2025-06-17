@@ -13,18 +13,24 @@ export const dynamic = 'error'
 
 const getLeaderboardPosition = async (discordID: string) => {
   // Efficiently compute the user's rank up to 100 using a CTE and stop early
-  const result = await sql<{ position: number | null }>`
-      WITH top AS (
-        SELECT
-          "snowflakeId",
-          ROW_NUMBER() OVER (ORDER BY COALESCE("answersCount", 0) DESC, "snowflakeId" DESC) AS position
-        FROM users
-        LIMIT 100
-      )
-      SELECT position FROM top WHERE "snowflakeId" = ${discordID}
-    `.execute(db)
+  const result = await db
+    .with('top', (db) =>
+      db
+        .selectFrom('users')
+        .select([
+          'snowflakeId',
+          sql<number>`row_number() over (order by coalesce("answersCount", 0) desc, "snowflakeId" desc)`.as(
+            'position',
+          ),
+        ])
+        .limit(100),
+    )
+    .selectFrom('top')
+    .select('position')
+    .where('snowflakeId', '=', discordID)
+    .executeTakeFirst()
 
-  const position = result.rows?.[0]?.position
+  const position = result?.position
   if (position) {
     return position
   }
