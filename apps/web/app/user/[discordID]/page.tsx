@@ -12,23 +12,29 @@ export const revalidate = 60
 export const dynamic = 'error'
 
 const getLeaderboardPosition = async (discordID: string) => {
+  // Efficiently compute the user's rank up to 100 using a CTE and stop early
   const result = await db
-    .with('rankedUsers', (db) =>
+    .with('top', (db) =>
       db
         .selectFrom('users')
         .select([
           'snowflakeId',
-          sql<number>`RANK() OVER (ORDER BY COALESCE("answersCount", 0) DESC, "snowflakeId" DESC)`.as(
+          sql<number>`row_number() over (order by coalesce("answersCount", 0) desc, "snowflakeId" desc)`.as(
             'position',
           ),
-        ]),
+        ])
+        .limit(100),
     )
-    .selectFrom('rankedUsers')
-    .select(['snowflakeId', 'position'])
+    .selectFrom('top')
+    .select('position')
     .where('snowflakeId', '=', discordID)
-    .execute()
+    .executeTakeFirst()
 
-  return result.length > 0 ? result[0].position : null
+  const position = result?.position
+  if (position) {
+    return position
+  }
+  return '100+'
 }
 
 const getUserData = async (discordID: string) => {
@@ -87,10 +93,10 @@ const getUserPosts = async (discordID: string) => {
       (eb) =>
         eb
           .selectFrom('messages')
-          .select(eb.fn.countAll<string>().as('count'))
+          .select(eb.fn.countAll().as('count'))
           .where('messages.postId', '=', eb.ref('posts.snowflakeId'))
           .where('messages.snowflakeId', '!=', eb.ref('posts.snowflakeId'))
-          .as('messagesCount') as any, // Ensure the return type matches AliasedSelectQueryBuilder
+          .as('messagesCount'),
     ])
     .orderBy('posts.createdAt', 'desc')
     .execute()
@@ -195,7 +201,7 @@ const UserInfo = async ({ params }: UserProps) => {
                 id={post.snowflakeId}
                 title={post.title}
                 createdAt={post.createdAt}
-                messagesCount={parseInt(post.messagesCount ?? '0', 10)}
+                messagesCount={parseInt(String(post.messagesCount ?? '0'), 10)}
                 hasAnswer={post.hasAnswer}
                 author={{ avatar: post.userAvatar, username: post.username }}
               />
