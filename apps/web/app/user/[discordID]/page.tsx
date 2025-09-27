@@ -163,7 +163,7 @@ const UserInfo = async (props: UserProps) => {
             </h1>
             {userData.leaderBoardPosition && (
               <div className="flex flex-row items-center justify-center gap-1 w-fit h-fit opacity-80 pt-1 ">
-                <MedalIcon size={4} className="mb-[1px]" />{' '}
+                <MedalIcon size={4} className="mb-px" />{' '}
                 <p className="text-sm h-fit">
                   Leaderboard Position:{' '}
                   <span className="opacity-60">
@@ -175,7 +175,7 @@ const UserInfo = async (props: UserProps) => {
             {/* joinedAt can be nulled, as it could be in discord.js */}
             {userData.joinedAt && (
               <div className=" flex flex-row items-center justify-center gap-1 w-fit h-fit opacity-80 ">
-                <CalendarPlusIcon size={4} className="mb-[1px]" />{' '}
+                <CalendarPlusIcon size={4} className="mb-px" />{' '}
                 <p className="text-sm h-fit">
                   Joined:{' '}
                   <span className="opacity-60">
@@ -185,7 +185,7 @@ const UserInfo = async (props: UserProps) => {
               </div>
             )}
             <div className=" flex flex-row items-center justify-center gap-1 w-fit h-fit opacity-80 ">
-              <HeartIcon size={4} className="mb-[1px]" />{' '}
+              <HeartIcon size={4} className="mb-px" />{' '}
               <p className="text-sm h-fit">
                 Total Answers:{' '}
                 <span className="text-green-500">{userData.answersCount}</span>
@@ -193,7 +193,7 @@ const UserInfo = async (props: UserProps) => {
             </div>
           </div>
         </div>
-        <div className="w-full h-[1px] xl:w-[1px] bg-white/10 xl:h-auto mt-3 xl:mt-0"></div>
+        <div className="w-full h-px xl:w-px bg-white/10 xl:h-auto mt-3 xl:mt-0"></div>
         <div className="w-full h-fit flex flex-col items-stretch justify-start gap-4  xl:py-0">
           {recentPosts.length > 0 ? (
             recentPosts.map((post) => (

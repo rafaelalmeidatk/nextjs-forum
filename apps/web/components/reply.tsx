@@ -39,11 +39,11 @@ export const MessageReply = ({ reply }: { reply: Reply }) => {
             {reply.content.length == 0 && reply.attachments.length > 0 ? (
               <span className="italic">Click to see attachment</span>
             ) : reply.content.includes('```') ? (
-              <span className="d-code-inline !whitespace-normal">
+              <span className="d-code-inline whitespace-normal!">
                 {reply.content.replaceAll('```', '')}
               </span>
             ) : reply.content.includes('``') ? (
-              <span className="d-code-inline !whitespace-normal">
+              <span className="d-code-inline whitespace-normal!">
                 {reply.content.replaceAll('``', '')}
               </span>
             ) : (
