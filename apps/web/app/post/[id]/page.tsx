@@ -128,9 +128,9 @@ const getMessages = async (postId: string) => {
 export const dynamic = 'error'
 export const revalidate = 60
 
-export const generateMetadata = async ({
-  params,
-}: PostProps): Promise<Metadata> => {
+export const generateMetadata = async (props: PostProps): Promise<Metadata> => {
+  const params = await props.params
+
   const post = await getPost(params.id)
   const postMessage = await getPostMessage(params.id)
 
@@ -163,11 +163,12 @@ export const generateMetadata = async ({
   }
 }
 
-type PostProps = {
-  params: { id: string }
-}
+type Params = Promise<{ id: string }>
+type PostProps = { params: Params }
 
-const Post = async ({ params }: PostProps) => {
+const Post = async (props: PostProps) => {
+  const params = await props.params
+
   const isIndexed = await isPostIndexed(params.id)
   if (!isIndexed) {
     notFound()

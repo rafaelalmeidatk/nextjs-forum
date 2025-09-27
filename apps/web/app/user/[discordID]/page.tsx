@@ -104,9 +104,9 @@ const getUserPosts = async (discordID: string) => {
   return detailedPosts
 }
 
-export const generateMetadata = async ({
-  params,
-}: UserProps): Promise<Metadata> => {
+export const generateMetadata = async (props: UserProps): Promise<Metadata> => {
+  const params = await props.params
+
   const userData = await getUserData(params.discordID)
   if (!userData || !userData.isPublic) {
     return notFound()
@@ -136,11 +136,12 @@ export const generateMetadata = async ({
   }
 }
 
-type UserProps = {
-  params: { discordID: string }
-}
+type Params = Promise<{ discordID: string }>
+type UserProps = { params: Params }
 
-const UserInfo = async ({ params }: UserProps) => {
+const UserInfo = async (props: UserProps) => {
+  const params = await props.params
+
   const userData = await getUserData(params.discordID)
   if (!userData || !userData.isPublic) {
     return notFound()

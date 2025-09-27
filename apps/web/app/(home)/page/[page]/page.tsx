@@ -17,10 +17,12 @@ export const metadata: Metadata = {
   },
 }
 
-type Params = { page: string }
+type Params = Promise<{ page: string }>
 type PaginationPageProps = { params: Params }
 
-const PaginationPage = async ({ params }: PaginationPageProps) => {
+const PaginationPage = async (props: PaginationPageProps) => {
+  const params = await props.params
+
   // Only positive integers
   if (!/^\d+$/g.test(params.page)) {
     notFound()
