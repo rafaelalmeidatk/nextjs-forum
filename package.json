@@ -13,14 +13,14 @@
     "register-commands": "pnpm --filter=@nextjs-forum/bot register-commands",
     "dev:register-commands": "pnpm --filter=@nextjs-forum/bot dev:register-commands",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@nextjs-forum/eslint-config-custom": "workspace:*",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.4.3",
-    "prettier": "^3.5.2",
-    "turbo": "^2.4.2"
+    "husky": "9.1.7",
+    "lint-staged": "16.2.1",
+    "prettier": "3.6.2",
+    "turbo": "2.5.8"
   },
   "engines": {
     "node": ">=22.9.0",
