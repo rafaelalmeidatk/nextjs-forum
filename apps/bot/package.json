@@ -4,28 +4,28 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development node --experimental-strip-types --watch --env-file=.env index.ts",
-    "start": "NODE_ENV=production node --experimental-strip-types --env-file-if-exists=.env index.ts",
+    "dev": "NODE_ENV=development node --watch --env-file=.env index.ts",
+    "start": "NODE_ENV=production node --env-file-if-exists=.env index.ts",
     "type-check": "tsc",
-    "dev:register-commands": "NODE_ENV=development node --experimental-strip-types --env-file=.env ./register-commands.ts",
-    "register-commands": "node --experimental-strip-types --env-file-if-exists=.env ./register-commands.ts"
+    "dev:register-commands": "NODE_ENV=development node --env-file=.env ./register-commands.ts",
+    "register-commands": "node --env-file-if-exists=.env ./register-commands.ts"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.4.1",
+    "@faker-js/faker": "10.0.0",
     "@nextjs-forum/db": "workspace:*",
-    "@t3-oss/env-core": "^0.9.2",
-    "debug": "^4.3.4",
-    "discord.js": "^14.12.1",
-    "lru-cache": "^10.2.0",
-    "ts-dedent": "^2.2.0",
-    "zod": "^3.21.4"
+    "@t3-oss/env-core": "0.13.8",
+    "debug": "4.4.3",
+    "discord.js": "14.22.1",
+    "lru-cache": "11.2.2",
+    "ts-dedent": "2.2.0",
+    "zod": "4.1.11"
   },
   "devDependencies": {
     "@nextjs-forum/eslint-config-custom": "workspace:*",
     "@nextjs-forum/tsconfig": "workspace:*",
-    "@types/debug": "^4.1.8",
-    "@types/node": "^20.12.2",
-    "eslint": "^8.57.0",
-    "typescript": "^5.7.3"
+    "@types/debug": "4.1.8",
+    "@types/node": "24.5.2",
+    "eslint": "8.57.0",
+    "typescript": "5.9.2"
   }
 }

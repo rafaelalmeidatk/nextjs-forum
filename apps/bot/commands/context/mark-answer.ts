@@ -178,7 +178,7 @@ export const command: ContextMenuCommand = {
         const modLogChannel = interaction.client.channels.cache.get(
           env.MOD_LOG_CHANNEL_ID,
         )
-        if (!modLogChannel?.isTextBased()) return
+        if (!modLogChannel?.isSendable()) return
 
         await modLogChannel.send({
           content: `OP self marked their message: ${interaction.targetMessage.url}`,

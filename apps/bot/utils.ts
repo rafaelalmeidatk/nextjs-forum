@@ -13,7 +13,7 @@ const START_INDEXING_AFTER = 1686438000000
 
 export const isMessageInForumChannel = (
   channel: Channel,
-): channel is AnyThreadChannel<true> => {
+): channel is AnyThreadChannel => {
   return (
     channel.isThread() &&
     channel.parentId !== null &&
@@ -26,14 +26,14 @@ export const isMessageSupported = (message: Message) => {
   return !message.author.bot && !message.system && isIndexable
 }
 
-export const isThreadSupported = (thread: AnyThreadChannel<true>) => {
+export const isThreadSupported = (thread: AnyThreadChannel) => {
   const isIndexable =
     thread.createdAt !== null &&
     thread.createdAt.getTime() > START_INDEXING_AFTER
   return isIndexable
 }
 
-export const isThreadInForumChannel = (thread: AnyThreadChannel<true>) => {
+export const isThreadInForumChannel = (thread: AnyThreadChannel) => {
   return (
     thread.parentId !== null &&
     env.INDEXABLE_CHANNEL_IDS.includes(thread.parentId)

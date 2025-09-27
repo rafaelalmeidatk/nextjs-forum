@@ -30,7 +30,7 @@ export const syncPost = async (thread: AnyThreadChannel) => {
   await revalidateHomePage()
 }
 
-export const deletePost = async (thread: AnyThreadChannel<boolean>) => {
+export const deletePost = async (thread: AnyThreadChannel) => {
   await db.transaction().execute(async (trx) => {
     await trx.deleteFrom('posts').where('snowflakeId', '=', thread.id).execute()
     await trx.deleteFrom('messages').where('postId', '=', thread.id).execute()
@@ -52,7 +52,7 @@ export const updatePostLastActive = async (
     .execute()
 }
 
-export const unindexPost = async (channel: AnyThreadChannel<boolean>) => {
+export const unindexPost = async (channel: AnyThreadChannel) => {
   await db
     .updateTable('posts')
     .where('snowflakeId', '=', channel.id)
