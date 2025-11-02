@@ -3,11 +3,15 @@
 import { useImageLoadingStatus } from '@/utils/hooks/useImageLoadingStatus'
 import { ComponentProps } from 'react'
 
+type MessageContentImageProps = ComponentProps<'img'> & {
+  src: string
+}
+
 export const MessageContentImage = ({
   src,
   alt,
   ...props
-}: ComponentProps<'img'>) => {
+}: MessageContentImageProps) => {
   const loadingStatus = useImageLoadingStatus(src)
 
   if (loadingStatus === 'loaded') {

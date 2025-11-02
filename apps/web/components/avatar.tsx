@@ -16,9 +16,8 @@ const DEFAULT_AVATAR = 'https://cdn.discordapp.com/embed/avatars/1.png'
 type AvatarProps = ComponentProps<'img'> & {
   size: keyof typeof sizeToClassName
   username?: string
+  src: string
 }
-
-type LoadingStatus = 'loading' | 'loaded' | 'error'
 
 export const Avatar = ({
   src,

@@ -128,9 +128,9 @@ const getMessages = async (postId: string) => {
 export const dynamic = 'error'
 export const revalidate = 60
 
-export const generateMetadata = async ({
-  params,
-}: PostProps): Promise<Metadata> => {
+export const generateMetadata = async (props: PostProps): Promise<Metadata> => {
+  const params = await props.params
+
   const post = await getPost(params.id)
   const postMessage = await getPostMessage(params.id)
 
@@ -163,11 +163,12 @@ export const generateMetadata = async ({
   }
 }
 
-type PostProps = {
-  params: { id: string }
-}
+type Params = Promise<{ id: string }>
+type PostProps = { params: Params }
 
-const Post = async ({ params }: PostProps) => {
+const Post = async (props: PostProps) => {
+  const params = await props.params
+
   const isIndexed = await isPostIndexed(params.id)
   if (!isIndexed) {
     notFound()
@@ -280,7 +281,7 @@ const Post = async ({ params }: PostProps) => {
 
             <a
               href={`https://discord.com/channels/752553802359505017/${post.snowflakeId}/${post.snowflakeId}`}
-              className="w-fit shrink-0 rounded border border-neutral-700 px-4 py-1.5 font-semibold text-white transition-colors hover:bg-neutral-700 hover:no-underline"
+              className="w-fit shrink-0 rounded-sm border border-neutral-700 px-4 py-1.5 font-semibold text-white transition-colors hover:bg-neutral-700 hover:no-underline"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -315,7 +316,7 @@ const Post = async ({ params }: PostProps) => {
           </MessageGroup>
 
           {answerMessage && (
-            <div className="space-y-1.5 rounded border border-green-400 p-2 sm:p-3">
+            <div className="space-y-1.5 rounded-sm border border-green-400 p-2 sm:p-3">
               <div className="flex items-center space-x-2 text-green-400">
                 <CheckCircleSolidIcon />
                 <div className="text-sm">

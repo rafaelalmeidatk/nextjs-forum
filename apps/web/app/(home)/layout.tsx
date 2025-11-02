@@ -9,7 +9,7 @@ type HomeLayoutProps = { children: ReactNode }
 export default function HomeLayout({ children }: HomeLayoutProps) {
   return (
     <>
-      <div className="relative py-16 border-b border-neutral-800 bg-gradient-to-t from-neutral-900 to-neutral-800 overflow-hidden">
+      <div className="relative py-16 border-b border-neutral-800 bg-linear-to-t from-neutral-900 to-neutral-800 overflow-hidden">
         <div className="container max-w-7xl mx-auto flex items-center">
           <div className="flex-1 flex flex-col px-4 space-y-4 z-10 text-center lg:text-left">
             <h2 className="font-semibold text-5xl lg:max-w-2xl leading-[1.1]">
